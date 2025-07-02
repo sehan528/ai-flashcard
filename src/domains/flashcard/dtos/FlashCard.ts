@@ -17,7 +17,7 @@ export interface CardSet {
     description: string;          // 설명
     cards: FlashCard[];           // 포함된 카드들
     createdAt: Date;              // 생성 날짜
-    lastStudied?: Date;           // 마지막 학습 날짜
+    // lastStudied?: Date;           // 마지막 학습 날짜
 }
 
 // AI 평가 결과 구조
