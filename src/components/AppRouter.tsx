@@ -1,7 +1,7 @@
 import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 import type { AppTab } from './Layout/Header';
 import Home from '../pages/Home';
-import AddCard from '../pages/AddCard';
+import CardEdit from '../pages/CardEdit';
 import Settings from '../pages/Settings';
 
 interface AppRouterProps {
@@ -9,7 +9,7 @@ interface AppRouterProps {
     cardSets: CardSet[];
     onRefresh: () => void;
     onStartStudy: (cardSet: CardSet, isRandom: boolean) => void;
-    onCardAdded: () => void; // 새로 추가
+    onCardChanged: () => void; // 카드 변경 완료 콜백
 }
 
 const AppRouter = ({
@@ -17,7 +17,7 @@ const AppRouter = ({
                        cardSets,
                        onRefresh,
                        onStartStudy,
-                       onCardAdded
+                       onCardChanged
                    }: AppRouterProps) => {
     switch (currentTab) {
         case 'home':
@@ -28,10 +28,10 @@ const AppRouter = ({
                     onStartStudy={onStartStudy}
                 />
             );
-        case 'add-card':
+        case 'card-edit':
             return (
-                <AddCard
-                    onCardAdded={onCardAdded} // 카드 추가 완료 콜백 전달
+                <CardEdit
+                    onCardChanged={onCardChanged} // 카드 변경 완료 콜백 전달
                 />
             );
         case 'settings':
