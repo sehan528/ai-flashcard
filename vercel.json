@@ -4,11 +4,6 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "devCommand": "npm run dev",
-  "functions": {
-    "api/ai-evaluate.ts": {
-      "runtime": "node@20.x"
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",
@@ -26,12 +21,6 @@
           "value": "Content-Type, Authorization"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
     }
   ]
 }
