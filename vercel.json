@@ -6,7 +6,7 @@
   "devCommand": "npm run dev",
   "functions": {
     "api/ai-evaluate.ts": {
-      "runtime": "@vercel/node"
+      "runtime": "node@20.x"
     }
   },
   "headers": [
