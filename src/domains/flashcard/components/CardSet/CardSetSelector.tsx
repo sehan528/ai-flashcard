@@ -8,8 +8,8 @@ interface CardSetSelectorProps {
     selectedCardSetId: string | null;
     onSelectCardSet: (cardSetId: string) => void;
     onCreateNewSet: (name: string, description: string) => void;
-    onEditCardSet: (cardSetId: string, name: string, description: string) => void;
-    onDeleteCardSet: (cardSetId: string) => void;
+    onEditCardSet?: (cardSetId: string, name: string, description: string) => void;
+    onDeleteCardSet?: (cardSetId: string) => void;
 }
 
 const CardSetSelector = ({
@@ -94,15 +94,15 @@ const CardSetSelector = ({
     // 카드셋 삭제
     const handleDeleteCardSet = (cardSetId: string) => {
         const cardSet = cardSets.find(set => set.id === cardSetId);
-        if (cardSet && confirm(`"${cardSet.name}" 카드셋을 삭제하시겠습니까?`)) {
+        if (cardSet && onDeleteCardSet && confirm(`"${cardSet.name}" 카드셋을 삭제하시겠습니까?`)) {
             onDeleteCardSet(cardSetId);
         }
         closeContextMenu();
     };
 
-    // 카드셋 편집 저장
+// 카드셋 편집 저장
     const handleSaveEdit = (name: string, description: string) => {
-        if (editModal.cardSet) {
+        if (editModal.cardSet && onEditCardSet) {
             onEditCardSet(editModal.cardSet.id, name, description);
         }
         setEditModal({ isOpen: false, cardSet: null });
