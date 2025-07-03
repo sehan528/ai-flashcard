@@ -9,9 +9,6 @@
       "runtime": "@vercel/node"
     }
   },
-  "env": {
-    "HUGGING_FACE_TOKEN": "@hugging_face_token"
-  },
   "headers": [
     {
       "source": "/api/(.*)",
