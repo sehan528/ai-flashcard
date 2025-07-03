@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 
 import MainApp from './MainApp';
-
 import DevPlayground from './pages/DevPlayground';
+import Error404 from './pages/Error404';
 
 function App() {
     return (
@@ -13,7 +13,8 @@ function App() {
             {/* 개발 테스트 환경 -> 완료 시 라우트 삭제 */}
             <Route path="/test" element={<DevPlayground />} />
 
-
+            {/* 404 페이지 */}
+            <Route path="*" element={<Error404 />} />
         </Routes>
     );
 }
