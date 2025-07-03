@@ -33,11 +33,6 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
         };
     }, [cardSet, isRandom]);
 
-    // AI 평가 핸들러 (임시 - Day 2에서 구현 예정)
-    const handleAIEvaluate = (userAnswer: string) => {
-        console.log('AI 평가 요청:', userAnswer);
-        alert('AI 평가 기능은 Day 2에서 구현됩니다!');
-    };
 
     // 학습 종료
     const handleExit = () => {
@@ -110,8 +105,6 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
                     {currentCard.type === 'essay' ? (
                         <EssayStudyCard
                             card={currentCard}
-                            onAIEvaluate={handleAIEvaluate}
-                            isAILoading={false}
                         />
                     ) : (
                         <MultipleStudyCard
