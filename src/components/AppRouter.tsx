@@ -9,9 +9,16 @@ interface AppRouterProps {
     cardSets: CardSet[];
     onRefresh: () => void;
     onStartStudy: (cardSet: CardSet, isRandom: boolean) => void;
+    onCardAdded: () => void; // 새로 추가
 }
 
-const AppRouter = ({ currentTab, cardSets, onRefresh, onStartStudy }: AppRouterProps) => {
+const AppRouter = ({
+                       currentTab,
+                       cardSets,
+                       onRefresh,
+                       onStartStudy,
+                       onCardAdded
+                   }: AppRouterProps) => {
     switch (currentTab) {
         case 'home':
             return (
@@ -22,7 +29,11 @@ const AppRouter = ({ currentTab, cardSets, onRefresh, onStartStudy }: AppRouterP
                 />
             );
         case 'add-card':
-            return <AddCard />;
+            return (
+                <AddCard
+                    onCardAdded={onCardAdded} // 카드 추가 완료 콜백 전달
+                />
+            );
         case 'settings':
             return <Settings />;
         default:
