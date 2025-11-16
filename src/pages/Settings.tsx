@@ -20,6 +20,20 @@ const Settings = () => {
         loadStatistics();
     }, []);
 
+    // 모달 열릴 때 배경 스크롤 방지
+    useEffect(() => {
+        if (showExportModal || showDeleteConfirm) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        // 컴포넌트 언마운트 시 복구
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [showExportModal, showDeleteConfirm]);
+
     const loadStatistics = () => {
         const stats = FlashcardStorage.getStatistics();
         const allCardSets = FlashcardStorage.getCardSets();
@@ -92,13 +106,25 @@ const Settings = () => {
                 showMessage('success', `${result.totalImported}개의 카드셋을 가져왔습니다!`);
                 loadStatistics();
             } else {
-                const errorMessage = result.errors.length > 0
-                    ? `일부 파일 가져오기 실패: ${result.errors.join(', ')}`
-                    : '데이터 가져오기에 실패했습니다.';
-                showMessage('error', errorMessage);
+                // 에러가 있는 경우 더 자세한 메시지
+                if (result.errors.length > 0) {
+                    // 에러가 3개 이하면 모두 표시, 그 이상이면 처음 3개만
+                    const displayErrors = result.errors.slice(0, 3);
+                    const remainingErrors = result.errors.length - 3;
+
+                    let errorMessage = `파일 가져오기 실패:\n${displayErrors.join('\n')}`;
+                    if (remainingErrors > 0) {
+                        errorMessage += `\n... 외 ${remainingErrors}개 파일`;
+                    }
+
+                    showMessage('error', errorMessage);
+                } else {
+                    showMessage('error', '데이터 가져오기에 실패했습니다.');
+                }
 
                 // 일부 성공한 경우
                 if (result.totalImported > 0) {
+                    showMessage('success', `${result.totalImported}개의 카드셋은 성공적으로 가져왔습니다.`);
                     loadStatistics();
                 }
             }
@@ -133,7 +159,7 @@ const Settings = () => {
 
             {/* 메시지 알림 */}
             {message && (
-                <div className={`mb-4 p-4 rounded-lg ${
+                <div className={`mb-4 p-4 rounded-lg whitespace-pre-line ${
                     message.type === 'success'
                         ? 'bg-green-50 text-green-800 border border-green-200'
                         : 'bg-red-50 text-red-800 border border-red-200'

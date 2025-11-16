@@ -143,21 +143,76 @@ export class FlashcardStorage {
 
     // Import: 단일 카드셋 유효성 검증
     static validateCardSet(set: any): { valid: boolean; error?: string } {
-        if (!set.id || !set.name || !Array.isArray(set.cards)) {
-            return { valid: false, error: '카드셋 데이터 구조가 올바르지 않습니다.' };
+        // 기본 타입 체크
+        if (typeof set !== 'object' || set === null) {
+            return { valid: false, error: '올바른 플래시카드 형식이 아닙니다.' };
         }
 
+        // 필수 필드 존재 여부 및 타입 체크
+        if (typeof set.id !== 'string' || !set.id) {
+            return { valid: false, error: '카드셋 ID가 올바르지 않습니다.' };
+        }
+
+        if (typeof set.name !== 'string' || !set.name) {
+            return { valid: false, error: '카드셋 이름이 올바르지 않습니다.' };
+        }
+
+        if (!Array.isArray(set.cards)) {
+            return { valid: false, error: '카드 목록이 배열 형태가 아닙니다.' };
+        }
+
+        // cards 배열이 비어있어도 허용 (빈 카드셋 가능)
         for (const card of set.cards) {
-            if (!card.id || !card.question || !card.answer || !card.type) {
-                return { valid: false, error: '카드 데이터 구조가 올바르지 않습니다.' };
+            // 카드 기본 타입 체크
+            if (typeof card !== 'object' || card === null) {
+                return { valid: false, error: '카드 데이터가 올바르지 않습니다.' };
             }
 
+            // 필수 필드 타입 체크
+            if (typeof card.id !== 'string' || !card.id) {
+                return { valid: false, error: '카드 ID가 올바르지 않습니다.' };
+            }
+
+            if (typeof card.question !== 'string' || !card.question) {
+                return { valid: false, error: '질문이 올바르지 않습니다.' };
+            }
+
+            if (!card.answer) {
+                return { valid: false, error: '답변이 올바르지 않습니다.' };
+            }
+
+            if (typeof card.type !== 'string') {
+                return { valid: false, error: '카드 타입이 올바르지 않습니다.' };
+            }
+
+            // 카드 타입 검증
             if (card.type !== 'essay' && card.type !== 'multiple') {
                 return { valid: false, error: '카드 타입은 "essay" 또는 "multiple"이어야 합니다.' };
             }
 
-            if (card.type === 'multiple' && (!Array.isArray(card.answer) || card.correctIndex === undefined)) {
-                return { valid: false, error: '객관식 카드는 배열 형태의 답변과 정답 인덱스가 필요합니다.' };
+            // 서술형 카드 검증
+            if (card.type === 'essay' && typeof card.answer !== 'string') {
+                return { valid: false, error: '서술형 카드의 답변은 문자열이어야 합니다.' };
+            }
+
+            // 객관식 카드 검증
+            if (card.type === 'multiple') {
+                if (!Array.isArray(card.answer)) {
+                    return { valid: false, error: '객관식 카드의 답변은 배열이어야 합니다.' };
+                }
+
+                if (typeof card.correctIndex !== 'number') {
+                    return { valid: false, error: '객관식 카드는 정답 인덱스가 필요합니다.' };
+                }
+
+                if (card.correctIndex < 0 || card.correctIndex >= card.answer.length) {
+                    return { valid: false, error: '정답 인덱스가 유효하지 않습니다.' };
+                }
+            }
+
+            // tags 필드 검증 (선택적)
+            if (card.tags !== undefined && !Array.isArray(card.tags)) {
+                return { valid: false, error: '태그는 배열 형태여야 합니다.' };
             }
         }
 
@@ -250,8 +305,23 @@ export class FlashcardStorage {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
 
+            // JSON 파일인지 확인
+            if (!file.name.toLowerCase().endsWith('.json')) {
+                errors.push(`${file.name}: JSON 파일이 아닙니다.`);
+                continue;
+            }
+
             try {
                 const content = await file.text();
+
+                // JSON 파싱 가능 여부 먼저 확인
+                try {
+                    JSON.parse(content);
+                } catch (parseError) {
+                    errors.push(`${file.name}: 올바른 JSON 형식이 아닙니다.`);
+                    continue;
+                }
+
                 const result = this.importFromJSON(content, 'merge');
 
                 if (result.success) {
