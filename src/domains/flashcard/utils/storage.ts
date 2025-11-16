@@ -95,4 +95,131 @@ export class FlashcardStorage {
         this.addCardSet(sampleCardSet);
         console.log('샘플 데이터 생성 완료!');
     }
+
+    // Export: JSON 파일로 데이터 내보내기
+    static exportToJSON(): string {
+        const cardSets = this.getCardSets();
+        return JSON.stringify(cardSets, null, 2);
+    }
+
+    // Export: JSON 파일 다운로드
+    static downloadAsJSON(): void {
+        const jsonString = this.exportToJSON();
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        link.download = `flashcard-export-${timestamp}.json`;
+        link.href = url;
+        link.click();
+
+        URL.revokeObjectURL(url);
+    }
+
+    // Import: JSON 데이터 유효성 검증
+    static validateImportData(data: any): { valid: boolean; error?: string } {
+        if (!Array.isArray(data)) {
+            return { valid: false, error: '올바른 형식이 아닙니다. 배열 형태여야 합니다.' };
+        }
+
+        for (const set of data) {
+            if (!set.id || !set.name || !Array.isArray(set.cards)) {
+                return { valid: false, error: '카드셋 데이터 구조가 올바르지 않습니다.' };
+            }
+
+            for (const card of set.cards) {
+                if (!card.id || !card.question || !card.answer || !card.type) {
+                    return { valid: false, error: '카드 데이터 구조가 올바르지 않습니다.' };
+                }
+
+                if (card.type !== 'essay' && card.type !== 'multiple') {
+                    return { valid: false, error: '카드 타입은 "essay" 또는 "multiple"이어야 합니다.' };
+                }
+
+                if (card.type === 'multiple' && (!Array.isArray(card.answer) || card.correctIndex === undefined)) {
+                    return { valid: false, error: '객관식 카드는 배열 형태의 답변과 정답 인덱스가 필요합니다.' };
+                }
+            }
+        }
+
+        return { valid: true };
+    }
+
+    // Import: JSON 문자열에서 데이터 가져오기
+    static importFromJSON(jsonString: string, mergeMode: 'merge' | 'replace' = 'merge'): {
+        success: boolean;
+        error?: string;
+        importedCount?: number;
+    } {
+        try {
+            const data = JSON.parse(jsonString);
+
+            // 유효성 검증
+            const validation = this.validateImportData(data);
+            if (!validation.valid) {
+                return { success: false, error: validation.error };
+            }
+
+            // Date 객체 복원
+            const importedCardSets: CardSet[] = data.map((set: any) => ({
+                ...set,
+                createdAt: new Date(set.createdAt),
+                lastStudied: set.lastStudied ? new Date(set.lastStudied) : undefined,
+                cards: set.cards.map((card: any) => ({
+                    ...card,
+                    createdAt: new Date(card.createdAt)
+                }))
+            }));
+
+            if (mergeMode === 'replace') {
+                // 기존 데이터 덮어쓰기
+                this.saveCardSets(importedCardSets);
+            } else {
+                // 기존 데이터와 병합 (중복 ID 제거)
+                const existingCardSets = this.getCardSets();
+                const existingIds = new Set(existingCardSets.map(set => set.id));
+
+                const newCardSets = importedCardSets.filter(set => !existingIds.has(set.id));
+                const mergedCardSets = [...existingCardSets, ...newCardSets];
+
+                this.saveCardSets(mergedCardSets);
+            }
+
+            return {
+                success: true,
+                importedCount: mergeMode === 'replace' ? importedCardSets.length : importedCardSets.filter(set => !this.getCardSets().map(s => s.id).includes(set.id)).length
+            };
+        } catch (error) {
+            console.error('Import 실패:', error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'JSON 파싱에 실패했습니다.'
+            };
+        }
+    }
+
+    // 모든 데이터 삭제
+    static clearAllData(): void {
+        localStorage.removeItem(STORAGE_KEY);
+    }
+
+    // 데이터 통계 정보
+    static getStatistics(): {
+        totalCardSets: number;
+        totalCards: number;
+        totalStudyCount: number;
+    } {
+        const cardSets = this.getCardSets();
+        const totalCards = cardSets.reduce((sum, set) => sum + set.cards.length, 0);
+        const totalStudyCount = cardSets.reduce((sum, set) =>
+            sum + set.cards.reduce((cardSum, card) => cardSum + (card.studyCount || 0), 0), 0
+        );
+
+        return {
+            totalCardSets: cardSets.length,
+            totalCards,
+            totalStudyCount
+        };
+    }
 }
