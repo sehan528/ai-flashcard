@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { FlashcardStorage } from '../domains/flashcard/utils/storage';
+import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 
 const Settings = () => {
     const [statistics, setStatistics] = useState({
@@ -9,6 +10,9 @@ const Settings = () => {
     });
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showExportModal, setShowExportModal] = useState(false);
+    const [selectedCardSets, setSelectedCardSets] = useState<Set<string>>(new Set());
+    const [cardSets, setCardSets] = useState<CardSet[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // 통계 정보 로드
@@ -18,7 +22,9 @@ const Settings = () => {
 
     const loadStatistics = () => {
         const stats = FlashcardStorage.getStatistics();
+        const allCardSets = FlashcardStorage.getCardSets();
         setStatistics(stats);
+        setCardSets(allCardSets);
     };
 
     const showMessage = (type: 'success' | 'error', text: string) => {
@@ -26,37 +32,79 @@ const Settings = () => {
         setTimeout(() => setMessage(null), 3000);
     };
 
-    // Export 기능
-    const handleExport = () => {
+    // Export 모달 열기
+    const handleOpenExportModal = () => {
+        setShowExportModal(true);
+        setSelectedCardSets(new Set());
+    };
+
+    // Export 모달 닫기
+    const handleCloseExportModal = () => {
+        setShowExportModal(false);
+        setSelectedCardSets(new Set());
+    };
+
+    // 카드셋 선택/해제
+    const toggleCardSetSelection = (id: string) => {
+        const newSelection = new Set(selectedCardSets);
+        if (newSelection.has(id)) {
+            newSelection.delete(id);
+        } else {
+            newSelection.add(id);
+        }
+        setSelectedCardSets(newSelection);
+    };
+
+    // 전체 선택/해제
+    const toggleSelectAll = () => {
+        if (selectedCardSets.size === cardSets.length) {
+            setSelectedCardSets(new Set());
+        } else {
+            setSelectedCardSets(new Set(cardSets.map(set => set.id)));
+        }
+    };
+
+    // Export 실행
+    const handleExportSelected = () => {
+        if (selectedCardSets.size === 0) {
+            showMessage('error', '내보낼 카드셋을 선택해주세요.');
+            return;
+        }
+
         try {
-            FlashcardStorage.downloadAsJSON();
-            showMessage('success', '데이터를 성공적으로 내보냈습니다!');
+            FlashcardStorage.downloadSelectedCardSets(Array.from(selectedCardSets));
+            showMessage('success', `${selectedCardSets.size}개의 카드셋을 내보냈습니다!`);
+            handleCloseExportModal();
         } catch (error) {
             showMessage('error', '데이터 내보내기에 실패했습니다.');
         }
     };
 
-    // Import 기능
-    const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
+    // Import 기능 (다중 파일 지원)
+    const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const content = e.target?.result as string;
-            const result = FlashcardStorage.importFromJSON(content, 'merge');
+        try {
+            const result = await FlashcardStorage.importMultipleFiles(files);
 
             if (result.success) {
-                showMessage('success', `${result.importedCount}개의 카드셋을 가져왔습니다!`);
+                showMessage('success', `${result.totalImported}개의 카드셋을 가져왔습니다!`);
                 loadStatistics();
             } else {
-                showMessage('error', result.error || '데이터 가져오기에 실패했습니다.');
+                const errorMessage = result.errors.length > 0
+                    ? `일부 파일 가져오기 실패: ${result.errors.join(', ')}`
+                    : '데이터 가져오기에 실패했습니다.';
+                showMessage('error', errorMessage);
+
+                // 일부 성공한 경우
+                if (result.totalImported > 0) {
+                    loadStatistics();
+                }
             }
-        };
-        reader.onerror = () => {
+        } catch (error) {
             showMessage('error', '파일 읽기에 실패했습니다.');
-        };
-        reader.readAsText(file);
+        }
 
         // 파일 입력 초기화
         if (fileInputRef.current) {
@@ -130,7 +178,7 @@ const Settings = () => {
                 {/* Export 버튼 */}
                 <div className="mb-4">
                     <button
-                        onClick={handleExport}
+                        onClick={handleOpenExportModal}
                         className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,7 +187,7 @@ const Settings = () => {
                         데이터 내보내기 (Export)
                     </button>
                     <p className="text-xs text-gray-500 mt-2">
-                        모든 카드셋을 JSON 파일로 저장합니다.
+                        선택한 카드셋을 각각 JSON 파일로 저장합니다.
                     </p>
                 </div>
 
@@ -149,6 +197,7 @@ const Settings = () => {
                         ref={fileInputRef}
                         type="file"
                         accept=".json"
+                        multiple
                         onChange={handleImport}
                         className="hidden"
                         id="import-file"
@@ -163,7 +212,7 @@ const Settings = () => {
                         데이터 가져오기 (Import)
                     </label>
                     <p className="text-xs text-gray-500 mt-2">
-                        JSON 파일에서 카드셋을 가져옵니다. 기존 데이터와 병합됩니다.
+                        JSON 파일(들)에서 카드셋을 가져옵니다. 여러 파일 선택 가능합니다.
                     </p>
                 </div>
 
@@ -186,6 +235,90 @@ const Settings = () => {
                     </p>
                 </div>
             </div>
+
+            {/* Export 모달 */}
+            {showExportModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">
+                                내보낼 카드셋 선택
+                            </h3>
+                            <button
+                                onClick={toggleSelectAll}
+                                className="text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded-lg transition-colors"
+                            >
+                                {selectedCardSets.size === cardSets.length ? 'Deselect All' : 'Select All'}
+                            </button>
+                        </div>
+
+                        {cardSets.length === 0 ? (
+                            <p className="text-center text-gray-500 py-8">
+                                내보낼 카드셋이 없습니다.
+                            </p>
+                        ) : (
+                            <div className="space-y-2 mb-6">
+                                {cardSets.map(cardSet => (
+                                    <div
+                                        key={cardSet.id}
+                                        onClick={() => toggleCardSetSelection(cardSet.id)}
+                                        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                                            selectedCardSets.has(cardSet.id)
+                                                ? 'border-blue-500 bg-blue-50'
+                                                : 'border-gray-200 bg-white hover:border-gray-300'
+                                        }`}
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <div className="flex-shrink-0 mt-1">
+                                                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                                                    selectedCardSets.has(cardSet.id)
+                                                        ? 'bg-blue-500 border-blue-500'
+                                                        : 'border-gray-300'
+                                                }`}>
+                                                    {selectedCardSets.has(cardSet.id) && (
+                                                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-semibold text-gray-800">{cardSet.name}</h4>
+                                                {cardSet.description && (
+                                                    <p className="text-sm text-gray-600 mt-1">{cardSet.description}</p>
+                                                )}
+                                                <p className="text-xs text-gray-500 mt-2">
+                                                    {cardSet.cards.length}개의 카드
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleCloseExportModal}
+                                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
+                            >
+                                취소
+                            </button>
+                            <button
+                                onClick={handleExportSelected}
+                                disabled={selectedCardSets.size === 0}
+                                className={`flex-1 font-medium py-2 px-4 rounded-lg transition-colors ${
+                                    selectedCardSets.size === 0
+                                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        : 'bg-blue-500 hover:bg-blue-600 text-white'
+                                }`}
+                            >
+                                내보내기 ({selectedCardSets.size})
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* 삭제 확인 모달 */}
             {showDeleteConfirm && (

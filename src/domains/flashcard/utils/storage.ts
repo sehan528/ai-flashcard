@@ -102,7 +102,7 @@ export class FlashcardStorage {
         return JSON.stringify(cardSets, null, 2);
     }
 
-    // Export: JSON 파일 다운로드
+    // Export: JSON 파일 다운로드 (전체)
     static downloadAsJSON(): void {
         const jsonString = this.exportToJSON();
         const blob = new Blob([jsonString], { type: 'application/json' });
@@ -117,36 +117,72 @@ export class FlashcardStorage {
         URL.revokeObjectURL(url);
     }
 
-    // Import: JSON 데이터 유효성 검증
-    static validateImportData(data: any): { valid: boolean; error?: string } {
-        if (!Array.isArray(data)) {
-            return { valid: false, error: '올바른 형식이 아닙니다. 배열 형태여야 합니다.' };
+    // Export: 선택한 카드셋들을 각각 개별 JSON 파일로 다운로드
+    static downloadSelectedCardSets(cardSetIds: string[]): void {
+        const allCardSets = this.getCardSets();
+
+        cardSetIds.forEach(id => {
+            const cardSet = allCardSets.find(set => set.id === id);
+            if (!cardSet) return;
+
+            const jsonString = JSON.stringify(cardSet, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+
+            // 파일명: 카드셋 이름 + 타임스탬프
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            const safeName = cardSet.name.replace(/[^a-zA-Z0-9가-힣\s]/g, '').replace(/\s+/g, '-');
+            link.download = `${safeName}-${timestamp}.json`;
+            link.href = url;
+            link.click();
+
+            URL.revokeObjectURL(url);
+        });
+    }
+
+    // Import: 단일 카드셋 유효성 검증
+    static validateCardSet(set: any): { valid: boolean; error?: string } {
+        if (!set.id || !set.name || !Array.isArray(set.cards)) {
+            return { valid: false, error: '카드셋 데이터 구조가 올바르지 않습니다.' };
         }
 
-        for (const set of data) {
-            if (!set.id || !set.name || !Array.isArray(set.cards)) {
-                return { valid: false, error: '카드셋 데이터 구조가 올바르지 않습니다.' };
+        for (const card of set.cards) {
+            if (!card.id || !card.question || !card.answer || !card.type) {
+                return { valid: false, error: '카드 데이터 구조가 올바르지 않습니다.' };
             }
 
-            for (const card of set.cards) {
-                if (!card.id || !card.question || !card.answer || !card.type) {
-                    return { valid: false, error: '카드 데이터 구조가 올바르지 않습니다.' };
-                }
+            if (card.type !== 'essay' && card.type !== 'multiple') {
+                return { valid: false, error: '카드 타입은 "essay" 또는 "multiple"이어야 합니다.' };
+            }
 
-                if (card.type !== 'essay' && card.type !== 'multiple') {
-                    return { valid: false, error: '카드 타입은 "essay" 또는 "multiple"이어야 합니다.' };
-                }
-
-                if (card.type === 'multiple' && (!Array.isArray(card.answer) || card.correctIndex === undefined)) {
-                    return { valid: false, error: '객관식 카드는 배열 형태의 답변과 정답 인덱스가 필요합니다.' };
-                }
+            if (card.type === 'multiple' && (!Array.isArray(card.answer) || card.correctIndex === undefined)) {
+                return { valid: false, error: '객관식 카드는 배열 형태의 답변과 정답 인덱스가 필요합니다.' };
             }
         }
 
         return { valid: true };
     }
 
-    // Import: JSON 문자열에서 데이터 가져오기
+    // Import: JSON 데이터 유효성 검증 (배열 또는 단일 객체)
+    static validateImportData(data: any): { valid: boolean; error?: string } {
+        // 단일 카드셋 객체인 경우
+        if (!Array.isArray(data)) {
+            return this.validateCardSet(data);
+        }
+
+        // 카드셋 배열인 경우
+        for (const set of data) {
+            const validation = this.validateCardSet(set);
+            if (!validation.valid) {
+                return validation;
+            }
+        }
+
+        return { valid: true };
+    }
+
+    // Import: JSON 문자열에서 데이터 가져오기 (배열 또는 단일 객체 지원)
     static importFromJSON(jsonString: string, mergeMode: 'merge' | 'replace' = 'merge'): {
         success: boolean;
         error?: string;
@@ -161,8 +197,11 @@ export class FlashcardStorage {
                 return { success: false, error: validation.error };
             }
 
+            // 단일 카드셋을 배열로 변환
+            const dataArray = Array.isArray(data) ? data : [data];
+
             // Date 객체 복원
-            const importedCardSets: CardSet[] = data.map((set: any) => ({
+            const importedCardSets: CardSet[] = dataArray.map((set: any) => ({
                 ...set,
                 createdAt: new Date(set.createdAt),
                 lastStudied: set.lastStudied ? new Date(set.lastStudied) : undefined,
@@ -197,6 +236,39 @@ export class FlashcardStorage {
                 error: error instanceof Error ? error.message : 'JSON 파싱에 실패했습니다.'
             };
         }
+    }
+
+    // Import: 여러 JSON 파일을 동시에 가져오기
+    static async importMultipleFiles(files: FileList): Promise<{
+        success: boolean;
+        totalImported: number;
+        errors: string[];
+    }> {
+        let totalImported = 0;
+        const errors: string[] = [];
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            try {
+                const content = await file.text();
+                const result = this.importFromJSON(content, 'merge');
+
+                if (result.success) {
+                    totalImported += result.importedCount || 0;
+                } else {
+                    errors.push(`${file.name}: ${result.error}`);
+                }
+            } catch (error) {
+                errors.push(`${file.name}: 파일 읽기 실패`);
+            }
+        }
+
+        return {
+            success: errors.length === 0,
+            totalImported,
+            errors
+        };
     }
 
     // 모든 데이터 삭제
