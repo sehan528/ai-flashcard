@@ -1,0 +1,144 @@
+{
+  "name": "데이터베이스",
+  "description": "데이터베이스 핵심 개념 및 면접 질문",
+  "cards": [
+    {
+      "question": "Key (기본키, 후보키, 슈퍼키 등등...) 에 대해 설명해 주세요.",
+      "answer": "**슈퍼키(Super Key)**: 테이블에서 각 행을 유일하게 식별할 수 있는 속성 또는 속성의 집합입니다. 중복을 허용하지 않지만, 최소성을 만족하지 않아도 됩니다.\n\n**후보키(Candidate Key)**: 슈퍼키 중에서 최소성을 만족하는 키입니다. 즉, 불필요한 속성이 없는 최소한의 슈퍼키입니다.\n\n**기본키(Primary Key)**: 후보키 중에서 선택된 메인 키로, 테이블의 각 행을 고유하게 식별합니다. NULL 값을 가질 수 없고, 중복되지 않습니다.\n\n**대체키(Alternate Key)**: 후보키 중 기본키로 선택되지 않은 나머지 키들입니다.\n\n**외래키(Foreign Key)**: 다른 테이블의 기본키를 참조하는 키로, 테이블 간의 관계를 나타냅니다.",
+      "type": "essay",
+      "tags": ["데이터베이스", "Key", "기본키", "후보키"]
+    },
+    {
+      "question": "기본키는 수정이 가능한가요?",
+      "answer": "기술적으로는 가능하지만, **권장하지 않습니다**.\n\n기본키를 수정하면:\n1. 외래키로 참조하는 다른 테이블과의 관계가 깨질 수 있습니다\n2. 인덱스 재구성으로 성능 저하가 발생합니다\n3. 데이터 정합성 문제가 생길 수 있습니다\n4. 클러스터드 인덱스를 사용하는 경우 물리적 저장 순서가 변경되어 큰 오버헤드가 발생합니다\n\n따라서 기본키는 **불변(immutable)**하게 설계하는 것이 좋고, 수정이 필요한 경우 대리키(surrogate key)인 auto_increment나 UUID를 사용하는 것이 일반적입니다.",
+      "type": "essay",
+      "tags": ["데이터베이스", "기본키", "설계"]
+    },
+    {
+      "question": "사실 MySQL의 경우, 기본키를 설정하지 않아도 테이블이 만들어집니다. 어떻게 이게 가능한 걸까요?",
+      "answer": "MySQL(InnoDB)은 기본키를 명시하지 않으면 내부적으로 숨겨진 기본키를 자동 생성합니다:\n\n1. 먼저 UNIQUE NOT NULL 컬럼이 있으면 그것을 기본키로 사용\n2. 없으면 내부적으로 6바이트 숨겨진 rowid를 자동 생성하여 기본키로 사용\n\nInnoDB는 **클러스터드 인덱스** 구조를 사용하므로 반드시 기본키가 필요하기 때문입니다. 모든 데이터는 기본키 순서로 물리적으로 저장됩니다.\n\n하지만 명시적으로 기본키를 지정하는 것이 성능과 관리 측면에서 훨씬 좋습니다. 숨겨진 rowid는 사용자가 제어할 수 없고, 쿼리 최적화에도 활용할 수 없기 때문입니다.",
+      "type": "essay",
+      "tags": ["MySQL", "InnoDB", "기본키", "클러스터드 인덱스"]
+    },
+    {
+      "question": "외래키 값은 NULL이 들어올 수 있나요?",
+      "answer": "**네, 가능합니다.** 외래키는 NULL 값을 허용할 수 있습니다.\n\n외래키가 NULL이라는 것은 \"참조하는 대상이 없다\"는 의미로, 관계가 선택적(optional)일 때 사용됩니다.\n\n예시:\n- 직원 테이블에서 부서ID(외래키)가 NULL → 아직 부서가 배정되지 않은 직원\n- 주문 테이블에서 쿠폰ID(외래키)가 NULL → 쿠폰을 사용하지 않은 주문\n\n반대로 외래키를 NOT NULL로 설정하면 반드시 참조 관계가 있어야 하므로 필수 관계(mandatory)를 표현할 수 있습니다.",
+      "type": "essay",
+      "tags": ["외래키", "NULL", "참조 무결성"]
+    },
+    {
+      "question": "어떤 칼럼의 정의에 UNIQUE 키워드가 붙는다고 가정해 봅시다. 이 칼럼을 활용한 쿼리의 성능은 그렇지 않은 것과 비교해서 어떻게 다를까요?",
+      "answer": "UNIQUE 제약조건이 있는 컬럼은 **자동으로 인덱스가 생성**되므로 조회 성능이 크게 향상됩니다.\n\n**성능 차이:**\n- UNIQUE 컬럼: O(log N) - 인덱스를 통한 빠른 검색\n- 일반 컬럼: O(N) - Full Table Scan\n\n**예시:**\n```sql\n-- email에 UNIQUE 제약조건이 있는 경우\nSELECT * FROM users WHERE email = 'test@example.com';\n-- → 인덱스 스캔으로 매우 빠름\n\n-- name에 제약조건이 없는 경우  \nSELECT * FROM users WHERE name = '홍길동';\n-- → 전체 테이블 스캔으로 느림\n```\n\n단, INSERT/UPDATE 시에는 중복 검사를 위한 오버헤드가 있으나, 조회 성능 향상이 훨씬 큽니다.",
+      "type": "essay",
+      "tags": ["UNIQUE", "인덱스", "성능", "쿼리 최적화"]
+    },
+    {
+      "question": "RDB와 NoSQL의 차이에 대해 설명해 주세요.",
+      "answer": "**RDB (Relational Database):**\n- 정형화된 스키마 구조 (테이블, 행, 열)\n- ACID 트랜잭션 보장\n- SQL 쿼리 언어 사용\n- 관계(JOIN)를 통한 데이터 연결\n- 수직적 확장(Scale-up)에 유리\n- 예: MySQL, PostgreSQL, Oracle\n\n**NoSQL (Not Only SQL):**\n- 유연한 스키마 또는 스키마리스\n- BASE 속성 (Basically Available, Soft state, Eventually consistent)\n- 다양한 데이터 모델 (Key-Value, Document, Column-family, Graph)\n- 수평적 확장(Scale-out)에 유리\n- 빠른 읽기/쓰기 성능\n- 예: MongoDB, Redis, Cassandra, DynamoDB\n\n**선택 기준:**\n- 데이터 정합성이 중요 → RDB\n- 대용량 트래픽, 빠른 응답 → NoSQL\n- 복잡한 관계 쿼리 → RDB\n- 유연한 스키마 필요 → NoSQL",
+      "type": "essay",
+      "tags": ["RDB", "NoSQL", "데이터베이스", "비교"]
+    },
+    {
+      "question": "NoSQL의 강점과, 약점이 무엇인가요?",
+      "answer": "**강점:**\n1. **유연한 스키마**: 스키마 변경이 자유로워 빠른 개발 가능\n2. **수평적 확장**: 서버 추가로 쉽게 확장 가능 (샤딩)\n3. **높은 성능**: 대용량 데이터 읽기/쓰기에 최적화\n4. **다양한 데이터 모델**: 비정형 데이터 저장에 유리\n5. **가용성**: 분산 환경에서 높은 가용성 제공\n\n**약점:**\n1. **데이터 정합성**: ACID 보장이 약하거나 없음 (Eventually Consistent)\n2. **복잡한 쿼리**: JOIN이 없거나 제한적이어서 복잡한 관계 쿼리가 어려움\n3. **표준화 부족**: 각 NoSQL마다 쿼리 언어와 방식이 다름\n4. **트랜잭션 제한**: 다중 문서/컬렉션 간 트랜잭션이 제한적\n5. **학습 곡선**: RDB에 익숙한 개발자에게는 새로운 개념 학습 필요\n6. **데이터 중복**: 역정규화로 인한 저장 공간 낭비 가능",
+      "type": "essay",
+      "tags": ["NoSQL", "장단점", "설계"]
+    },
+    {
+      "question": "RDB의 어떠한 특징 때문에 NoSQL에 비해 부하가 많이 걸릴 \"수\" 있을까요?",
+      "answer": "**주의**: 무조건 NoSQL이 RDB보다 빠른 것은 아닙니다!\n\n**RDB에서 부하가 걸릴 수 있는 상황:**\n\n1. **복잡한 JOIN 연산**\n   - 여러 테이블을 조인할 때 많은 연산 필요\n   - NoSQL은 역정규화로 한 문서에 모든 데이터 저장\n\n2. **트랜잭션 오버헤드**\n   - ACID 보장을 위한 Lock, MVCC 등의 메커니즘\n   - NoSQL은 트랜잭션이 제한적이거나 없음\n\n3. **수직적 확장의 한계**\n   - 단일 서버 성능 한계에 도달\n   - NoSQL은 수평 확장이 쉬움\n\n4. **정규화로 인한 쿼리 복잡도**\n   - 정규화된 테이블은 여러 번 조회 필요\n   - NoSQL은 역정규화로 한 번에 조회\n\n**하지만:**\n- 인덱스가 잘 설계된 RDB는 매우 빠름\n- 복잡한 쿼리나 집계 연산은 RDB가 오히려 유리\n- 데이터 정합성이 중요한 경우 RDB의 트랜잭션이 필수",
+      "type": "essay",
+      "tags": ["RDB", "NoSQL", "성능", "비교"]
+    },
+    {
+      "question": "NoSQL을 활용한 경험이 있나요? 있다면, 왜 RDB를 선택하지 않고 해당 DB를 선택했는지 설명해 주세요.",
+      "answer": "**Redis 사용 경험:**\n\n**선택 이유:**\n1. **캐싱 레이어**: RDB 조회 성능 개선을 위한 캐시\n2. **빠른 응답 속도**: 인메모리 DB로 밀리초 단위 응답\n3. **세션 저장소**: 분산 환경에서 세션 공유\n4. **실시간 랭킹**: Sorted Set을 이용한 실시간 리더보드\n\n**MongoDB 사용 경험:**\n\n**선택 이유:**\n1. **유연한 스키마**: 자주 변경되는 제품 속성 저장\n2. **빠른 개발**: 스키마 변경 없이 필드 추가 가능\n3. **JSON 형태**: REST API와 자연스러운 연동\n4. **로그 데이터**: 비정형 로그를 유연하게 저장\n\n**결론:**\nNoSQL은 RDB를 **대체**하는 것이 아니라 **보완**하는 관계입니다. 각 DB의 강점을 살려 적재적소에 사용하는 것이 중요합니다 (Polyglot Persistence).",
+      "type": "essay",
+      "tags": ["NoSQL", "Redis", "MongoDB", "실무 경험"]
+    },
+    {
+      "question": "트랜잭션이 무엇이고, ACID 원칙에 대해 설명해 주세요.",
+      "answer": "**트랜잭션(Transaction):**\n데이터베이스의 상태를 변화시키는 하나의 논리적 작업 단위입니다. All or Nothing 원칙으로, 모두 성공하거나 모두 실패해야 합니다.\n\n**ACID 원칙:**\n\n**1. Atomicity (원자성)**\n- 트랜잭션의 모든 연산이 완전히 수행되거나 전혀 수행되지 않아야 함\n- 예: 계좌 이체 시 출금과 입금이 모두 성공하거나 모두 실패\n\n**2. Consistency (일관성)**\n- 트랜잭션 실행 전후에 데이터베이스가 일관된 상태를 유지해야 함\n- 모든 제약조건(FK, UNIQUE 등)을 만족해야 함\n\n**3. Isolation (격리성)**\n- 여러 트랜잭션이 동시에 실행될 때 서로 간섭하지 않아야 함\n- 각 트랜잭션은 독립적으로 실행되는 것처럼 보여야 함\n\n**4. Durability (지속성)**\n- 트랜잭션이 성공적으로 완료되면 그 결과는 영구적으로 반영되어야 함\n- 시스템 장애가 발생해도 결과가 보존됨",
+      "type": "essay",
+      "tags": ["트랜잭션", "ACID", "데이터베이스"]
+    },
+    {
+      "question": "ACID 원칙 중, Durability를 DBMS는 어떻게 보장하나요?",
+      "answer": "DBMS는 **WAL(Write-Ahead Logging)** 기법으로 Durability를 보장합니다.\n\n**WAL 동작 방식:**\n1. **데이터 변경 전 로그 기록**: 실제 데이터를 변경하기 전에 Redo 로그에 변경 내용을 먼저 기록\n2. **로그를 디스크에 flush**: 로그를 안전하게 디스크에 저장\n3. **COMMIT**: 로그가 안전하게 저장되면 트랜잭션 커밋\n4. **실제 데이터 변경**: 나중에 실제 데이터 파일 변경 (지연 쓰기)\n\n**장애 복구:**\n- **시스템 장애 시**: Redo 로그를 이용해 커밋된 트랜잭션 재실행\n- **미완료 트랜잭션**: Undo 로그를 이용해 롤백\n\n**MySQL InnoDB 예시:**\n- **Redo Log**: 커밋된 변경사항 저장 (복구용)\n- **Undo Log**: 롤백 및 MVCC용\n- **Double Write Buffer**: 데이터 페이지 손상 방지\n\n이를 통해 COMMIT된 트랜잭션은 시스템 장애에도 반드시 복구됩니다.",
+      "type": "essay",
+      "tags": ["ACID", "Durability", "WAL", "MySQL"]
+    },
+    {
+      "question": "트랜잭션을 사용해 본 경험이 있나요? 어떤 경우에 사용할 수 있나요?",
+      "answer": "**트랜잭션 사용 경험:**\n\n**1. 금융 거래 (계좌 이체)**\n```sql\nSTART TRANSACTION;\nUPDATE accounts SET balance = balance - 10000 WHERE id = 1;\nUPDATE accounts SET balance = balance + 10000 WHERE id = 2;\nCOMMIT;\n```\n- 출금과 입금이 모두 성공해야 함\n\n**2. 주문 처리**\n```sql\nSTART TRANSACTION;\nINSERT INTO orders (user_id, total) VALUES (1, 50000);\nUPDATE products SET stock = stock - 1 WHERE id = 10;\nINSERT INTO order_items (order_id, product_id) VALUES (LAST_INSERT_ID(), 10);\nCOMMIT;\n```\n- 주문 생성, 재고 감소, 주문 상세가 원자적으로 처리\n\n**3. 회원 가입**\n```sql\nSTART TRANSACTION;\nINSERT INTO users (email, name) VALUES ('test@example.com', '홍길동');\nINSERT INTO user_profiles (user_id, phone) VALUES (LAST_INSERT_ID(), '010-1234-5678');\nCOMMIT;\n```\n- 사용자와 프로필이 함께 생성\n\n**사용해야 하는 경우:**\n- 여러 테이블에 걸친 데이터 변경\n- 데이터 정합성이 중요한 비즈니스 로직\n- 실패 시 전체 롤백이 필요한 작업",
+      "type": "essay",
+      "tags": ["트랜잭션", "실무", "SQL"]
+    },
+    {
+      "question": "읽기에는 트랜잭션을 걸지 않아도 될까요?",
+      "answer": "**상황에 따라 다릅니다.** 읽기 작업에도 트랜잭션이 필요한 경우가 많습니다.\n\n**트랜잭션이 필요한 읽기:**\n\n**1. 일관된 읽기 (Consistent Read)**\n```sql\nSTART TRANSACTION;\nSELECT balance FROM accounts WHERE id = 1;\nSELECT balance FROM accounts WHERE id = 2;\nCOMMIT;\n```\n- 두 계좌의 잔액을 동일 시점에서 조회\n- 중간에 다른 트랜잭션의 변경이 반영되면 안 됨\n\n**2. Phantom Read 방지**\n```sql\nSTART TRANSACTION;\nSELECT COUNT(*) FROM orders WHERE status = 'PENDING';\n-- 집계 후 관련 작업 수행\nCOMMIT;\n```\n- 집계와 후속 작업 사이에 새로운 데이터가 삽입되면 안 됨\n\n**3. 읽기 후 쓰기**\n```sql\nSTART TRANSACTION;\nSELECT stock FROM products WHERE id = 1 FOR UPDATE;\n-- 재고 확인 후 주문 처리\nUPDATE products SET stock = stock - 1 WHERE id = 1;\nCOMMIT;\n```\n- 읽은 값을 기반으로 쓰기를 할 때 Lock 필요\n\n**트랜잭션 없이 읽기:**\n- 단순 조회만 하는 경우\n- 데이터 일관성이 중요하지 않은 경우\n- Auto-commit 모드에서 단일 SELECT",
+      "type": "essay",
+      "tags": ["트랜잭션", "읽기", "격리 수준"]
+    },
+    {
+      "question": "트랜잭션 격리 레벨에 대해 설명해 주세요.",
+      "answer": "트랜잭션 격리 레벨은 동시성 제어를 위해 **얼마나 엄격하게 격리할지** 결정합니다.\n\n**4가지 격리 레벨 (낮음 → 높음):**\n\n**1. READ UNCOMMITTED**\n- 커밋되지 않은 데이터 읽기 가능 (Dirty Read)\n- 동시성 최고, 정합성 최저\n- 거의 사용하지 않음\n\n**2. READ COMMITTED** ⭐ (Oracle, PostgreSQL 기본값)\n- 커밋된 데이터만 읽기\n- Dirty Read 방지\n- Non-repeatable Read 발생 가능\n- 실무에서 가장 많이 사용\n\n**3. REPEATABLE READ** ⭐ (MySQL InnoDB 기본값)\n- 트랜잭션 내에서 같은 쿼리는 항상 같은 결과\n- Non-repeatable Read 방지\n- Phantom Read 발생 가능 (MySQL은 MVCC로 방지)\n\n**4. SERIALIZABLE**\n- 완전한 격리, 트랜잭션 순차 실행\n- 모든 이상 현상 방지\n- 동시성 최저, 정합성 최고\n\n**이상 현상:**\n- **Dirty Read**: 커밋 안 된 데이터 읽기\n- **Non-repeatable Read**: 같은 데이터를 다시 읽었을 때 값이 다름\n- **Phantom Read**: 같은 쿼리 재실행 시 행이 추가/삭제됨",
+      "type": "essay",
+      "tags": ["격리 수준", "트랜잭션", "동시성"]
+    },
+    {
+      "question": "모든 DBMS가 4개의 레벨을 모두 구현하고 있나요? 그렇지 않다면 그 이유는 무엇일까요?",
+      "answer": "**아니오**, 모든 DBMS가 4개 레벨을 동일하게 구현하지는 않습니다.\n\n**MySQL InnoDB:**\n- REPEATABLE READ에서 Phantom Read도 방지 (MVCC 덕분)\n- 표준 REPEATABLE READ보다 더 강력\n\n**Oracle:**\n- READ UNCOMMITTED 미지원\n- READ COMMITTED와 SERIALIZABLE만 지원\n- REPEATABLE READ는 SERIALIZABLE로 처리\n\n**PostgreSQL:**\n- READ UNCOMMITTED를 지원하지만 실제로는 READ COMMITTED처럼 동작\n- REPEATABLE READ가 Phantom Read도 방지 (SSI 사용)\n\n**이유:**\n\n1. **구현 메커니즘 차이**\n   - MVCC vs Lock 기반\n   - 각 DBMS의 아키텍처에 따라 구현 방식이 다름\n\n2. **성능 최적화**\n   - 특정 격리 레벨이 해당 DBMS에서 비효율적일 수 있음\n   - 더 나은 대안이 있는 경우 제외\n\n3. **실용성**\n   - READ UNCOMMITTED는 실무에서 거의 사용하지 않음\n   - 지원하지 않아도 문제가 없음\n\n**결론**: 표준은 있지만, 각 DBMS는 자신의 아키텍처에 맞게 최적화된 격리 레벨을 제공합니다.",
+      "type": "essay",
+      "tags": ["격리 수준", "DBMS", "MVCC"]
+    },
+    {
+      "question": "만약 MySQL을 사용하고 있다면, (InnoDB 기준) Undo 영역과 Redo 영역에 대해 설명해 주세요.",
+      "answer": "**Undo 영역 (Undo Log):**\n\n**목적:**\n1. **롤백**: 트랜잭션 실패 시 이전 상태로 복구\n2. **MVCC**: 동시성 제어를 위한 이전 버전 데이터 제공\n\n**동작:**\n- 데이터 변경 전 이전 값을 Undo 로그에 저장\n- 다른 트랜잭션이 변경 전 데이터를 읽을 수 있게 함 (Snapshot)\n- COMMIT 후에도 MVCC를 위해 일정 시간 유지\n- Purge Thread가 주기적으로 정리\n\n**위치:** 시스템 테이블스페이스 또는 Undo 테이블스페이스\n\n---\n\n**Redo 영역 (Redo Log):**\n\n**목적:**\n1. **Durability 보장**: 장애 복구 시 커밋된 트랜잭션 재실행\n2. **성능 향상**: 디스크 쓰기를 순차적으로 처리\n\n**동작:**\n- 데이터 변경 시 Redo 로그에 먼저 기록 (WAL)\n- Circular 방식으로 재사용 (ib_logfile0, ib_logfile1)\n- COMMIT 시 Redo 로그만 디스크에 flush\n- 실제 데이터 파일은 나중에 천천히 기록 (지연 쓰기)\n\n**장애 복구:**\n- Redo 로그를 이용해 커밋된 변경사항 재실행\n- Undo 로그를 이용해 미완료 트랜잭션 롤백\n\n**차이점:**\n- Undo: 변경 **전** 값, 롤백/MVCC용\n- Redo: 변경 **후** 값, 복구용",
+      "type": "essay",
+      "tags": ["MySQL", "InnoDB", "Undo", "Redo", "WAL"]
+    },
+    {
+      "question": "그런데, 스토리지 엔진이 정확히 무엇을 하는 건가요?",
+      "answer": "**스토리지 엔진(Storage Engine):**\n\n데이터베이스에서 **데이터를 물리적으로 저장하고 조회**하는 역할을 담당하는 컴포넌트입니다.\n\n**주요 역할:**\n\n1. **데이터 저장/조회**\n   - 디스크에 데이터를 어떻게 저장할지 결정\n   - INSERT, SELECT, UPDATE, DELETE 처리\n\n2. **인덱스 관리**\n   - B-Tree, Hash 등 인덱스 구조 구현\n   - 인덱스를 통한 빠른 검색\n\n3. **트랜잭션 처리**\n   - ACID 속성 구현 (엔진에 따라 다름)\n   - Lock, MVCC 등 동시성 제어\n\n4. **버퍼 관리**\n   - 메모리 캐시 관리 (Buffer Pool)\n   - 디스크 I/O 최적화\n\n**MySQL 스토리지 엔진 예시:**\n\n**InnoDB** (기본, 권장)\n- 트랜잭션 지원 (ACID)\n- 외래키 지원\n- MVCC 동시성 제어\n- 크래시 복구\n- 클러스터드 인덱스\n\n**MyISAM** (구형, 비권장)\n- 트랜잭션 미지원\n- 테이블 레벨 Lock\n- 빠른 SELECT (단순 조회)\n- 전문 검색(Full-text) 지원\n\n**Memory**\n- 인메모리 저장\n- 임시 테이블용\n- 서버 재시작 시 데이터 손실\n\n**비유:**\n스토리지 엔진은 자동차의 엔진과 같습니다. 같은 차체(MySQL)에 다른 엔진(InnoDB, MyISAM)을 장착할 수 있고, 각 엔진마다 성능과 특성이 다릅니다.",
+      "type": "essay",
+      "tags": ["스토리지 엔진", "MySQL", "InnoDB", "MyISAM"]
+    },
+    {
+      "question": "인덱스가 무엇이고, 언제 사용하는지 설명해 주세요.",
+      "answer": "**인덱스(Index):**\n\n책의 목차처럼 데이터를 빠르게 찾기 위한 **별도의 자료구조**입니다. 주로 B-Tree 구조를 사용합니다.\n\n**동작 원리:**\n```\n인덱스 없이: O(N) - 전체 스캔\n인덱스 사용: O(log N) - 트리 탐색\n```\n\n**언제 사용하나요:**\n\n**1. WHERE 절에 자주 사용되는 컬럼**\n```sql\nSELECT * FROM users WHERE email = 'test@example.com';\n-- email에 인덱스가 있으면 빠름\n```\n\n**2. JOIN 조건에 사용되는 컬럼**\n```sql\nSELECT * FROM orders o JOIN users u ON o.user_id = u.id;\n-- user_id에 인덱스 필요\n```\n\n**3. ORDER BY, GROUP BY에 사용되는 컬럼**\n```sql\nSELECT * FROM products ORDER BY created_at DESC;\n-- created_at에 인덱스가 있으면 정렬 생략 가능\n```\n\n**4. MIN, MAX 등 집계 함수**\n```sql\nSELECT MAX(price) FROM products;\n-- price 인덱스가 있으면 즉시 조회\n```\n\n**인덱스를 사용하지 말아야 할 때:**\n- 테이블 크기가 작을 때 (수백 건 이하)\n- 카디널리티가 낮을 때 (성별, boolean 등)\n- 데이터 변경(INSERT/UPDATE/DELETE)이 매우 빈번할 때\n- 해당 컬럼을 거의 조회하지 않을 때",
+      "type": "essay",
+      "tags": ["인덱스", "성능", "쿼리 최적화"]
+    },
+    {
+      "question": "일반적으로 인덱스는 수정이 잦은 테이블에선 사용하지 않기를 권합니다. 왜 그럴까요?",
+      "answer": "인덱스는 조회 성능은 향상시키지만, **데이터 수정 시 오버헤드**가 발생하기 때문입니다.\n\n**INSERT 시:**\n1. 실제 테이블에 데이터 삽입\n2. 모든 인덱스에도 새로운 항목 추가\n3. B-Tree 리밸런싱 발생 가능\n\n**UPDATE 시:**\n1. 인덱스 컬럼이 변경되면 인덱스에서 삭제 후 재삽입\n2. 여러 인덱스가 있으면 각각 업데이트\n3. 페이지 분할(Page Split) 발생 가능\n\n**DELETE 시:**\n1. 모든 인덱스에서 해당 항목 삭제\n2. 인덱스 재구성\n\n**성능 저하 예시:**\n```sql\n-- 인덱스 5개가 있는 테이블\nINSERT INTO logs (message, level, timestamp, user_id, ip) \nVALUES (...);\n-- 실제로는 6번의 쓰기 발생 (테이블 1 + 인덱스 5)\n```\n\n**해결책:**\n- 꼭 필요한 인덱스만 생성\n- 배치 작업 시 인덱스 임시 삭제 후 재생성\n- 파티셔닝 활용\n- 로그성 데이터는 NoSQL 고려\n\n**결론:**\n인덱스는 **조회:수정 비율**을 고려해서 생성해야 합니다. 조회가 많으면 인덱스 유리, 수정이 많으면 인덱스 불리합니다.",
+      "type": "essay",
+      "tags": ["인덱스", "성능", "트레이드오프"]
+    },
+    {
+      "question": "앞 꼬리질문에 대해, 그렇다면 인덱스에서 사용하지 않겠다고 선택한 값은 위 정책을 그대로 따라가나요?",
+      "answer": "아니오, **커버링 인덱스(Covering Index)**를 사용하면 다릅니다.\n\n**커버링 인덱스란:**\n쿼리에 필요한 모든 컬럼을 인덱스에 포함시켜 테이블 접근 없이 인덱스만으로 쿼리를 처리하는 기법입니다.\n\n**예시:**\n```sql\n-- 인덱스: (user_id, created_at, status)\nCREATE INDEX idx_orders ON orders(user_id, created_at, status);\n\n-- 이 쿼리는 테이블 접근 없이 인덱스만 사용\nSELECT created_at, status \nFROM orders \nWHERE user_id = 123;\n-- → 매우 빠름 (Using index)\n\n-- 이 쿼리는 테이블 접근 필요\nSELECT created_at, status, total_amount \nFROM orders \nWHERE user_id = 123;\n-- → total_amount가 인덱스에 없어서 테이블 조회 필요\n```\n\n**장점:**\n- 디스크 I/O 감소 (테이블 접근 불필요)\n- 매우 빠른 조회 성능\n\n**단점:**\n- 인덱스 크기 증가\n- INSERT/UPDATE 시 오버헤드 증가\n\n**MySQL 실행 계획에서 확인:**\n```sql\nEXPLAIN SELECT ...;\n-- Extra: Using index  → 커버링 인덱스 사용\n-- Extra: Using index condition → 인덱스 + 테이블 조회\n```\n\n**결론:**\n인덱스에 포함된 컬럼은 조회 시 테이블 접근이 필요 없어 매우 빠르지만, 수정 시 오버헤드는 여전히 존재합니다.",
+      "type": "essay",
+      "tags": ["인덱스", "커버링 인덱스", "쿼리 최적화"]
+    },
+    {
+      "question": "ORDER BY/GROUP BY 연산의 동작 과정을 인덱스의 존재여부와 연관지어서 설명해 주세요.",
+      "answer": "**인덱스가 있는 경우:**\n\n**ORDER BY:**\n```sql\n-- created_at에 인덱스가 있는 경우\nSELECT * FROM orders ORDER BY created_at DESC;\n```\n- 인덱스는 이미 정렬되어 있음 (B-Tree 구조)\n- 정렬 과정 생략 (Using index)\n- 매우 빠른 실행\n\n**GROUP BY:**\n```sql\n-- user_id에 인덱스가 있는 경우\nSELECT user_id, COUNT(*) FROM orders GROUP BY user_id;\n```\n- 인덱스가 정렬되어 있어 그룹화가 쉬움\n- 인덱스 스캔만으로 처리 가능\n\n---\n\n**인덱스가 없는 경우:**\n\n**ORDER BY:**\n```sql\nSELECT * FROM orders ORDER BY created_at DESC;\n```\n1. **Full Table Scan**: 모든 행 읽기\n2. **Filesort**: 메모리 또는 디스크에서 정렬\n3. 결과 반환\n\n**Filesort 과정:**\n- 데이터가 sort_buffer_size에 들어가면 메모리 정렬 (빠름)\n- 크면 디스크 임시 파일 사용 (느림)\n- Extra: Using filesort → 성능 저하 신호\n\n**GROUP BY:**\n```sql\nSELECT user_id, COUNT(*) FROM orders GROUP BY user_id;\n```\n1. **Full Table Scan**: 모든 행 읽기\n2. **Temporary Table**: 임시 테이블 생성\n3. **Grouping**: 그룹화 및 집계\n4. Extra: Using temporary; Using filesort\n\n---\n\n**복합 인덱스 활용:**\n```sql\n-- 인덱스: (user_id, created_at)\nSELECT * FROM orders \nWHERE user_id = 123 \nORDER BY created_at DESC;\n-- → 완벽하게 인덱스 활용 (WHERE + ORDER BY)\n\n-- 인덱스: (created_at, user_id)\nSELECT * FROM orders \nWHERE user_id = 123 \nORDER BY created_at DESC;\n-- → 인덱스 일부만 사용, filesort 발생 가능\n```\n\n**결론:**\n- 인덱스 O: 정렬 생략, 빠름\n- 인덱스 X: Filesort/Temporary Table, 느림",
+      "type": "essay",
+      "tags": ["인덱스", "ORDER BY", "GROUP BY", "Filesort"]
+    },
+    {
+      "question": "기본키는 인덱스라고 할 수 있을까요? 그렇지 않다면, 인덱스와 기본키는 어떤 차이가 있나요?",
+      "answer": "**네, 기본키는 자동으로 인덱스입니다.**\n\n기본키를 생성하면 DBMS는 자동으로 **Unique 인덱스**를 생성합니다.\n\n**차이점:**\n\n**기본키 (Primary Key):**\n- **목적**: 각 행을 고유하게 식별\n- **제약조건**: NOT NULL + UNIQUE\n- **개수**: 테이블당 1개만 가능\n- **자동 생성**: 인덱스 자동 생성\n- **클러스터드 인덱스**: MySQL InnoDB에서는 클러스터드 인덱스로 생성 (데이터와 함께 저장)\n- **의미**: 논리적인 개념 (비즈니스 의미)\n\n**인덱스 (Index):**\n- **목적**: 조회 성능 향상\n- **제약조건**: 없음 (NULL 허용 가능)\n- **개수**: 테이블당 여러 개 가능\n- **수동 생성**: 명시적으로 생성 필요\n- **논클러스터드**: 일반적으로 논클러스터드 인덱스 (별도 저장)\n- **의미**: 물리적인 개념 (성능 최적화)\n\n**예시:**\n```sql\n-- 기본키 생성 → 자동으로 인덱스 생성됨\nCREATE TABLE users (\n    id INT PRIMARY KEY,  -- 자동 인덱스\n    email VARCHAR(255) UNIQUE,  -- 자동 인덱스\n    name VARCHAR(100),\n    INDEX idx_name (name)  -- 수동 인덱스\n);\n```\n\n**MySQL에서 확인:**\n```sql\nSHOW INDEX FROM users;\n-- Key_name: PRIMARY → 기본키 인덱스\n-- Key_name: idx_name → 일반 인덱스\n```\n\n**결론:**\n모든 기본키는 인덱스이지만, 모든 인덱스가 기본키는 아닙니다. 기본키는 데이터 무결성을 위한 **논리적 제약**이고, 인덱스는 **물리적 최적화** 수단입니다.",
+      "type": "essay",
+      "tags": ["기본키", "인덱스", "차이점"]
+    },
+    {
+      "question": "그렇다면 외래키는요?",
+      "answer": "**외래키는 자동으로 인덱스가 생성되지 않는 경우가 많습니다.** (DBMS마다 다름)\n\n**DBMS별 차이:**\n\n**MySQL InnoDB:**\n- 외래키 생성 시 **자동으로 인덱스 생성** (없는 경우)\n- 이미 해당 컬럼에 인덱스가 있으면 재사용\n\n```sql\nCREATE TABLE orders (\n    id INT PRIMARY KEY,\n    user_id INT,\n    FOREIGN KEY (user_id) REFERENCES users(id)\n);\n-- user_id에 자동으로 인덱스 생성됨\n```\n\n**PostgreSQL:**\n- 외래키 생성 시 **자동 인덱스 생성 안 됨**\n- 수동으로 인덱스를 생성해야 함\n\n```sql\nCREATE TABLE orders (\n    id INT PRIMARY KEY,\n    user_id INT,\n    FOREIGN KEY (user_id) REFERENCES users(id)\n);\n-- 인덱스 수동 생성 권장\nCREATE INDEX idx_orders_user_id ON orders(user_id);\n```\n\n**Oracle:**\n- 외래키에 자동 인덱스 생성 안 됨\n- 수동 생성 필요\n\n---\n\n**왜 외래키에 인덱스가 필요한가?**\n\n**1. JOIN 성능:**\n```sql\nSELECT * FROM orders o \nJOIN users u ON o.user_id = u.id;\n-- user_id에 인덱스가 없으면 매우 느림\n```\n\n**2. 부모 테이블 삭제 시:**\n```sql\nDELETE FROM users WHERE id = 123;\n-- 자식 테이블(orders)에서 user_id=123인 행 확인\n-- 인덱스 없으면 Full Table Scan\n```\n\n**3. Lock 경합 감소:**\n- 외래키 제약 검사 시 인덱스가 없으면 테이블 Lock 발생 가능\n\n**결론:**\n- MySQL: 외래키 생성 시 자동 인덱스\n- PostgreSQL/Oracle: 수동으로 인덱스 생성 권장\n- **항상 외래키 컬럼에는 인덱스를 생성하는 것이 좋습니다**",
+      "type": "essay",
+      "tags": ["외래키", "인덱스", "MySQL", "PostgreSQL"]
+    }
+  ]
+}
