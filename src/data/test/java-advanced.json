@@ -1,0 +1,44 @@
+{
+  "name": "Java 고급 (JVM, GC)",
+  "description": "JVM 내부 동작 및 메모리 관리",
+  "cards": [
+    {
+      "question": "JVM의 메모리 구조를 설명하세요.",
+      "answer": "Method Area(클래스 정보), Heap(객체 인스턴스), Stack(메서드 호출 및 지역변수), PC Register(현재 수행 중인 명령 주소), Native Method Stack으로 구성됩니다.",
+      "type": "essay",
+      "tags": ["Java", "JVM", "메모리"]
+    },
+    {
+      "question": "Garbage Collection의 동작 원리를 설명하세요.",
+      "answer": "더 이상 참조되지 않는 객체를 자동으로 메모리에서 제거하는 메커니즘입니다. Mark and Sweep 알고리즘을 사용하며, Young Generation과 Old Generation으로 나누어 관리합니다.",
+      "type": "essay",
+      "tags": ["Java", "GC", "메모리"]
+    },
+    {
+      "question": "다음 중 GC의 종류가 아닌 것은?",
+      "answer": ["Serial GC", "Parallel GC", "CMS GC", "Linear GC"],
+      "type": "multiple",
+      "correctIndex": 3,
+      "tags": ["Java", "GC"]
+    },
+    {
+      "question": "Java 8의 주요 특징을 설명하세요.",
+      "answer": "Lambda 표현식, Stream API, Optional, 인터페이스의 default 메서드, 새로운 날짜/시간 API(LocalDateTime), Functional Interface 등이 추가되었습니다.",
+      "type": "essay",
+      "tags": ["Java", "Java8", "Lambda"]
+    },
+    {
+      "question": "리플렉션(Reflection)이란 무엇이며, 언제 사용하나요?",
+      "answer": "런타임에 클래스의 정보를 분석하고 조작할 수 있는 기능입니다. 프레임워크(Spring, Hibernate)에서 동적으로 객체를 생성하거나, 테스트 프레임워크에서 사용됩니다.",
+      "type": "essay",
+      "tags": ["Java", "Reflection", "고급"]
+    },
+    {
+      "question": "다음 중 Java의 동시성 프로그래밍 도구가 아닌 것은?",
+      "answer": ["synchronized", "volatile", "async/await", "ReentrantLock"],
+      "type": "multiple",
+      "correctIndex": 2,
+      "tags": ["Java", "동시성", "멀티스레드"]
+    }
+  ]
+}
