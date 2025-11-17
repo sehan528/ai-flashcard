@@ -20,11 +20,11 @@ export const useAppState = () => {
             const loadedCardSets = FlashcardStorage.getCardSets();
             setCardSets(loadedCardSets);
 
-            // 샘플 데이터가 없으면 생성 (개발용)
-            if (loadedCardSets.length === 0) {
-                FlashcardStorage.createSampleData();
-                refreshCardSets();
-            }
+            // 자동 샘플 데이터 생성 제거 - 사용자가 수동으로 생성하도록 함
+            // if (loadedCardSets.length === 0) {
+            //     FlashcardStorage.createSampleData();
+            //     refreshCardSets();
+            // }
         } catch (error) {
             console.error('데이터 로드 실패:', error);
         } finally {

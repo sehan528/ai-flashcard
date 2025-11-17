@@ -100,18 +100,18 @@ export class FlashcardStorage {
     // 개발용: 면접 대비 테스트 데이터 생성 (JSON 파일에서 로드)
     static async createInterviewTestData(): Promise<void> {
         try {
-            // JSON 파일 목록
+            // JSON 파일 목록 (public 폴더에서 로드)
             const testDataFiles = [
-                '/src/data/test/java-basic.json',
-                '/src/data/test/java-advanced.json',
-                '/src/data/test/spring-basic.json',
-                '/src/data/test/spring-advanced.json',
-                '/src/data/test/database.json',
-                '/src/data/test/network.json',
-                '/src/data/test/os.json',
-                '/src/data/test/data-structure.json',
-                '/src/data/test/algorithm.json',
-                '/src/data/test/design-pattern.json'
+                '/data/test/java-basic.json',
+                '/data/test/java-advanced.json',
+                '/data/test/spring-basic.json',
+                '/data/test/spring-advanced.json',
+                '/data/test/database.json',
+                '/data/test/network.json',
+                '/data/test/os.json',
+                '/data/test/data-structure.json',
+                '/data/test/algorithm.json',
+                '/data/test/design-pattern.json'
             ];
 
             let importedCount = 0;
