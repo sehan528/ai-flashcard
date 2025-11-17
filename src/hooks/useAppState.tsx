@@ -18,35 +18,22 @@ export const useAppState = () => {
 
     // 초기 데이터 로드
     useEffect(() => {
-        const initializeData = async () => {
-            // 이미 초기화되었으면 건너뛰기 (StrictMode 중복 실행 방지)
-            if (isInitializedRef.current) {
-                return;
-            }
+        // 이미 초기화되었으면 건너뛰기 (StrictMode 중복 실행 방지)
+        if (isInitializedRef.current) {
+            return;
+        }
 
-            try {
-                const loadedCardSets = FlashcardStorage.getCardSets();
-                setCardSets(loadedCardSets);
+        try {
+            const loadedCardSets = FlashcardStorage.getCardSets();
+            setCardSets(loadedCardSets);
 
-                // 데이터가 없으면 자동으로 테스트 데이터 생성
-                if (loadedCardSets.length === 0) {
-                    console.log('초기 데이터가 없습니다. 테스트 데이터를 생성합니다...');
-                    await FlashcardStorage.createInterviewTestData();
-                    // 데이터 다시 로드
-                    const updatedCardSets = FlashcardStorage.getCardSets();
-                    setCardSets(updatedCardSets);
-                }
-
-                // 초기화 완료 표시
-                isInitializedRef.current = true;
-            } catch (error) {
-                console.error('데이터 로드 실패:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        initializeData();
+            // 초기화 완료 표시
+            isInitializedRef.current = true;
+        } catch (error) {
+            console.error('데이터 로드 실패:', error);
+        } finally {
+            setIsLoading(false);
+        }
     }, []);
 
     return {
