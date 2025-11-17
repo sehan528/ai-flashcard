@@ -91,7 +91,7 @@ def process_directory(directory):
 if __name__ == '__main__':
     # Get the script directory
     script_dir = Path(__file__).parent
-    dataset_dir = script_dir.parent / 'public' / 'dataset'
+    dataset_dir = script_dir.parent / 'public' / 'data' / 'dataset'
 
     print("Fixing dataset formats...\n")
     process_directory(dataset_dir)

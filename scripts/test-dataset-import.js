@@ -52,7 +52,7 @@ function validateCardSet(set) {
 }
 
 // Test the DB dataset
-const dbJsonPath = path.join(__dirname, '../public/dataset/db/db.json');
+const dbJsonPath = path.join(__dirname, '../public/data/dataset/db/db.json');
 
 console.log('Testing DB dataset import validation...\n');
 

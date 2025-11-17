@@ -58,7 +58,7 @@ function fixDatasetFormat(filePath) {
 }
 
 // Process all dataset files
-const datasetDir = path.join(__dirname, '../public/dataset');
+const datasetDir = path.join(__dirname, '../public/data/dataset');
 
 function processDirectory(dir) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
