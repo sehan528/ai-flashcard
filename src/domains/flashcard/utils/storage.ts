@@ -108,6 +108,9 @@ export class FlashcardStorage {
                 return;
             }
 
+            // ⚠️ 중요: 비동기 함수 진입 시점에 즉시 플래그 설정 (동시 호출 방지)
+            localStorage.setItem(INIT_FLAG_KEY, 'true');
+
             // 기존 카드셋 목록 가져오기
             const existingCardSets = this.getCardSets();
             const existingNames = new Set(existingCardSets.map(set => set.name));
@@ -175,12 +178,15 @@ export class FlashcardStorage {
 
             console.log(`면접 대비 테스트 데이터 생성 완료! (생성: ${importedCount}개, 건너뜀: ${skippedCount}개)`);
 
-            // 초기화 완료 플래그 저장
-            if (importedCount > 0) {
-                localStorage.setItem(INIT_FLAG_KEY, 'true');
+            // 데이터 생성 실패 시 플래그 제거 (재시도 가능하도록)
+            if (importedCount === 0) {
+                localStorage.removeItem(INIT_FLAG_KEY);
+                console.warn('테스트 데이터 생성 실패: 생성된 카드셋이 없습니다.');
             }
         } catch (error) {
             console.error('테스트 데이터 생성 실패:', error);
+            // 에러 발생 시 플래그 제거 (재시도 가능하도록)
+            localStorage.removeItem(INIT_FLAG_KEY);
         }
     }
 
