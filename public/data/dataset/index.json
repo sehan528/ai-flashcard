@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "generatedAt": "AUTO_GENERATED",
-  "totalDatasets": 1,
+  "totalDatasets": 2,
   "categories": {
     "db": [
       {
@@ -11,6 +11,16 @@
         "description": "데이터베이스 핵심 개념 및 면접 질문",
         "cardCount": 60,
         "fileName": "db.json"
+      }
+    ],
+    "ds": [
+      {
+        "category": "ds",
+        "path": "/data/dataset/ds/ds.json",
+        "name": "자료구조",
+        "description": "자료구조 핵심 개념 및 면접 질문",
+        "cardCount": 62,
+        "fileName": "ds.json"
       }
     ]
   },
@@ -22,6 +32,14 @@
       "description": "데이터베이스 핵심 개념 및 면접 질문",
       "cardCount": 60,
       "fileName": "db.json"
+    },
+    {
+      "category": "ds",
+      "path": "/data/dataset/ds/ds.json",
+      "name": "자료구조",
+      "description": "자료구조 핵심 개념 및 면접 질문",
+      "cardCount": 62,
+      "fileName": "ds.json"
     }
   ]
 }

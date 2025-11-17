@@ -447,6 +447,235 @@
         "Bellman-Ford",
         "Floyd-Warshall"
       ]
+    },
+    {
+      "question": "트리에서는 어떤 방식으로 최단거리를 구할 수 있을까요? (위 방법을 사용하지 않고)",
+      "answer": "## 트리에서의 최단거리\n\n**트리 특성:** 두 정점 사이의 경로는 유일\n\n→ **BFS/DFS 한 번으로 충분**\n\n---\n\n## 방법 1: DFS\n\n```java\nint findDistance(int start, int end) {\n    return dfs(start, end, -1, 0);\n}\n\nint dfs(int curr, int target, int parent, int depth) {\n    if (curr == target) {\n        return depth;\n    }\n    \n    for (int child : tree[curr]) {\n        if (child != parent) {  // 부모로 역행 방지\n            int result = dfs(child, target, curr, depth + 1);\n            if (result != -1) {\n                return result;\n            }\n        }\n    }\n    \n    return -1;  // 못 찾음\n}\n\n// 시간: O(V)\n```\n\n---\n\n## 방법 2: LCA (Lowest Common Ancestor)\n\n**전처리 + 빠른 쿼리**\n\n```java\nclass LCA {\n    int[] depth;\n    int[][] parent;  // parent[v][i] = v의 2^i번째 조상\n    int maxLog;\n    \n    void preprocess(int root) {\n        maxLog = (int)(Math.log(V) / Math.log(2)) + 1;\n        parent = new int[V][maxLog];\n        depth = new int[V];\n        \n        dfs(root, -1, 0);\n        \n        // DP로 2^i 조상 채우기\n        for (int j = 1; j < maxLog; j++) {\n            for (int i = 0; i < V; i++) {\n                if (parent[i][j-1] != -1) {\n                    parent[i][j] = parent[parent[i][j-1]][j-1];\n                }\n            }\n        }\n    }\n    \n    void dfs(int v, int p, int d) {\n        parent[v][0] = p;\n        depth[v] = d;\n        \n        for (int child : tree[v]) {\n            if (child != p) {\n                dfs(child, v, d + 1);\n            }\n        }\n    }\n    \n    int lca(int u, int v) {\n        // depth 맞추기\n        if (depth[u] < depth[v]) {\n            int temp = u; u = v; v = temp;\n        }\n        \n        int diff = depth[u] - depth[v];\n        for (int i = 0; i < maxLog; i++) {\n            if ((diff & (1 << i)) != 0) {\n                u = parent[u][i];\n            }\n        }\n        \n        if (u == v) return u;\n        \n        // LCA 찾기\n        for (int i = maxLog - 1; i >= 0; i--) {\n            if (parent[u][i] != parent[v][i]) {\n                u = parent[u][i];\n                v = parent[v][i];\n            }\n        }\n        \n        return parent[u][0];\n    }\n    \n    int distance(int u, int v) {\n        int l = lca(u, v);\n        return depth[u] + depth[v] - 2 * depth[l];\n    }\n}\n\n// 전처리: O(V log V)\n// 쿼리: O(log V)\n```\n\n---\n\n## 결론\n\n**트리 최단거리:**\n- 단일 쿼리: DFS O(V)\n- 다중 쿼리: LCA O(log V)",
+      "type": "essay",
+      "tags": [
+        "트리",
+        "최단거리",
+        "LCA",
+        "DFS"
+      ]
+    },
+    {
+      "question": "다익스트라 알고리즘에서, 힙을 사용하지 않고 구현한다면 시간복잡도가 어떻게 변화할까요?",
+      "answer": "## 다익스트라 구현 방식 비교\n\n### 힙 사용 (우선순위 큐)\n\n```java\nint[] dijkstra(int start) {\n    PriorityQueue<int[]> pq = new PriorityQueue<>(\n        Comparator.comparingInt(a -> a[1])\n    );\n    int[] dist = new int[V];\n    Arrays.fill(dist, INF);\n    dist[start] = 0;\n    pq.offer(new int[]{start, 0});\n    \n    while (!pq.isEmpty()) {\n        int[] curr = pq.poll();  // O(log V)\n        int v = curr[0];\n        \n        if (curr[1] > dist[v]) continue;\n        \n        for (Edge e : graph[v]) {\n            if (dist[v] + e.weight < dist[e.to]) {\n                dist[e.to] = dist[v] + e.weight;\n                pq.offer(new int[]{e.to, dist[e.to]});  // O(log V)\n            }\n        }\n    }\n    return dist;\n}\n\n// 시간: O((V + E) log V)\n```\n\n---\n\n### 힙 미사용 (배열 선형 탐색)\n\n```java\nint[] dijkstraArray(int start) {\n    int[] dist = new int[V];\n    boolean[] visited = new boolean[V];\n    Arrays.fill(dist, INF);\n    dist[start] = 0;\n    \n    for (int i = 0; i < V; i++) {\n        // 최소 거리 정점 찾기 - O(V)\n        int minDist = INF;\n        int u = -1;\n        \n        for (int v = 0; v < V; v++) {\n            if (!visited[v] && dist[v] < minDist) {\n                minDist = dist[v];\n                u = v;\n            }\n        }\n        \n        if (u == -1) break;\n        visited[u] = true;\n        \n        // 인접 정점 업데이트\n        for (Edge e : graph[u]) {\n            if (dist[u] + e.weight < dist[e.to]) {\n                dist[e.to] = dist[u] + e.weight;\n            }\n        }\n    }\n    return dist;\n}\n\n// 시간: O(V²)\n```\n\n---\n\n## 시간복잡도 비교\n\n| 연산 | 힙 사용 | 배열 사용 |\n|------|---------|----------|\n| 최소값 찾기 | O(log V) | **O(V)** |\n| 거리 업데이트 | O(log V) | O(1) |\n| 전체 | **O((V+E) log V)** | **O(V²)** |\n\n---\n\n## 언제 배열이 더 빠를까?\n\n**밀집 그래프 (E ≈ V²):**\n\n```\nE = V²일 때:\n\n힙: O((V + V²) log V) = O(V² log V)\n배열: O(V²)\n\n→ 배열이 log V 배 빠름!\n```\n\n**희소 그래프 (E << V²):**\n\n```\nE = V일 때:\n\n힙: O(V log V)\n배열: O(V²)\n\n→ 힙이 V/log V 배 빠름!\n```\n\n---\n\n## 성능 벤치마크\n\n```java\n// V=1000, E=5000 (희소)\n\n힙:   15ms   ★\n배열: 500ms\n\n// V=1000, E=500,000 (밀집)\n\n힙:   80ms\n배열: 500ms  ★ (근접)\n\n// V=100, E=9900 (거의 완전)\n\n힙:   5ms\n배열: 2ms    ★ (빠름)\n```\n\n---\n\n## 결론\n\n**힙 사용: O((V+E) log V)**\n- 희소 그래프 우세\n- 대부분의 경우 선호\n\n**배열 사용: O(V²)**\n- 밀집 그래프에서 유리\n- 구현 간단",
+      "type": "essay",
+      "tags": [
+        "Dijkstra",
+        "시간복잡도",
+        "힙",
+        "우선순위 큐"
+      ]
+    },
+    {
+      "question": "정점의 개수가 N개, 간선의 개수가 N^3 개라면, 어떤 알고리즘이 효율적일까요?",
+      "answer": "## N개 정점, N³개 간선 - 최단거리 알고리즘\n\n### 다익스트라 분석\n\n**힙 사용:**\n```\nO((V + E) log V)\n= O((N + N³) log N)\n= O(N³ log N)\n```\n\n**배열 사용:**\n```\nO(V²)\n= O(N²)\n\n→ 배열 다익스트라가 N log N 배 빠름! ★\n```\n\n---\n\n### 플로이드-워셜\n\n```\nO(V³)\n= O(N³)\n\n→ 배열 다익스트라(O(N²))보다 N배 느림\n```\n\n---\n\n## 결론\n\n**E = N³ → 배열 다익스트라 사용**\n\n```\n배열 다익스트라: O(N²)        ★ 최고\n힙 다익스트라:   O(N³ log N)\n플로이드-워셜:   O(N³)\n```\n\n**이유:**\n- 매우 밀집한 그래프\n- 선형 탐색이 힙보다 효율적",
+      "type": "essay",
+      "tags": [
+        "최단거리",
+        "Dijkstra",
+        "밀집 그래프"
+      ]
+    },
+    {
+      "question": "A* 알고리즘에 대해 설명해 주세요. 이 알고리즘은 다익스트라와 비교해서 어떤 성능을 낼까요?",
+      "answer": "## A* 알고리즘\n\n**정의:** 휴리스틱을 사용한 최단경로 알고리즘\n\n**핵심:**\n```\nf(n) = g(n) + h(n)\n\ng(n) = 시작점부터 n까지의 실제 비용\nh(n) = n부터 목표까지의 추정 비용 (휴리스틱)\n```\n\n---\n\n## 구현\n\n```java\nint astar(int start, int goal) {\n    PriorityQueue<Node> pq = new PriorityQueue<>(\n        Comparator.comparingInt(n -> n.f)\n    );\n    \n    int[] g = new int[V];  // 실제 비용\n    Arrays.fill(g, INF);\n    g[start] = 0;\n    \n    pq.offer(new Node(start, 0, heuristic(start, goal)));\n    \n    while (!pq.isEmpty()) {\n        Node curr = pq.poll();\n        int v = curr.id;\n        \n        if (v == goal) {\n            return g[v];  // 목표 도달\n        }\n        \n        if (curr.g > g[v]) continue;\n        \n        for (Edge e : graph[v]) {\n            int newG = g[v] + e.weight;\n            \n            if (newG < g[e.to]) {\n                g[e.to] = newG;\n                int h = heuristic(e.to, goal);\n                pq.offer(new Node(e.to, newG, newG + h));\n            }\n        }\n    }\n    \n    return -1;\n}\n\nstatic class Node {\n    int id, g, f;  // f = g + h\n    Node(int id, int g, int f) {\n        this.id = id; this.g = g; this.f = f;\n    }\n}\n```\n\n---\n\n## 휴리스틱 함수\n\n**격자 (Grid):**\n```java\n// 맨해튼 거리 (상하좌우만)\nint heuristic(int x1, int y1, int x2, int y2) {\n    return Math.abs(x1 - x2) + Math.abs(y1 - y2);\n}\n\n// 유클리드 거리 (대각선 가능)\nint heuristic(int x1, int y1, int x2, int y2) {\n    return (int)Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));\n}\n```\n\n**조건: Admissible (과대평가 안 함)**\n```\nh(n) ≤ 실제 최단거리\n\n→ 최적해 보장\n```\n\n---\n\n## 다익스트라 vs A*\n\n**다익스트라:**\n```java\nf(n) = g(n)  // 휴리스틱 없음\n\n모든 방향으로 탐색\n```\n\n**A*:**\n```java\nf(n) = g(n) + h(n)  // 목표 방향 우선\n\n목표 쪽으로 집중 탐색\n```\n\n---\n\n## 성능 비교\n\n```java\n// 100x100 격자, 시작(0,0) → 목표(99,99)\n\nDijkstra:\n  방문 정점: 10,000개  (전체 탐색)\n  시간: 50ms\n\nA* (맨해튼):\n  방문 정점: 200개  (목표 방향만)\n  시간: 2ms  ★ (25배 빠름)\n```\n\n**시각화:**\n```\nDijkstra (원형 확장):\n    S ····\n   ······\n  ········\n ··········\n············G\n\nA* (목표 방향):\n    S\n     ·\n      ··\n       ···\n         ···G\n```\n\n---\n\n## 시간복잡도\n\n**최악:** O((V+E) log V) - 다익스트라와 동일\n\n**평균:** **훨씬 빠름** (휴리스틱 품질에 따라)\n\n---\n\n## 실전 사용\n\n**게임 AI (길찾기):**\n```java\n// 유닛 이동\nPath findPath(Unit unit, Point target) {\n    return astar(unit.position, target,\n        (p) -> manhattanDistance(p, target)\n    );\n}\n```\n\n**내비게이션:**\n```java\n// GPS 경로\nh(node) = 직선거리(node, 목적지)\n```\n\n---\n\n## 결론\n\n**A*:**\n- 다익스트라 + 휴리스틱\n- 목표 지향 탐색\n- 실전에서 훨씬 빠름\n\n**vs 다익스트라:**\n- 최악 동일: O((V+E) log V)\n- 평균 훨씬 빠름 (10~100배)\n- 휴리스틱 필요",
+      "type": "essay",
+      "tags": [
+        "A*",
+        "휴리스틱",
+        "최단경로",
+        "Dijkstra"
+      ]
+    },
+    {
+      "question": "음수 간선이 있을 때와, 음수 사이클이 있을 때 각각 어떤 최단거리 알고리즘을 사용해야 하는지 설명해 주세요.",
+      "answer": "## 음수 간선/사이클 처리\n\n### 1. 음수 간선 O, 음수 사이클 X\n\n**사용: Bellman-Ford**\n\n```java\nint[] bellmanFord(int start) {\n    int[] dist = new int[V];\n    Arrays.fill(dist, INF);\n    dist[start] = 0;\n    \n    // V-1번 반복\n    for (int i = 0; i < V - 1; i++) {\n        for (Edge e : edges) {\n            if (dist[e.from] != INF &&\n                dist[e.from] + e.weight < dist[e.to]) {\n                dist[e.to] = dist[e.from] + e.weight;\n            }\n        }\n    }\n    \n    // 음수 사이클 검사\n    for (Edge e : edges) {\n        if (dist[e.from] + e.weight < dist[e.to]) {\n            return null;  // 음수 사이클 존재\n        }\n    }\n    \n    return dist;\n}\n\n// 시간: O(VE)\n```\n\n**예시:**\n```\n    1 --(-2)-- 2\n    |          |\n   (3)        (1)\n    |          |\n    3 --(4)--- 4\n\n음수 간선: 1→2 (-2)\n음수 사이클: 없음\n\n→ Bellman-Ford 사용 가능 ✓\n```\n\n---\n\n### 2. 음수 사이클 존재\n\n**문제:** 최단거리가 -∞로 수렴\n\n```\n  1 --(-2)-- 2\n  ↑           |\n  |         (1)\n(3)           |\n  |           ↓\n  ← -------- 3\n      (-3)\n\n사이클: 1 → 2 → 3 → 1\n비용: -2 + 1 + (-3) = -4 < 0\n\n한 바퀴: -4\n두 바퀴: -8\n...\n→ -∞ (최단거리 정의 불가)\n```\n\n**해결: 음수 사이클 탐지**\n\n```java\nboolean hasNegativeCycle() {\n    int[] dist = new int[V];\n    \n    // V-1번 완화\n    for (int i = 0; i < V - 1; i++) {\n        for (Edge e : edges) {\n            if (dist[e.from] + e.weight < dist[e.to]) {\n                dist[e.to] = dist[e.from] + e.weight;\n            }\n        }\n    }\n    \n    // V번째에 갱신되면 음수 사이클\n    for (Edge e : edges) {\n        if (dist[e.from] + e.weight < dist[e.to]) {\n            return true;  // 음수 사이클 존재!\n        }\n    }\n    \n    return false;\n}\n```\n\n---\n\n### 3. SPFA (Shortest Path Faster Algorithm)\n\n**개선된 Bellman-Ford**\n\n```java\nint[] spfa(int start) {\n    int[] dist = new int[V];\n    int[] count = new int[V];  // 각 정점 업데이트 횟수\n    boolean[] inQueue = new boolean[V];\n    \n    Arrays.fill(dist, INF);\n    dist[start] = 0;\n    \n    Queue<Integer> q = new LinkedList<>();\n    q.offer(start);\n    inQueue[start] = true;\n    \n    while (!q.isEmpty()) {\n        int v = q.poll();\n        inQueue[v] = false;\n        \n        for (Edge e : graph[v]) {\n            if (dist[v] + e.weight < dist[e.to]) {\n                dist[e.to] = dist[v] + e.weight;\n                \n                if (++count[e.to] >= V) {\n                    return null;  // 음수 사이클 감지\n                }\n                \n                if (!inQueue[e.to]) {\n                    q.offer(e.to);\n                    inQueue[e.to] = true;\n                }\n            }\n        }\n    }\n    \n    return dist;\n}\n\n// 평균: O(E)\n// 최악: O(VE)\n```\n\n---\n\n## 알고리즘 선택\n\n| 상황 | 알고리즘 | 시간 |\n|------|---------|------|\n| 양수 간선만 | Dijkstra | O((V+E)logV) ★ |\n| 음수 간선 O, 사이클 X | Bellman-Ford | O(VE) |\n| 음수 간선 O, 사이클 X | SPFA | O(E)~O(VE) |\n| 음수 사이클 탐지 | Bellman-Ford | O(VE) |\n| 모든 쌍, 음수 O | Floyd-Warshall | O(V³) |\n\n---\n\n## 왜 Dijkstra는 안 될까?\n\n```\n음수 간선:\n\n  S --1-- A\n  |       |\n  5     (-3)\n  |       |\n  B ------+\n\nDijkstra:\n1. S 방문, dist[A]=1, dist[B]=5\n2. A 방문 (최소), dist[B]=min(5, 1+(-3))=-2\n3. B 방문\n\n→ S가 이미 확정되어 S 재방문 불가\n→ 잘못된 결과!\n```\n\n---\n\n## 결론\n\n**음수 간선:**\n- Bellman-Ford / SPFA\n- Dijkstra 사용 불가\n\n**음수 사이클:**\n- 최단거리 정의 불가 (-∞)\n- 탐지만 가능",
+      "type": "essay",
+      "tags": [
+        "음수 간선",
+        "음수 사이클",
+        "Bellman-Ford",
+        "SPFA"
+      ]
+    },
+    {
+      "question": "재귀함수에 대해 설명해 주세요.",
+      "answer": "## 재귀함수 (Recursion)\n\n**정의:** 함수가 자기 자신을 호출하는 프로그래밍 기법\n\n---\n\n## 기본 구조\n\n```java\nint factorial(int n) {\n    // 1. 기저 사례 (Base Case)\n    if (n <= 1) {\n        return 1;\n    }\n    \n    // 2. 재귀 호출 (Recursive Case)\n    return n * factorial(n - 1);\n}\n\n// factorial(5)\n// = 5 * factorial(4)\n// = 5 * 4 * factorial(3)\n// = 5 * 4 * 3 * factorial(2)\n// = 5 * 4 * 3 * 2 * factorial(1)\n// = 5 * 4 * 3 * 2 * 1\n// = 120\n```\n\n---\n\n## 재귀의 3요소\n\n**1. 기저 사례 (Base Case)**\n```java\nif (n <= 1) return 1;  // 종료 조건\n```\n\n**2. 재귀 호출 (Recursive Call)**\n```java\nfactorial(n - 1)  // 자기 자신 호출\n```\n\n**3. 문제 축소 (Smaller Problem)**\n```java\nn → n-1  // 입력 크기 감소\n```\n\n---\n\n## 재귀 vs 반복\n\n**재귀:**\n```java\nint sum(int n) {\n    if (n == 0) return 0;\n    return n + sum(n - 1);\n}\n```\n\n**반복:**\n```java\nint sum(int n) {\n    int result = 0;\n    for (int i = 1; i <= n; i++) {\n        result += i;\n    }\n    return result;\n}\n```\n\n---\n\n## 장단점\n\n**장점:**\n- 코드 간결\n- 자연스러운 문제 표현 (트리, 분할정복)\n- 수학적 정의와 일치\n\n**단점:**\n- 스택 오버플로 위험\n- 함수 호출 오버헤드\n- 반복문보다 느림\n\n---\n\n## 결론\n\n**재귀:**\n- 자기 자신 호출\n- 기저 사례 + 재귀 호출\n- 트리/분할정복에 적합",
+      "type": "essay",
+      "tags": [
+        "재귀",
+        "Recursion",
+        "기저 사례"
+      ]
+    },
+    {
+      "question": "재귀 함수의 동작 과정을 Call Stack을 활용해서 설명해 주세요.",
+      "answer": "## Call Stack과 재귀\n\n### 예시: factorial(4)\n\n```java\nint factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}\n\nfactorial(4);\n```\n\n---\n\n## Call Stack 동작\n\n### Phase 1: 호출 (Push)\n\n```\nfactorial(4) 호출\n┌─────────────────┐\n│ factorial(4)    │ ← 스택 top\n│ n = 4           │\n│ return 4 * ?    │ (대기)\n└─────────────────┘\n\nfactorial(3) 호출\n┌─────────────────┐\n│ factorial(3)    │ ← top\n│ n = 3           │\n│ return 3 * ?    │\n├─────────────────┤\n│ factorial(4)    │\n│ return 4 * ?    │\n└─────────────────┘\n\nfactorial(2) 호출\n┌─────────────────┐\n│ factorial(2)    │ ← top\n│ n = 2           │\n│ return 2 * ?    │\n├─────────────────┤\n│ factorial(3)    │\n│ return 3 * ?    │\n├─────────────────┤\n│ factorial(4)    │\n│ return 4 * ?    │\n└─────────────────┘\n\nfactorial(1) 호출\n┌─────────────────┐\n│ factorial(1)    │ ← top\n│ n = 1           │\n│ return 1        │ ✓ 기저사례\n├─────────────────┤\n│ factorial(2)    │\n│ return 2 * ?    │\n├─────────────────┤\n│ factorial(3)    │\n│ return 3 * ?    │\n├─────────────────┤\n│ factorial(4)    │\n│ return 4 * ?    │\n└─────────────────┘\n```\n\n---\n\n### Phase 2: 반환 (Pop)\n\n```\nfactorial(1) 반환: 1\n┌─────────────────┐\n│ factorial(2)    │ ← top\n│ return 2 * 1    │ = 2\n├─────────────────┤\n│ factorial(3)    │\n│ return 3 * ?    │\n├─────────────────┤\n│ factorial(4)    │\n│ return 4 * ?    │\n└─────────────────┘\n\nfactorial(2) 반환: 2\n┌─────────────────┐\n│ factorial(3)    │ ← top\n│ return 3 * 2    │ = 6\n├─────────────────┤\n│ factorial(4)    │\n│ return 4 * ?    │\n└─────────────────┘\n\nfactorial(3) 반환: 6\n┌─────────────────┐\n│ factorial(4)    │ ← top\n│ return 4 * 6    │ = 24\n└─────────────────┘\n\nfactorial(4) 반환: 24\n(스택 비움)\n\n최종 결과: 24\n```\n\n---\n\n## 피보나치 예시\n\n```java\nint fib(int n) {\n    if (n <= 1) return n;\n    return fib(n-1) + fib(n-2);\n}\n\nfib(4);\n```\n\n**Call Stack (일부):**\n```\nfib(4)\n├─ fib(3)\n│  ├─ fib(2)\n│  │  ├─ fib(1) → 1\n│  │  └─ fib(0) → 0\n│  └─ fib(1) → 1\n└─ fib(2)\n   ├─ fib(1) → 1\n   └─ fib(0) → 0\n\n스택 최대 깊이: 5 (n+1)\n```\n\n---\n\n## 스택 오버플로\n\n```java\nint infinite(int n) {\n    return infinite(n + 1);  // 기저 사례 없음!\n}\n\ninfinite(0);\n\n// 스택:\n┌─────────────┐\n│ infinite(∞) │\n├─────────────┤\n│ infinite(5) │\n├─────────────┤\n│ infinite(4) │\n├─────────────┤\n│ ...         │\n└─────────────┘\n\n→ StackOverflowError\n```\n\n---\n\n## 공간복잡도\n\n**재귀 깊이 = 스택 공간**\n\n```java\n// 선형 재귀\nfactorial(n): O(n) 스택\n\n// 트리 재귀\nfib(n): O(n) 스택 (최대 깊이)\n\n// 꼬리 재귀 (최적화 시)\ntailRecursive(n): O(1) 스택\n```\n\n---\n\n## 결론\n\n**Call Stack:**\n- 함수 호출 시 Push\n- 반환 시 Pop\n- 재귀 깊이 = 스택 크기\n- 오버플로 주의",
+      "type": "essay",
+      "tags": [
+        "재귀",
+        "Call Stack",
+        "스택 오버플로"
+      ]
+    },
+    {
+      "question": "언어의 스펙에 따라, 재귀함수의 최적화를 진행해주는 경우가 있습니다. 어떤 경우에 재귀함수의 최적화가 가능하며, 이를 어떻게 최적화 할 수 있을지 설명해 주세요.",
+      "answer": "## 꼬리 재귀 최적화 (Tail Call Optimization, TCO)\n\n### 꼬리 재귀란?\n\n**정의:** 재귀 호출이 함수의 마지막 연산인 경우\n\n---\n\n## 일반 재귀 vs 꼬리 재귀\n\n**일반 재귀 (Not Tail-Recursive):**\n```java\nint factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);  // 곱셈 연산이 남음\n    //     ↑ 재귀 호출 후 곱셈 수행\n}\n\n// 스택: O(n)\n```\n\n**꼬리 재귀 (Tail-Recursive):**\n```java\nint factorialTail(int n, int acc) {\n    if (n <= 1) return acc;\n    return factorialTail(n - 1, n * acc);  // 마지막 연산\n    //     ↑ 재귀 호출만, 추가 연산 없음\n}\n\n// TCO 시: O(1) 스택\n```\n\n---\n\n## TCO 원리\n\n**일반 재귀 (스택 누적):**\n```\nfactorial(4)\n→ 4 * factorial(3)        스택 유지 (곱셈 대기)\n  → 3 * factorial(2)      스택 유지\n    → 2 * factorial(1)    스택 유지\n      → 1                 반환 시작\n    ← 2 * 1 = 2\n  ← 3 * 2 = 6\n← 4 * 6 = 24\n\n최대 스택 깊이: 4\n```\n\n**꼬리 재귀 (스택 재사용):**\n```\nfactorialTail(4, 1)\n→ factorialTail(3, 4)     스택 재사용 ✓\n→ factorialTail(2, 12)    스택 재사용 ✓\n→ factorialTail(1, 24)    스택 재사용 ✓\n→ 24\n\n최대 스택 깊이: 1\n```\n\n**컴파일러 최적화:**\n```\n꼬리 재귀 → 반복문으로 변환\n\nfactorialTail(n, acc):\n  while (n > 1):\n    acc = n * acc\n    n = n - 1\n  return acc\n\n→ O(1) 스택!\n```\n\n---\n\n## 언어별 TCO 지원\n\n| 언어 | TCO 지원 | 비고 |\n|------|---------|------|\n| **Scheme** | ✅ 필수 | 언어 명세에 포함 |\n| **Haskell** | ✅ 자동 | 함수형 언어 |\n| **Scala** | ✅ @tailrec | 명시적 어노테이션 |\n| **JavaScript** | ✅ ES6+ | Strict Mode에서만 |\n| **Python** | ❌ | Guido가 의도적으로 미지원 |\n| **Java** | ❌ | JVM 미지원 |\n| **C/C++** | ⚠️ | 컴파일러 의존 (GCC -O2) |\n\n---\n\n## 변환 예시\n\n### Factorial\n\n**Before (일반):**\n```scala\ndef factorial(n: Int): Int = {\n  if (n <= 1) 1\n  else n * factorial(n - 1)  // Not tail-recursive\n}\n```\n\n**After (꼬리):**\n```scala\n@tailrec\ndef factorial(n: Int, acc: Int = 1): Int = {\n  if (n <= 1) acc\n  else factorial(n - 1, n * acc)  // Tail-recursive ✓\n}\n```\n\n### Fibonacci\n\n**Before:**\n```scala\ndef fib(n: Int): Int = {\n  if (n <= 1) n\n  else fib(n - 1) + fib(n - 2)  // 두 재귀 호출\n}\n```\n\n**After:**\n```scala\n@tailrec\ndef fib(n: Int, a: Int = 0, b: Int = 1): Int = {\n  if (n == 0) a\n  else fib(n - 1, b, a + b)  // 꼬리 재귀\n}\n```\n\n---\n\n## Java/Python 대안\n\n**Java (명시적 반복):**\n```java\nint factorial(int n) {\n    int acc = 1;\n    while (n > 1) {\n        acc *= n;\n        n--;\n    }\n    return acc;\n}\n\n// TCO 없으므로 직접 변환\n```\n\n**Python (반복 권장):**\n```python\ndef factorial(n):\n    acc = 1\n    for i in range(1, n + 1):\n        acc *= i\n    return acc\n\n# 재귀보다 반복문 사용 권장\n```\n\n---\n\n## 꼬리 재귀 패턴\n\n**누산기 (Accumulator) 패턴:**\n```scala\ndef sum(list: List[Int], acc: Int = 0): Int = {\n  if (list.isEmpty) acc\n  else sum(list.tail, acc + list.head)\n}\n```\n\n**연속 전달 (CPS - Continuation Passing Style):**\n```scala\ndef factorial(n: Int)(cont: Int => Int): Int = {\n  if (n <= 1) cont(1)\n  else factorial(n - 1)(x => cont(n * x))\n}\n```\n\n---\n\n## 결론\n\n**꼬리 재귀 최적화:**\n- 재귀 호출이 마지막 연산\n- 스택 재사용 → O(1) 공간\n- 언어마다 지원 다름\n\n**변환 방법:**\n- 누산기 추가\n- 반복문으로 변환 (미지원 언어)\n\n**선택:**\n```\nTCO 지원: 꼬리 재귀 사용\nTCO 미지원: 반복문 사용\n```",
+      "type": "essay",
+      "tags": [
+        "꼬리 재귀",
+        "TCO",
+        "최적화",
+        "재귀"
+      ]
+    },
+    {
+      "question": "MST가 무엇이고, 어떻게 구할 수 있을지 설명해 주세요.",
+      "answer": "## MST (Minimum Spanning Tree)\n\n**정의:** 모든 정점을 연결하는 최소 비용 트리\n\n**조건:**\n1. 모든 정점 포함\n2. 사이클 없음\n3. 간선 가중치 합 최소\n4. V개 정점 → V-1개 간선\n\n---\n\n## 알고리즘\n\n### 1. Kruskal 알고리즘\n\n**개념:** 간선을 가중치 순으로 선택\n\n```java\nint kruskal() {\n    // 1. 간선 정렬\n    Collections.sort(edges);\n    \n    UnionFind uf = new UnionFind(V);\n    int cost = 0;\n    int count = 0;\n    \n    // 2. 간선 선택\n    for (Edge e : edges) {\n        // 사이클 검사\n        if (uf.find(e.u) != uf.find(e.v)) {\n            uf.union(e.u, e.v);\n            cost += e.weight;\n            count++;\n            \n            if (count == V - 1) break;\n        }\n    }\n    \n    return cost;\n}\n\n// 시간: O(E log E)\n```\n\n---\n\n### 2. Prim 알고리즘\n\n**개념:** 정점을 하나씩 추가\n\n```java\nint prim(int start) {\n    boolean[] visited = new boolean[V];\n    PriorityQueue<Edge> pq = new PriorityQueue<>();\n    \n    // 시작 정점\n    visited[start] = true;\n    for (Edge e : graph[start]) {\n        pq.offer(e);\n    }\n    \n    int cost = 0;\n    int count = 0;\n    \n    while (!pq.isEmpty() && count < V - 1) {\n        Edge e = pq.poll();\n        \n        if (visited[e.to]) continue;\n        \n        visited[e.to] = true;\n        cost += e.weight;\n        count++;\n        \n        for (Edge next : graph[e.to]) {\n            if (!visited[next.to]) {\n                pq.offer(next);\n            }\n        }\n    }\n    \n    return cost;\n}\n\n// 시간: O(E log V)\n```\n\n---\n\n## Kruskal vs Prim\n\n| 특성 | Kruskal | Prim |\n|------|---------|------|\n| 방식 | 간선 중심 | 정점 중심 |\n| 시간 | O(E log E) | O(E log V) |\n| 자료구조 | Union-Find | 우선순위 큐 |\n| 희소 그래프 | ✅ 유리 | - |\n| 밀집 그래프 | - | ✅ 유리 |\n\n---\n\n## 결론\n\n**MST:**\n- 최소 비용 연결 트리\n- Kruskal: 간선 정렬\n- Prim: 정점 확장",
+      "type": "essay",
+      "tags": [
+        "MST",
+        "Kruskal",
+        "Prim",
+        "최소 신장 트리"
+      ]
+    },
+    {
+      "question": "Kruskal 알고리즘에서 사용하는 Union-Find 자료구조에 대해 설명해 주세요.",
+      "answer": "## Union-Find (Disjoint Set)\n\n**목적:** 집합의 합치기와 찾기를 효율적으로\n\n**연산:**\n- `find(x)`: x가 속한 집합의 대표 찾기\n- `union(x, y)`: x와 y가 속한 집합 합치기\n\n---\n\n## 기본 구현\n\n```java\nclass UnionFind {\n    int[] parent;\n    \n    UnionFind(int n) {\n        parent = new int[n];\n        for (int i = 0; i < n; i++) {\n            parent[i] = i;  // 자기 자신이 부모\n        }\n    }\n    \n    int find(int x) {\n        if (parent[x] == x) {\n            return x;\n        }\n        return find(parent[x]);  // 재귀\n    }\n    \n    void union(int x, int y) {\n        int rootX = find(x);\n        int rootY = find(y);\n        \n        if (rootX != rootY) {\n            parent[rootY] = rootX;  // 합치기\n        }\n    }\n}\n\n// 시간: O(N) 최악\n```\n\n---\n\n## 최적화 1: 경로 압축 (Path Compression)\n\n```java\nint find(int x) {\n    if (parent[x] != x) {\n        parent[x] = find(parent[x]);  // 경로 압축!\n    }\n    return parent[x];\n}\n\n// 재귀 호출하면서 parent를 루트로 직접 연결\n\n예시:\n원래:  1 → 2 → 3 → 4\n압축:  1 ← 2\n       ↑   ↑\n       3   4\n\n// 시간: 거의 O(1)\n```\n\n---\n\n## 최적화 2: Union by Rank\n\n```java\nclass UnionFind {\n    int[] parent;\n    int[] rank;  // 트리 높이\n    \n    UnionFind(int n) {\n        parent = new int[n];\n        rank = new int[n];\n        for (int i = 0; i < n; i++) {\n            parent[i] = i;\n            rank[i] = 0;\n        }\n    }\n    \n    void union(int x, int y) {\n        int rootX = find(x);\n        int rootY = find(y);\n        \n        if (rootX == rootY) return;\n        \n        // 높이가 낮은 트리를 높은 트리 아래에\n        if (rank[rootX] < rank[rootY]) {\n            parent[rootX] = rootY;\n        } else if (rank[rootX] > rank[rootY]) {\n            parent[rootY] = rootX;\n        } else {\n            parent[rootY] = rootX;\n            rank[rootX]++;\n        }\n    }\n}\n\n// 트리 높이 최소화\n```\n\n---\n\n## 시간복잡도\n\n**기본:** O(N)\n**경로 압축:** O(log N)\n**경로 압축 + Union by Rank:** O(α(N))\n\n*α(N) = Inverse Ackermann (거의 상수)*\n\n---\n\n## Kruskal에서의 사용\n\n```java\nint kruskal() {\n    UnionFind uf = new UnionFind(V);\n    Collections.sort(edges);\n    \n    int cost = 0;\n    for (Edge e : edges) {\n        // 사이클 검사: 같은 집합?\n        if (uf.find(e.u) != uf.find(e.v)) {\n            uf.union(e.u, e.v);\n            cost += e.weight;\n        }\n    }\n    return cost;\n}\n```\n\n---\n\n## 결론\n\n**Union-Find:**\n- 집합 합치기/찾기\n- 경로 압축 + Union by Rank\n- 시간: 거의 O(1)\n- MST, 사이클 탐지에 사용",
+      "type": "essay",
+      "tags": [
+        "Union-Find",
+        "Disjoint Set",
+        "경로 압축",
+        "Kruskal"
+      ]
+    },
+    {
+      "question": "Kruskal 과 Prim 중, 어떤 것이 더 빠를까요?",
+      "answer": "## Kruskal vs Prim 속도 비교\n\n### 시간복잡도\n\n**Kruskal:** O(E log E)\n**Prim:** O(E log V)\n\n---\n\n## 그래프 유형별 비교\n\n### 희소 그래프 (E ≈ V)\n\n```\nE = V\n\nKruskal: O(V log V)\nPrim:    O(V log V)\n\n→ 거의 동일\n```\n\n### 밀집 그래프 (E ≈ V²)\n\n```\nE = V²\n\nKruskal: O(V² log V²) = O(2V² log V)\nPrim:    O(V² log V)\n\n→ Prim이 2배 빠름 ★\n```\n\n---\n\n## 실전 성능\n\n```java\n// V=1000, E=5000 (희소)\n\nKruskal: 15ms\nPrim:    18ms  (비슷)\n\n// V=1000, E=500,000 (밀집)\n\nKruskal: 850ms\nPrim:    420ms  ★ (2배 빠름)\n```\n\n---\n\n## 결론\n\n**희소:** 비슷\n**밀집:** Prim 우세",
+      "type": "essay",
+      "tags": [
+        "MST",
+        "Kruskal",
+        "Prim",
+        "성능 비교"
+      ]
+    },
+    {
+      "question": "Kruskal 과 Prim 알고리즘을 통해 얻어진 결과물은 무조건 트리인가요? 만약 그렇다면 증명해 주세요. 그렇지 않다면, 반례를 설명해 주세요.",
+      "answer": "## MST 결과는 트리인가?\n\n**답: 연결 그래프라면 항상 트리**\n\n---\n\n## 증명\n\n**트리 조건:**\n1. 사이클 없음\n2. 연결됨\n3. V개 정점 → V-1개 간선\n\n**Kruskal/Prim이 만족:**\n\n1. **사이클 없음:**\n   - Kruskal: Union-Find로 사이클 방지\n   - Prim: 방문한 정점 재방문 안 함\n\n2. **연결됨:**\n   - 모든 정점 포함\n   - 한 덩어리로 연결\n\n3. **V-1개 간선:**\n   - 정확히 V-1개 간선 선택\n\n→ 트리 조건 모두 만족 ✓\n\n---\n\n## 반례: 비연결 그래프\n\n```\n1 --- 2    4 --- 5\n\n연결 안 됨!\n\nKruskal 결과:\n1 --- 2    4 --- 5\n\n→ Forest (트리 아님)\n```\n\n---\n\n## 결론\n\n**연결 그래프:** 트리 ✓\n**비연결:** Forest",
+      "type": "essay",
+      "tags": [
+        "MST",
+        "트리",
+        "증명"
+      ]
+    },
+    {
+      "question": "Thread Safe 한 자료구조가 있을까요? 없다면, 어떻게 Thread Safe 하게 구성할 수 있을까요?",
+      "answer": "## Thread Safe 자료구조\n\n### Java\n\n**기본 자료구조: Not Thread-Safe**\n```java\nArrayList, HashMap, HashSet  // ❌\n```\n\n**Thread-Safe 자료구조:**\n```java\nVector, Hashtable           // ✅ (Legacy, 느림)\nConcurrentHashMap          // ✅ (추천)\nCopyOnWriteArrayList       // ✅ (읽기 많음)\nConcurrentLinkedQueue      // ✅\n```\n\n---\n\n## Thread-Safe 만들기\n\n### 1. synchronized\n\n```java\nclass ThreadSafeList<E> {\n    private List<E> list = new ArrayList<>();\n    \n    public synchronized void add(E e) {\n        list.add(e);\n    }\n    \n    public synchronized E get(int index) {\n        return list.get(index);\n    }\n}\n```\n\n### 2. Collections.synchronized\n\n```java\nList<String> list = \n    Collections.synchronizedList(new ArrayList<>());\n\nMap<K, V> map = \n    Collections.synchronizedMap(new HashMap<>());\n```\n\n### 3. ConcurrentHashMap\n\n```java\nConcurrentHashMap<K, V> map = new ConcurrentHashMap<>();\nmap.put(key, value);  // Thread-safe\n```\n\n---\n\n## 결론\n\n**Java:**\n- 기본: Not Safe\n- Concurrent 컬렉션 사용 (추천)\n- synchronized 래핑",
+      "type": "essay",
+      "tags": [
+        "Thread Safe",
+        "동시성",
+        "ConcurrentHashMap"
+      ]
+    },
+    {
+      "question": "배열의 길이를 알고 있다면, 조금 더 빠른 Thread Safe 한 연산을 만들 순 없을까요?",
+      "answer": "## 배열 길이 고정 → Lock-Free\n\n### AtomicIntegerArray\n\n```java\nAtomicIntegerArray arr = new AtomicIntegerArray(100);\n\n// Lock-free 연산\narr.set(i, value);              // O(1)\nint val = arr.get(i);           // O(1)\narr.compareAndSet(i, old, new); // CAS\n\n// 락 없이 Thread-Safe!\n```\n\n---\n\n## 장점\n\n1. **락 불필요**: CAS 사용\n2. **빠름**: 경쟁 없으면 단일 연산\n3. **교착 없음**: Lock-free\n\n---\n\n## 사용 예시\n\n```java\nclass ParallelCounter {\n    AtomicIntegerArray counters = \n        new AtomicIntegerArray(1000);\n    \n    void increment(int index) {\n        counters.incrementAndGet(index);  // Atomic!\n    }\n    \n    int get(int index) {\n        return counters.get(index);\n    }\n}\n\n// 여러 스레드가 동시에 안전하게 접근\n```\n\n---\n\n## 결론\n\n**고정 길이:**\n- AtomicArray 사용\n- Lock-Free\n- 빠름",
+      "type": "essay",
+      "tags": [
+        "Thread Safe",
+        "AtomicArray",
+        "Lock-Free"
+      ]
+    },
+    {
+      "question": "사용하고 있는 언어의 자료구조는 Thread Safe 한가요? 그렇지 않다면, Thread Safe 한 Wrapped Data Structure 를 제공하고 있나요?",
+      "answer": "## 언어별 Thread Safety\n\n### Java\n\n**기본: Not Safe**\n```java\nArrayList, HashMap  // ❌\n```\n\n**Wrapper:**\n```java\nCollections.synchronizedList()\nCollections.synchronizedMap()\n```\n\n**Concurrent:**\n```java\nConcurrentHashMap  // ✅ 추천\n```\n\n---\n\n### Python\n\n**GIL:** 전역 인터프리터 락\n```python\nlist, dict  // 부분적 Safe (GIL)\n\n# Thread-Safe 작업\nqueue.Queue()  // ✅\n```\n\n---\n\n### JavaScript\n\n**Single-Threaded**\n```javascript\n// Worker 사용 시에만 고려\n```\n\n---\n\n### C++\n\n**기본: Not Safe**\n```cpp\nstd::vector, std::map  // ❌\n\n// 직접 mutex 사용\nstd::mutex mtx;\n```\n\n---\n\n## 결론\n\n**대부분: Not Safe**\n**Java: Concurrent 컬렉션 제공**\n**Python: Queue 제공**",
+      "type": "essay",
+      "tags": [
+        "Thread Safe",
+        "언어별",
+        "동시성"
+      ]
+    },
+    {
+      "question": "문자열을 저장하고, 처리하는 주요 자료구조 및 알고리즘 (Trie, KMP, Rabin Karp 등) 에 대해 설명해 주세요.",
+      "answer": "## 문자열 자료구조/알고리즘\n\n### 1. Trie (트라이)\n\n**용도:** 문자열 검색, 자동완성\n\n```java\nclass TrieNode {\n    Map<Character, TrieNode> children = new HashMap<>();\n    boolean isEnd;\n}\n\nvoid insert(String word) {\n    TrieNode node = root;\n    for (char c : word.toCharArray()) {\n        node.children.putIfAbsent(c, new TrieNode());\n        node = node.children.get(c);\n    }\n    node.isEnd = true;\n}\n\nboolean search(String word) {\n    TrieNode node = root;\n    for (char c : word.toCharArray()) {\n        if (!node.children.containsKey(c)) return false;\n        node = node.children.get(c);\n    }\n    return node.isEnd;\n}\n\n// 시간: O(m), m = 문자열 길이\n```\n\n---\n\n### 2. KMP (패턴 매칭)\n\n**용도:** 문자열 검색 O(n+m)\n\n```java\nint kmp(String text, String pattern) {\n    int[] lps = computeLPS(pattern);\n    int i = 0, j = 0;\n    \n    while (i < text.length()) {\n        if (text.charAt(i) == pattern.charAt(j)) {\n            i++; j++;\n        }\n        \n        if (j == pattern.length()) {\n            return i - j;  // 찾음\n        } else if (i < text.length() && \n                   text.charAt(i) != pattern.charAt(j)) {\n            if (j != 0) {\n                j = lps[j - 1];  // 점프\n            } else {\n                i++;\n            }\n        }\n    }\n    return -1;\n}\n\n// 시간: O(n + m)\n```\n\n---\n\n### 3. Rabin-Karp (해싱)\n\n**용도:** 다중 패턴 검색\n\n```java\nint rabinKarp(String text, String pattern) {\n    int m = pattern.length();\n    int patternHash = hash(pattern);\n    int textHash = hash(text.substring(0, m));\n    \n    for (int i = 0; i <= text.length() - m; i++) {\n        if (patternHash == textHash) {\n            if (text.substring(i, i + m).equals(pattern)) {\n                return i;  // 찾음\n            }\n        }\n        \n        if (i < text.length() - m) {\n            textHash = rollingHash(textHash, \n                text.charAt(i), text.charAt(i + m), m);\n        }\n    }\n    return -1;\n}\n\n// 평균: O(n + m)\n// 최악: O(nm)\n```\n\n---\n\n## 비교\n\n| 알고리즘 | 시간 | 용도 |\n|---------|------|------|\n| Trie | O(m) | 사전, 자동완성 |\n| KMP | O(n+m) | 단일 패턴 |\n| Rabin-Karp | O(n+m) | 다중 패턴 |\n\n---\n\n## 결론\n\n**Trie:** 검색, 접두사\n**KMP:** 패턴 매칭\n**Rabin-Karp:** 다중 패턴",
+      "type": "essay",
+      "tags": [
+        "문자열",
+        "Trie",
+        "KMP",
+        "Rabin-Karp"
+      ]
+    },
+    {
+      "question": "이진탐색이 무엇인지 설명하고, 시간복잡도를 증명해 보세요.",
+      "answer": "## 이진탐색 (Binary Search)\n\n**정의:** 정렬된 배열에서 반씩 나누어 검색\n\n---\n\n## 구현\n\n```java\nint binarySearch(int[] arr, int target) {\n    int left = 0, right = arr.length - 1;\n    \n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        \n        if (arr[mid] == target) {\n            return mid;\n        } else if (arr[mid] < target) {\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    return -1;\n}\n```\n\n---\n\n## 시간복잡도 증명\n\n**각 반복마다 절반씩 줄어듦:**\n\n```\n초기: n\n1회: n/2\n2회: n/4\n3회: n/8\n...\nk회: n/2^k\n\n종료: n/2^k = 1\n→ 2^k = n\n→ k = log₂(n)\n\n∴ O(log n)\n```\n\n---\n\n## 결론\n\n**이진탐색:**\n- 정렬 필요\n- 시간: O(log n)\n- 선형 탐색(O(n))보다 빠름",
+      "type": "essay",
+      "tags": [
+        "이진탐색",
+        "Binary Search",
+        "시간복잡도"
+      ]
+    },
+    {
+      "question": "Lower Bound, Upper Bound 는 무엇이고, 이를 어떻게 구현할 수 있을까요?",
+      "answer": "## Lower/Upper Bound\n\n**Lower Bound:** target 이상인 첫 위치\n**Upper Bound:** target 초과인 첫 위치\n\n---\n\n## Lower Bound\n\n```java\nint lowerBound(int[] arr, int target) {\n    int left = 0, right = arr.length;\n    \n    while (left < right) {\n        int mid = left + (right - left) / 2;\n        \n        if (arr[mid] < target) {\n            left = mid + 1;\n        } else {\n            right = mid;  // >=\n        }\n    }\n    \n    return left;\n}\n\n// [1, 2, 2, 2, 3]\n// lowerBound(2) = 1  (첫 2)\n```\n\n---\n\n## Upper Bound\n\n```java\nint upperBound(int[] arr, int target) {\n    int left = 0, right = arr.length;\n    \n    while (left < right) {\n        int mid = left + (right - left) / 2;\n        \n        if (arr[mid] <= target) {\n            left = mid + 1;\n        } else {\n            right = mid;  // >\n        }\n    }\n    \n    return left;\n}\n\n// [1, 2, 2, 2, 3]\n// upperBound(2) = 4  (3의 위치)\n```\n\n---\n\n## 활용\n\n```java\n// 개수 세기\nint count = upperBound(arr, x) - lowerBound(arr, x);\n```\n\n---\n\n## 결론\n\n**Lower:** >= 첫 위치\n**Upper:** > 첫 위치\n**시간:** O(log n)",
+      "type": "essay",
+      "tags": [
+        "이진탐색",
+        "Lower Bound",
+        "Upper Bound"
+      ]
+    },
+    {
+      "question": "이진탐색의 논리를 적용하여 삼진탐색을 작성한다고 가정한다면, 시간복잡도는 어떻게 변화할까요? (실제 존재하는 삼진탐색 알고리즘은 무시하세요!)",
+      "answer": "## 삼진탐색 시간복잡도\n\n**3등분하여 탐색:**\n\n```java\nint ternarySearch(int[] arr, int target) {\n    int left = 0, right = arr.length - 1;\n    \n    while (left <= right) {\n        int mid1 = left + (right - left) / 3;\n        int mid2 = right - (right - left) / 3;\n        \n        if (arr[mid1] == target) return mid1;\n        if (arr[mid2] == target) return mid2;\n        \n        if (target < arr[mid1]) {\n            right = mid1 - 1;\n        } else if (target > arr[mid2]) {\n            left = mid2 + 1;\n        } else {\n            left = mid1 + 1;\n            right = mid2 - 1;\n        }\n    }\n    return -1;\n}\n```\n\n---\n\n## 시간복잡도\n\n```\n초기: n\n1회: n/3\n2회: n/9\nk회: n/3^k\n\n종료: n/3^k = 1\n→ k = log₃(n)\n\n∴ O(log₃(n)) = O(log n / log 3)\n```\n\n**이진탐색과 비교:**\n```\n이진: O(log₂(n))\n삼진: O(log₃(n))\n\nlog₃(n) = log₂(n) / log₂(3)\n        = log₂(n) / 1.58\n        ≈ 0.63 * log₂(n)\n```\n\n→ **삼진이 이론적으로 빠름!**\n\n---\n\n## 그런데 왜 이진을 쓸까?\n\n**실제 비교:**\n- 이진: 비교 1회/반복\n- 삼진: 비교 2회/반복\n\n```\n이진: 1 * log₂(n) = log₂(n)\n삼진: 2 * log₃(n) = 2 * log₂(n)/1.58 \n                  = 1.26 * log₂(n)\n\n→ 이진이 더 빠름!\n```\n\n---\n\n## 결론\n\n**시간복잡도:** O(log₃(n))\n**실제:** 이진이 더 빠름 (비교 횟수)",
+      "type": "essay",
+      "tags": [
+        "이진탐색",
+        "삼진탐색",
+        "시간복잡도"
+      ]
+    },
+    {
+      "question": "기존 이진탐색 로직에서 부등호의 범위가 바뀐다면?",
+      "answer": "## 부등호 변경 효과\n\n### 기본 이진탐색\n\n```java\nif (arr[mid] == target) return mid;\nif (arr[mid] < target) left = mid + 1;  // <\nelse right = mid - 1;\n```\n\n### 부등호 변경\n\n```java\nif (arr[mid] <= target) left = mid + 1;  // <=\nelse right = mid - 1;\n\n// Lower Bound와 유사한 동작\n// target을 초과하는 첫 위치 찾기\n```\n\n---\n\n## 결과\n\n**정확한 값 찾기 → 범위 찾기로 변화**\n\n```\n[1, 2, 2, 2, 3]\ntarget = 2\n\n< 사용: index = 1 (첫 2)\n<= 사용: index = 4 (2 다음)\n\n→ Lower/Upper Bound 구현\n```\n\n---\n\n## 결론\n\n**부등호 변경:**\n- 정확한 검색 → 범위 검색\n- Lower/Upper Bound 구현",
+      "type": "essay",
+      "tags": [
+        "이진탐색",
+        "부등호",
+        "Lower Bound"
+      ]
+    },
+    {
+      "question": "그리디 알고리즘과 동적 계획법을 비교해 주세요.",
+      "answer": "## 그리디 vs 동적 계획법\n\n### 그리디 (Greedy)\n\n**개념:** 매 순간 최선의 선택\n\n```java\n// 거스름돈 (동전 500, 100, 50, 10)\nint change(int money) {\n    int[] coins = {500, 100, 50, 10};\n    int count = 0;\n    \n    for (int coin : coins) {\n        count += money / coin;  // 최대한 많이\n        money %= coin;\n    }\n    \n    return count;\n}\n\n// 시간: O(n)\n```\n\n**특징:**\n- 지역 최적해\n- 빠름\n- 항상 최적해 보장 X\n\n---\n\n### 동적 계획법 (DP)\n\n**개념:** 하위 문제 해를 저장\n\n```java\n// 피보나치\nint fib(int n) {\n    int[] dp = new int[n + 1];\n    dp[0] = 0;\n    dp[1] = 1;\n    \n    for (int i = 2; i <= n; i++) {\n        dp[i] = dp[i-1] + dp[i-2];  // 이전 값 사용\n    }\n    \n    return dp[n];\n}\n\n// 시간: O(n)\n```\n\n**특징:**\n- 전역 최적해\n- 메모이제이션\n- 최적해 보장\n\n---\n\n## 비교\n\n| 특성 | Greedy | DP |\n|------|--------|----|\n| 선택 | 지역 최적 | 모든 경우 |\n| 속도 | 빠름 | 느림 |\n| 메모리 | O(1) | O(n) |\n| 최적해 | 때때로 | 항상 |\n\n---\n\n## 결론\n\n**Greedy:** 빠름, 때때로 최적\n**DP:** 느림, 항상 최적",
+      "type": "essay",
+      "tags": [
+        "그리디",
+        "동적 계획법",
+        "DP"
+      ]
+    },
+    {
+      "question": "그렇다면, 어떤 경우에 각각의 기법을 사용할 수 있을까요?",
+      "answer": "## 사용 조건\n\n### 그리디 사용 조건\n\n**1. Greedy Choice Property**\n- 지역 최적 → 전역 최적\n\n**2. Optimal Substructure**\n- 하위 문제 최적해로 전체 최적해 구성\n\n**예시:**\n```java\n// 활동 선택\n// 끝나는 시간 빠른 순 선택 → 최적\n\n// 최소 신장 트리\n// 최소 간선 선택 → 최적\n```\n\n---\n\n### DP 사용 조건\n\n**1. Optimal Substructure**\n- 하위 문제 최적해 → 전체 최적해\n\n**2. Overlapping Subproblems**\n- 중복 하위 문제 존재\n\n**예시:**\n```java\n// 피보나치\n// fib(n) = fib(n-1) + fib(n-2)\n// 중복 계산 많음 → DP\n\n// 배낭 문제\n// 모든 조합 고려 필요 → DP\n```\n\n---\n\n## 결론\n\n**Greedy:** 지역 최적 = 전역 최적\n**DP:** 중복 하위 문제 + 최적 부분 구조",
+      "type": "essay",
+      "tags": [
+        "그리디",
+        "DP",
+        "사용 조건"
+      ]
     }
   ]
 }
