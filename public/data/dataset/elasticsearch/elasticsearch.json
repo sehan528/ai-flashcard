@@ -1,0 +1,60 @@
+{
+  "name": "Elasticsearch",
+  "description": "Elasticsearch 검색 엔진의 아키텍처, 쿼리, 성능 최적화 등 핵심 개념",
+  "cards": [
+    {
+      "question": "Elasticsearch의 기본 아키텍처와 주요 컴포넌트(Cluster, Node, Index, Document 등)에 대해 설명해주세요.",
+      "answer": "Elasticsearch는 분산 검색 및 분석 엔진으로, 계층적 아키텍처를 가지고 있습니다.\n\n**주요 컴포넌트:**\n\n**1. Cluster (클러스터)**\n- 하나 이상의 노드로 구성된 전체 시스템\n- 고유한 이름으로 식별됩니다 (기본: elasticsearch)\n- 데이터를 저장하고 모든 노드에서 검색 및 인덱싱 기능을 제공\n- 여러 노드가 클러스터명을 공유하면 자동으로 클러스터를 형성\n\n**2. Node (노드)**\n- 클러스터의 일부인 단일 서버 인스턴스\n- 데이터를 저장하고 클러스터의 인덱싱 및 검색 기능에 참여\n- 고유한 UUID로 식별됩니다\n- 노드 유형:\n  - Master Node: 클러스터 관리 (인덱스 생성/삭제, 노드 추적)\n  - Data Node: 데이터 저장 및 CRUD, 검색, 집계 수행\n  - Ingest Node: 데이터 전처리 파이프라인 실행\n  - Coordinating Node: 요청 라우팅 전담\n\n**3. Index (인덱스)**\n- 유사한 특성을 가진 문서들의 논리적 집합\n- RDB의 데이터베이스 또는 테이블과 유사\n- 고유한 이름으로 식별 (소문자 필수)\n- 설정(Settings)과 매핑(Mapping)을 가짐\n- 여러 샤드로 분산 저장됩니다\n\n**4. Document (도큐먼트)**\n- 인덱싱할 수 있는 기본 정보 단위\n- JSON 형식으로 표현\n- RDB의 Row(행)와 유사\n- 고유한 ID를 가짐 (자동 생성 또는 수동 지정)\n- 필드(Field)로 구성: Key-Value 쌍\n\n**5. Shard (샤드)**\n- 인덱스를 여러 조각으로 나눈 것\n- 수평적 확장과 병렬 처리를 가능하게 함\n- Primary Shard: 원본 데이터\n- Replica Shard: Primary의 복제본 (고가용성, 읽기 성능 향상)\n\n**6. Type (타입) - Deprecated**\n- ES 7.x부터 제거됨\n- 이전에는 인덱스 내 문서 카테고리를 구분했으나, 현재는 단일 타입만 사용\n\n**아키텍처 계층 구조:**\nCluster → Node → Index → Shard → Document → Field\n\n**데이터 흐름:**\n1. 클라이언트가 노드에 요청\n2. Coordinating Node가 요청을 받아 적절한 샤드로 라우팅\n3. Data Node의 샤드가 데이터 처리\n4. 결과를 Coordinating Node에 반환\n5. Coordinating Node가 결과를 집계하여 클라이언트에 응답\n\n**특징:**\n- **분산 시스템**: 수평 확장 가능\n- **고가용성**: 노드 장애 시 자동 복구\n- **Near Real-time**: 거의 실시간 검색 (1초 refresh interval)\n- **스키마리스**: 동적 매핑 지원 (자동 타입 감지)\n\nElasticsearch는 이러한 컴포넌트들이 유기적으로 결합되어 대규모 데이터에 대한 빠른 검색과 분석을 제공합니다.",
+      "type": "essay",
+      "tags": [
+        "Elasticsearch",
+        "아키텍처",
+        "검색엔진"
+      ],
+      "id": "elasticsearch-001",
+      "createdAt": "2025-11-17T16:00:00.000001",
+      "studyCount": 0
+    },
+    {
+      "question": "Elasticsearch에서 인덱스와 도큐먼트의 개념과 관계는 무엇인가요?",
+      "answer": "Elasticsearch에서 인덱스와 도큐먼트는 데이터 저장과 조직화의 핵심 개념입니다.\n\n**Index (인덱스):**\n\n**정의:**\n- 유사한 특성을 가진 도큐먼트들의 논리적 집합\n- 데이터를 저장하고 검색하는 기본 단위\n\n**특징:**\n- 고유한 이름 (소문자, 특수문자 제한)\n- Settings: 샤드 수, 복제본 수, 분석기 등 설정\n- Mapping: 필드 타입과 속성 정의 (스키마)\n- 여러 샤드로 물리적으로 분산 저장\n\n**RDB 비교:**\n- Database 또는 Table에 해당\n- 하지만 조인 기능은 제한적\n\n---\n\n**Document (도큐먼트):**\n\n**정의:**\n- 인덱싱할 수 있는 기본 정보 단위\n- JSON 형식의 데이터 구조\n\n**특징:**\n- 고유한 _id 필드 (자동 생성 또는 수동 지정)\n- 여러 필드(Field)로 구성\n- 중첩 구조 지원 (객체, 배열)\n- 불변(Immutable): 수정 시 새 버전 생성\n\n**메타데이터:**\n- _index: 도큐먼트가 속한 인덱스\n- _id: 도큐먼트 고유 식별자\n- _source: 원본 JSON 데이터\n- _version: 버전 번호 (낙관적 동시성 제어)\n- _score: 검색 시 관련성 점수\n\n**RDB 비교:**\n- Row(행)에 해당\n- Column은 Field에 해당\n\n---\n\n**인덱스와 도큐먼트의 관계:**\n\n**1. 1:N 관계**\n- 하나의 인덱스는 여러 도큐먼트를 포함\n- 각 도큐먼트는 정확히 하나의 인덱스에 속함\n\n**2. 매핑을 통한 스키마 정의**\n- 인덱스의 Mapping이 도큐먼트의 구조를 정의\n- 필드 타입: text, keyword, integer, date, boolean, object 등\n- 동적 매핑: 새 필드 자동 감지 및 타입 추론\n- 명시적 매핑: 사전에 스키마 정의 (권장)\n\n**3. 샤딩을 통한 분산**\n- 도큐먼트는 _id의 해시값을 기반으로 특정 샤드에 할당\n- 공식: shard = hash(_id) % number_of_primary_shards\n- 인덱스의 Primary Shard 수는 생성 후 변경 불가\n\n**4. 라우팅**\n- 기본: _id 기반 자동 라우팅\n- 커스텀: routing 파라미터로 특정 샤드 지정 가능\n- 같은 routing 값을 가진 도큐먼트는 같은 샤드에 저장\n\n---\n\n**인덱싱 과정:**\n\n1. 클라이언트가 도큐먼트를 인덱스에 추가 요청\n2. Coordinating Node가 요청 수신\n3. _id 해시를 통해 대상 Primary Shard 결정\n4. Primary Shard에 도큐먼트 저장\n5. Replica Shard에 동기적으로 복제\n6. 성공 응답 반환\n7. Refresh (기본 1초 간격)로 검색 가능하게 됨\n\n---\n\n**검색 과정:**\n\n1. 클라이언트가 검색 쿼리 전송\n2. Coordinating Node가 모든 샤드에 쿼리 브로드캐스트\n3. 각 샤드가 로컬에서 검색 수행\n4. 결과를 Coordinating Node에 반환\n5. Coordinating Node가 결과 병합 및 정렬\n6. 최종 결과를 클라이언트에 반환\n\n---\n\n**인덱스 설계 원칙:**\n\n**1. 인덱스 분리 기준**\n- 데이터 타입이 다르면 별도 인덱스\n- 검색 패턴이 다르면 분리\n- 시간 기반 데이터는 날짜별 인덱스 (logs-2025-01-01)\n\n**2. 도큐먼트 크기**\n- 너무 크면 성능 저하 (권장: 수십 KB 이하)\n- 중첩 객체는 적당히 사용\n\n**3. 필드 설계**\n- 검색용: text (분석됨)\n- 정확한 매칭/정렬/집계용: keyword (분석 안 됨)\n- multi-field로 같은 데이터를 text와 keyword 모두 저장 가능\n\n---\n\n**실제 예시:**\n\n**인덱스: \"products\"**\n- Settings: 5 primary shards, 1 replica\n- Mapping: name(text), category(keyword), price(float), created_at(date)\n\n**도큐먼트들:**\n- { \"_id\": \"1\", \"name\": \"Laptop\", \"category\": \"Electronics\", \"price\": 999.99 }\n- { \"_id\": \"2\", \"name\": \"Mouse\", \"category\": \"Electronics\", \"price\": 29.99 }\n\n인덱스는 도큐먼트를 조직화하고 관리하는 컨테이너이며, 도큐먼트는 실제 저장되는 데이터입니다. 두 개념은 Elasticsearch의 데이터 모델의 핵심을 이룹니다.",
+      "type": "essay",
+      "tags": [
+        "Elasticsearch",
+        "인덱스",
+        "도큐먼트"
+      ],
+      "id": "elasticsearch-002",
+      "createdAt": "2025-11-17T16:00:00.000002",
+      "studyCount": 0
+    },
+    {
+      "question": "Shard와 Replica의 역할 및 차이점은 무엇인가요?",
+      "answer": "Elasticsearch의 샤드(Shard)와 복제본(Replica)은 분산 시스템의 확장성과 고가용성을 제공하는 핵심 메커니즘입니다.\n\n---\n\n**Shard (샤드):**\n\n**정의:**\n- 인덱스 데이터를 여러 조각으로 나눈 것\n- 각 샤드는 독립적인 Lucene 인덱스\n\n**종류:**\n\n**1. Primary Shard (주 샤드)**\n- 원본 데이터를 저장하는 샤드\n- 인덱스 생성 시 개수를 지정 (기본: 1개)\n- **생성 후 개수 변경 불가** (reindex 필요)\n- 모든 쓰기 작업은 Primary Shard에서 먼저 수행\n\n**2. Replica Shard (복제 샤드)**\n- Primary Shard의 복제본\n- 읽기 작업에도 참여하여 성능 향상\n- 동적으로 개수 조정 가능\n\n**주요 역할:**\n\n**1. 수평 확장 (Horizontal Scaling)**\n- 데이터를 여러 노드에 분산하여 저장 용량 확장\n- 대용량 인덱스를 관리 가능\n\n**2. 병렬 처리**\n- 여러 샤드에서 동시에 쿼리 실행\n- 검색 및 인덱싱 성능 향상\n\n**3. 부하 분산**\n- 요청을 여러 샤드에 분산\n- 단일 노드의 부하 감소\n\n**샤드 할당:**\n- 도큐먼트는 _id의 해시값으로 샤드 결정\n- shard_num = hash(_id) % number_of_primary_shards\n- 같은 샤드에 관련 데이터를 모으려면 routing 사용\n\n---\n\n**Replica (복제본):**\n\n**정의:**\n- Primary Shard의 완전한 복사본\n- 다른 노드에 저장되어 고가용성 제공\n\n**주요 역할:**\n\n**1. 고가용성 (High Availability)**\n- 노드 장애 시 데이터 손실 방지\n- Primary Shard 실패 시 Replica가 Primary로 승격\n- 자동 장애 복구 (Failover)\n\n**2. 읽기 성능 향상**\n- 검색 요청을 Primary와 Replica에 분산\n- 읽기 처리량 증가\n- 특히 읽기 집약적 워크로드에 유리\n\n**3. 데이터 중복성**\n- 여러 노드에 데이터 복제\n- 물리적 장애로부터 보호\n\n**Replica 개수:**\n- 동적으로 변경 가능\n- 기본값: 1 (Primary 1개 + Replica 1개 = 총 2벌)\n- 0으로 설정 가능 (개발 환경, 단일 노드)\n\n---\n\n**Primary Shard vs Replica Shard:**\n\n| 특징 | Primary Shard | Replica Shard |\n|------|--------------|---------------|\n| 목적 | 데이터 저장 및 분산 | 고가용성 및 성능 |\n| 개수 변경 | 불가 (reindex 필요) | 가능 |\n| 쓰기 작업 | 먼저 수행됨 | 동기적으로 복제됨 |\n| 읽기 작업 | 참여 | 참여 |\n| 배치 | 어느 노드에나 | Primary와 다른 노드 |\n| 승격 | - | Primary 실패 시 승격 가능 |\n\n---\n\n**샤드와 복제본의 관계:**\n\n**1. 복제 구조**\n- 1 Primary Shard → N Replica Shards\n- Replica는 항상 Primary와 다른 노드에 배치\n\n**2. 동기화**\n- Primary에 쓰기 발생 → Replica에 동기적 복제\n- 모든 Replica에 복제 완료 후 성공 응답\n\n**3. 읽기 부하 분산**\n- 검색 요청은 Primary 또는 Replica 중 하나에 라우팅\n- 라운드 로빈 또는 응답 시간 기반 선택\n\n---\n\n**실제 예시:**\n\n**설정:**\n- Primary Shards: 3\n- Replicas: 1 (각 Primary마다 1개의 Replica)\n- 총 샤드 수: 3 Primary + 3 Replica = 6개\n\n**3 노드 클러스터에서의 배치:**\n- Node 1: P0, R1, R2\n- Node 2: P1, R0, R2\n- Node 3: P2, R0, R1\n\n(P = Primary, R = Replica, 숫자 = 샤드 번호)\n\n**Node 2 장애 시:**\n- P1이 사라짐 → R1 (Node 1 또는 3에 있음)이 Primary로 승격\n- 클러스터는 계속 작동\n- 자동으로 새 Replica 생성 시도 (Node 복구 또는 새 Node 추가 시)\n\n---\n\n**샤드 개수 결정 가이드:**\n\n**Primary Shard 개수:**\n- 너무 적으면: 노드 추가 시 활용 불가\n- 너무 많으면: 오버헤드 증가, 메모리 낭비\n- 권장: 샤드 크기 10-50GB\n- 공식: (예상 데이터 크기 / 샤드 크기) ≈ Primary Shard 수\n\n**Replica 개수:**\n- 최소 1개 권장 (고가용성)\n- 읽기 성능이 중요하면 2개 이상\n- 비용과 성능의 균형 고려\n\n**예시:**\n- 100GB 데이터, 샤드당 20GB → 5 Primary Shards\n- 고가용성 필요 → Replica 1\n- 높은 읽기 처리량 필요 → Replica 2\n\n---\n\n**오버샤딩 (Over-Sharding) 문제:**\n\n너무 많은 샤드는 역효과:\n- 각 샤드는 메모리와 파일 디스크립터 소비\n- 클러스터 상태 관리 복잡도 증가\n- 검색 성능 저하 (너무 많은 샤드 조회)\n\n**권장:**\n- 노드당 샤드 수: 1000개 이하\n- 샤드당 크기: 10-50GB\n\n---\n\n**성능 최적화 팁:**\n\n**1. 읽기 집약적 워크로드**\n- Replica 수를 늘려 읽기 처리량 증가\n- 검색 요청이 여러 Replica에 분산됨\n\n**2. 쓰기 집약적 워크로드**\n- Replica 수를 줄여 복제 오버헤드 감소\n- 벌크 인덱싱 시 Replica를 0으로 설정 후 복원\n\n**3. 대용량 인덱스**\n- 시간 기반 인덱스 사용 (일별, 월별)\n- Index Lifecycle Management (ILM) 적용\n\nShard와 Replica는 Elasticsearch의 분산 특성과 고가용성의 기반이며, 적절한 설정이 성능과 안정성에 큰 영향을 미칩니다.",
+      "type": "essay",
+      "tags": [
+        "Elasticsearch",
+        "샤드",
+        "복제본",
+        "분산시스템"
+      ],
+      "id": "elasticsearch-003",
+      "createdAt": "2025-11-17T16:00:00.000003",
+      "studyCount": 0
+    },
+    {
+      "question": "Elasticsearch에서 클러스터와 노드 간의 관계와 역할에 대해 설명해주세요.",
+      "answer": "Elasticsearch에서 클러스터와 노드는 분산 시스템의 핵심 구성 요소이며, 서로 밀접하게 연관되어 작동합니다.\n\n---\n\n**Cluster (클러스터):**\n\n**정의:**\n- 하나 이상의 노드가 모여 형성한 논리적 그룹\n- 전체 데이터를 보유하고 모든 노드에서 통합 인덱싱 및 검색 기능 제공\n\n**특징:**\n- **고유한 이름**: 클러스터 식별자 (기본: \"elasticsearch\")\n- **자동 디스커버리**: 같은 네트워크의 동일 클러스터명 노드 자동 결합\n- **단일 진입점**: 어느 노드로든 요청 가능\n- **통합 관리**: 모든 인덱스와 데이터를 통합 관리\n\n**역할:**\n- 전체 시스템의 건강 상태 모니터링\n- 메타데이터 관리 (인덱스, 매핑, 설정)\n- 클러스터 수준 설정 및 정책 적용\n\n**클러스터 상태 (Health):**\n- **Green**: 모든 Primary와 Replica 샤드 활성\n- **Yellow**: 모든 Primary 활성, 일부 Replica 미할당\n- **Red**: 일부 Primary 샤드 미할당 (데이터 손실 가능)\n\n---\n\n**Node (노드):**\n\n**정의:**\n- 클러스터의 일부인 단일 Elasticsearch 서버 인스턴스\n- 데이터를 저장하고 클러스터의 인덱싱 및 검색에 참여\n\n**특징:**\n- **고유 식별자**: UUID로 자동 생성\n- **노드 이름**: 설정 가능 (기본: 랜덤 생성)\n- **역할 지정**: 여러 역할 동시 수행 가능\n- **동적 추가/제거**: 클러스터에 노드 추가/제거 시 자동 재조정\n\n---\n\n**노드 유형 (Node Roles):**\n\n**1. Master-Eligible Node (마스터 후보 노드)**\n\n**역할:**\n- 클러스터 메타데이터 관리\n- 인덱스 생성/삭제\n- 노드 추가/제거 추적\n- 샤드 할당 결정\n\n**특징:**\n- 여러 노드가 master-eligible 가능\n- 그 중 하나가 Active Master로 선출\n- Master 장애 시 새로운 Master 자동 선출\n\n**설정:**\n- node.roles: [master]\n\n**2. Data Node (데이터 노드)**\n\n**역할:**\n- 샤드 저장\n- CRUD, 검색, 집계 작업 수행\n- 대부분의 리소스 소비 (CPU, 메모리, I/O)\n\n**세부 역할:**\n- **Data Content Node**: 일반 콘텐츠\n- **Data Hot Node**: 최신 데이터 (빈번한 쓰기/읽기)\n- **Data Warm Node**: 자주 접근하지 않는 데이터\n- **Data Cold Node**: 거의 접근하지 않는 데이터\n- **Data Frozen Node**: 아카이브 데이터\n\n**설정:**\n- node.roles: [data]\n\n**3. Ingest Node (수집 노드)**\n\n**역할:**\n- 인덱싱 전 문서 전처리\n- 파이프라인 실행 (필터링, 변환, 강화)\n- ETL 작업 수행\n\n**사용 사례:**\n- 로그 파싱\n- 필드 추가/제거/변환\n- IP 위치 정보 추가\n- 날짜 형식 변환\n\n**설정:**\n- node.roles: [ingest]\n\n**4. Coordinating Node (코디네이팅 노드)**\n\n**역할:**\n- 클라이언트 요청 수신\n- 요청을 적절한 데이터 노드로 라우팅\n- 검색 결과 집계 및 반환\n- 로드 밸런서 역할\n\n**특징:**\n- 모든 노드가 기본적으로 coordinating 역할 수행\n- 전용 coordinating node: 다른 역할 없이 라우팅만 담당\n\n**설정:**\n- node.roles: [] (모든 역할 제거)\n\n**5. Machine Learning Node (ML 노드)**\n\n**역할:**\n- 머신러닝 작업 수행\n- 이상 탐지\n- 예측 분석\n\n**설정:**\n- node.roles: [ml]\n\n---\n\n**클러스터와 노드의 관계:**\n\n**1. 1:N 관계**\n- 하나의 클러스터는 여러 노드로 구성\n- 각 노드는 정확히 하나의 클러스터에 속함\n\n**2. 분산 협업**\n- 노드들이 협력하여 전체 데이터 관리\n- 샤드가 여러 노드에 분산\n- 어느 노드로든 동일한 데이터 접근 가능\n\n**3. 자동 관리**\n- 노드 추가 시 자동으로 샤드 재배치\n- 노드 제거 시 샤드를 다른 노드로 이동\n- Master 노드가 클러스터 상태 조율\n\n---\n\n**클러스터 운영 시나리오:**\n\n**시나리오 1: 단일 노드 클러스터**\n- 1개 노드 = 1개 클러스터\n- 개발 환경에 적합\n- 고가용성 없음 (Replica 할당 불가)\n\n**시나리오 2: 3 노드 클러스터 (일반 구성)**\n- 3개 노드 모두 master-eligible + data\n- Master 선출 시 Split-brain 방지 (과반수 투표)\n- 고가용성 확보\n\n**시나리오 3: 역할 분리 클러스터 (대규모)**\n- 3개 전용 Master 노드 (경량)\n- 10개 Data 노드 (대용량 스토리지)\n- 2개 Coordinating 노드 (로드 밸런싱)\n- 각 역할 최적화로 성능 향상\n\n---\n\n**노드 디스커버리 및 클러스터 형성:**\n\n**1. 디스커버리 과정**\n- 새 노드 시작\n- 구성된 seed hosts에 연결 시도\n- 같은 cluster.name 확인\n- 클러스터에 조인\n\n**2. Master 선출**\n- Master-eligible 노드들이 투표\n- 과반수 득표 시 Master로 선출\n- Zen Discovery (ES 7 이전) 또는 Voting Configuration (ES 7+)\n\n**3. Split-brain 방지**\n- 최소 master-eligible 노드: 3개 권장\n- 과반수 투표 메커니즘\n- discovery.seed_hosts 설정\n\n---\n\n**클러스터 크기 조정 (Scaling):**\n\n**수평 확장 (Scale Out):**\n- 노드 추가로 용량 및 성능 증가\n- 샤드 자동 재배치\n- 선형적 확장 가능\n\n**수직 확장 (Scale Up):**\n- 노드의 하드웨어 성능 향상\n- 제한적인 확장성\n\n**축소 (Scale Down):**\n- 노드 제거 시 샤드를 다른 노드로 이동\n- Graceful shutdown 권장\n\n---\n\n**Best Practices:**\n\n**1. 최소 3개의 Master-eligible 노드**\n- Split-brain 방지\n- 고가용성 확보\n\n**2. 전용 Master 노드 (대규모 클러스터)**\n- 클러스터 안정성 향상\n- 메타데이터 관리에만 집중\n\n**3. 데이터 노드 티어링 (Tiering)**\n- Hot-Warm-Cold 아키텍처\n- 비용 효율적 데이터 관리\n\n**4. 적절한 노드 수**\n- 너무 많으면: 관리 복잡도 증가\n- 너무 적으면: 장애 시 위험\n\n**5. 하드웨어 균등성**\n- 노드 간 성능 차이 최소화\n- 예측 가능한 성능\n\n클러스터는 전체 시스템의 논리적 단위이며, 노드는 실제 작업을 수행하는 물리적 단위입니다. 이들의 유기적 결합이 Elasticsearch의 분산 특성과 고가용성을 가능하게 합니다.",
+      "type": "essay",
+      "tags": [
+        "Elasticsearch",
+        "클러스터",
+        "노드",
+        "분산시스템"
+      ],
+      "id": "elasticsearch-004",
+      "createdAt": "2025-11-17T16:00:00.000004",
+      "studyCount": 0
+    }
+  ]
+}
