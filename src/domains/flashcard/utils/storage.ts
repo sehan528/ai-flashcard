@@ -99,13 +99,15 @@ export class FlashcardStorage {
 
 
     // 개발용: 면접 대비 테스트 데이터 생성 (JSON 파일에서 로드)
-    static async createInterviewTestData(): Promise<void> {
+    // index.json을 읽어서 data/dataset 폴더의 모든 데이터셋을 자동으로 로드
+    static async createInterviewTestData(): Promise<{ success: boolean; importedCount: number; totalCards: number; categories: string[] }> {
         try {
             // 이미 초기화되었는지 확인 (중복 실행 방지)
             const isInitialized = localStorage.getItem(INIT_FLAG_KEY);
             if (isInitialized === 'true') {
                 console.log('테스트 데이터가 이미 초기화되었습니다.');
-                return;
+                const stats = this.getStatistics();
+                return { success: true, importedCount: 0, totalCards: stats.totalCards, categories: [] };
             }
 
             // ⚠️ 중요: 비동기 함수 진입 시점에 즉시 플래그 설정 (동시 호출 방지)
@@ -115,22 +117,32 @@ export class FlashcardStorage {
             const existingCardSets = this.getCardSets();
             const existingNames = new Set(existingCardSets.map(set => set.name));
 
-            // JSON 파일 목록 (public 폴더에서 로드)
-            const testDataFiles = [
-                '/data/test/java-basic.json',
-                '/data/test/java-advanced.json',
-                '/data/test/spring-basic.json',
-                '/data/test/spring-advanced.json',
-                '/data/test/database.json',
-                '/data/test/network.json',
-                '/data/test/os.json',
-                '/data/test/data-structure.json',
-                '/data/test/algorithm.json',
-                '/data/test/design-pattern.json'
-            ];
+            // index.json에서 데이터셋 목록 읽기 (자동 스캔)
+            let testDataFiles: string[] = [];
+            let categories: string[] = [];
+
+            try {
+                const indexResponse = await fetch('/data/dataset/index.json');
+                if (indexResponse.ok) {
+                    const indexData = await indexResponse.json();
+                    testDataFiles = indexData.datasets.map((ds: any) => ds.path);
+                    categories = Object.keys(indexData.categories);
+                    console.log(`📚 Found ${testDataFiles.length} datasets across ${categories.length} categories`);
+                    console.log(`Categories: ${categories.join(', ')}`);
+                } else {
+                    console.warn('index.json not found. Please run: npm run generate:index');
+                    localStorage.removeItem(INIT_FLAG_KEY);
+                    return { success: false, importedCount: 0, totalCards: 0, categories: [] };
+                }
+            } catch (error) {
+                console.error('Failed to load dataset index:', error);
+                localStorage.removeItem(INIT_FLAG_KEY);
+                return { success: false, importedCount: 0, totalCards: 0, categories: [] };
+            }
 
             let importedCount = 0;
             let skippedCount = 0;
+            let totalCards = 0;
 
             // 각 JSON 파일을 불러와서 카드셋 생성
             for (const filePath of testDataFiles) {
@@ -170,23 +182,28 @@ export class FlashcardStorage {
 
                     this.addCardSet(cardSet);
                     existingNames.add(testData.name); // 중복 방지를 위해 Set에 추가
+                    totalCards += cardSet.cards.length;
                     importedCount++;
                 } catch (error) {
                     console.error(`${filePath} 로드 실패:`, error);
                 }
             }
 
-            console.log(`면접 대비 테스트 데이터 생성 완료! (생성: ${importedCount}개, 건너뜀: ${skippedCount}개)`);
+            console.log(`데이터셋 불러오기 완료! (생성: ${importedCount}개, 건너뜀: ${skippedCount}개, 총 ${totalCards}개 카드)`);
 
             // 데이터 생성 실패 시 플래그 제거 (재시도 가능하도록)
             if (importedCount === 0) {
                 localStorage.removeItem(INIT_FLAG_KEY);
-                console.warn('테스트 데이터 생성 실패: 생성된 카드셋이 없습니다.');
+                console.warn('데이터셋 불러오기 실패: 생성된 카드셋이 없습니다.');
+                return { success: false, importedCount: 0, totalCards: 0, categories };
             }
+
+            return { success: true, importedCount, totalCards, categories };
         } catch (error) {
-            console.error('테스트 데이터 생성 실패:', error);
+            console.error('데이터셋 불러오기 실패:', error);
             // 에러 발생 시 플래그 제거 (재시도 가능하도록)
             localStorage.removeItem(INIT_FLAG_KEY);
+            return { success: false, importedCount: 0, totalCards: 0, categories: [] };
         }
     }
 

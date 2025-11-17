@@ -146,15 +146,27 @@ const Settings = () => {
         showMessage('success', '모든 데이터가 삭제되었습니다.');
     };
 
-    // 테스트 데이터 생성
+    // 데이터셋 불러오기
     const handleCreateTestData = async () => {
         try {
-            await FlashcardStorage.createInterviewTestData();
+            const result = await FlashcardStorage.createInterviewTestData();
             loadStatistics();
-            showMessage('success', '면접 대비 테스트 데이터 10개 카드셋(60개 카드)이 생성되었습니다!');
+
+            if (result.success) {
+                if (result.importedCount === 0) {
+                    showMessage('success', '데이터셋이 이미 불러와져 있습니다.');
+                } else {
+                    const categoriesText = result.categories.length > 0
+                        ? ` (${result.categories.join(', ').toUpperCase()})`
+                        : '';
+                    showMessage('success', `${result.importedCount}개 카드셋 (${result.totalCards}개 카드)을 불러왔습니다!${categoriesText}`);
+                }
+            } else {
+                showMessage('error', '데이터셋 불러오기에 실패했습니다.');
+            }
         } catch (error) {
-            showMessage('error', '테스트 데이터 생성에 실패했습니다.');
-            console.error('Test data creation failed:', error);
+            showMessage('error', '데이터셋 불러오기에 실패했습니다.');
+            console.error('Dataset loading failed:', error);
         }
     };
 
@@ -254,7 +266,7 @@ const Settings = () => {
                     </p>
                 </div>
 
-                {/* 테스트 데이터 생성 버튼 */}
+                {/* 데이터셋 불러오기 버튼 */}
                 <div className="mb-4">
                     <button
                         onClick={handleCreateTestData}
@@ -263,10 +275,10 @@ const Settings = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        면접 대비 테스트 데이터 생성
+                        데이터셋 불러오기 (DB, DS, OS 등)
                     </button>
                     <p className="text-xs text-gray-500 mt-2">
-                        Java, Spring, CS 기초 면접 질문 10개 카드셋(60개 카드)을 생성합니다.
+                        public/data/dataset 폴더의 모든 데이터셋을 자동으로 불러옵니다. (현재: DB 60문제)
                     </p>
                 </div>
 

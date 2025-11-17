@@ -9,7 +9,9 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test:dataset": "node scripts/test-dataset-import.js",
-    "fix:dataset": "python3 scripts/fix-dataset-format.py"
+    "fix:dataset": "python3 scripts/fix-dataset-format.py",
+    "generate:index": "python3 scripts/generate-dataset-index.py",
+    "prebuild": "npm run generate:index"
   },
   "dependencies": {
     "@vercel/node": "^5.3.2",

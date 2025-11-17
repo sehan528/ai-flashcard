@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "AUTO_GENERATED",
+  "totalDatasets": 1,
+  "categories": {
+    "db": [
+      {
+        "category": "db",
+        "path": "/data/dataset/db/db.json",
+        "name": "데이터베이스",
+        "description": "데이터베이스 핵심 개념 및 면접 질문",
+        "cardCount": 60,
+        "fileName": "db.json"
+      }
+    ]
+  },
+  "datasets": [
+    {
+      "category": "db",
+      "path": "/data/dataset/db/db.json",
+      "name": "데이터베이스",
+      "description": "데이터베이스 핵심 개념 및 면접 질문",
+      "cardCount": 60,
+      "fileName": "db.json"
+    }
+  ]
+}
