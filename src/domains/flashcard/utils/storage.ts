@@ -100,6 +100,10 @@ export class FlashcardStorage {
     // 개발용: 면접 대비 테스트 데이터 생성 (JSON 파일에서 로드)
     static async createInterviewTestData(): Promise<void> {
         try {
+            // 기존 카드셋 목록 가져오기
+            const existingCardSets = this.getCardSets();
+            const existingNames = new Set(existingCardSets.map(set => set.name));
+
             // JSON 파일 목록 (public 폴더에서 로드)
             const testDataFiles = [
                 '/data/test/java-basic.json',
@@ -115,6 +119,7 @@ export class FlashcardStorage {
             ];
 
             let importedCount = 0;
+            let skippedCount = 0;
 
             // 각 JSON 파일을 불러와서 카드셋 생성
             for (const filePath of testDataFiles) {
@@ -126,6 +131,13 @@ export class FlashcardStorage {
                     }
 
                     const testData = await response.json();
+
+                    // 중복 체크: 같은 이름의 카드셋이 이미 있으면 건너뛰기
+                    if (existingNames.has(testData.name)) {
+                        console.log(`"${testData.name}" 카드셋이 이미 존재하여 건너뜁니다.`);
+                        skippedCount++;
+                        continue;
+                    }
 
                     // 카드셋 생성
                     const cardSet: CardSet = {
@@ -146,13 +158,14 @@ export class FlashcardStorage {
                     };
 
                     this.addCardSet(cardSet);
+                    existingNames.add(testData.name); // 중복 방지를 위해 Set에 추가
                     importedCount++;
                 } catch (error) {
                     console.error(`${filePath} 로드 실패:`, error);
                 }
             }
 
-            console.log(`면접 대비 테스트 데이터 생성 완료! (총 ${importedCount}개 카드셋, 60개 카드)`);
+            console.log(`면접 대비 테스트 데이터 생성 완료! (생성: ${importedCount}개, 건너뜀: ${skippedCount}개)`);
         } catch (error) {
             console.error('테스트 데이터 생성 실패:', error);
         }

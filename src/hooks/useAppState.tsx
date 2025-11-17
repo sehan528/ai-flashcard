@@ -7,6 +7,7 @@ export const useAppState = () => {
     const [cardSets, setCardSets] = useState<CardSet[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentTab, setCurrentTab] = useState<AppTab>('home');
+    const [selectedCardSetId, setSelectedCardSetId] = useState<string | null>(null);
 
     // 데이터 새로고침 함수
     const refreshCardSets = () => {
@@ -44,9 +45,11 @@ export const useAppState = () => {
         cardSets,
         isLoading,
         currentTab,
+        selectedCardSetId,
 
         // 액션
         setCurrentTab,
+        setSelectedCardSetId,
         refreshCardSets,
     };
 };

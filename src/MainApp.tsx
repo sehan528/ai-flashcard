@@ -6,7 +6,15 @@ import { useStudyActions } from './hooks/useStudyActions';
 
 function MainApp() {
     // 커스텀 훅으로 상태 관리 분리
-    const { cardSets, isLoading, currentTab, setCurrentTab, refreshCardSets } = useAppState();
+    const {
+        cardSets,
+        isLoading,
+        currentTab,
+        selectedCardSetId,
+        setCurrentTab,
+        setSelectedCardSetId,
+        refreshCardSets
+    } = useAppState();
 
     // 학습 관련 액션들
     const {
@@ -64,9 +72,14 @@ function MainApp() {
                 <AppRouter
                     currentTab={currentTab}
                     cardSets={cardSets}
+                    selectedCardSetId={selectedCardSetId}
                     onRefresh={refreshCardSets}
                     onStartStudy={handleStartStudy}
                     onCardChanged={handleCardChanged}
+                    onEditCardSet={(cardSetId: string) => {
+                        setSelectedCardSetId(cardSetId);
+                        setCurrentTab('card-edit');
+                    }}
                 />
             </main>
         </div>

@@ -146,18 +146,6 @@ const Settings = () => {
         showMessage('success', '모든 데이터가 삭제되었습니다.');
     };
 
-    // 테스트 데이터 생성
-    const handleCreateTestData = async () => {
-        try {
-            await FlashcardStorage.createInterviewTestData();
-            loadStatistics();
-            showMessage('success', '면접 대비 테스트 데이터 10개 카드셋(60개 카드)이 생성되었습니다!');
-        } catch (error) {
-            showMessage('error', '테스트 데이터 생성에 실패했습니다.');
-            console.error('Test data creation failed:', error);
-        }
-    };
-
     return (
         <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
@@ -251,22 +239,6 @@ const Settings = () => {
                     </label>
                     <p className="text-xs text-gray-500 mt-2">
                         JSON 파일(들)에서 카드셋을 가져옵니다. 여러 파일 선택 가능합니다.
-                    </p>
-                </div>
-
-                {/* 테스트 데이터 생성 버튼 */}
-                <div className="mb-4">
-                    <button
-                        onClick={handleCreateTestData}
-                        className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        면접 대비 테스트 데이터 생성
-                    </button>
-                    <p className="text-xs text-gray-500 mt-2">
-                        Java, Spring, CS 기초 면접 질문 10개 카드셋(60개 카드)을 생성합니다.
                     </p>
                 </div>
 

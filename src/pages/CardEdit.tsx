@@ -8,10 +8,11 @@ import CardForm from '../domains/flashcard/components/FlashCard/CardForm';
 type EditMode = 'list' | 'add' | 'edit';
 
 interface CardEditProps {
+    initialCardSetId?: string | null; // 초기 선택할 카드셋 ID
     onCardChanged?: () => void; // 카드 변경 완료 시 콜백
 }
 
-const CardEdit = ({ onCardChanged }: CardEditProps) => {
+const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
     const [cardSets, setCardSets] = useState<CardSet[]>([]);
     const [selectedCardSetId, setSelectedCardSetId] = useState<string | null>(null);
     const [editMode, setEditMode] = useState<EditMode>('list');
@@ -23,12 +24,22 @@ const CardEdit = ({ onCardChanged }: CardEditProps) => {
         loadCardSets();
     }, []);
 
+    // initialCardSetId가 변경되면 선택된 카드셋 업데이트
+    useEffect(() => {
+        if (initialCardSetId) {
+            setSelectedCardSetId(initialCardSetId);
+            setEditMode('list'); // 리스트 모드로 전환
+        }
+    }, [initialCardSetId]);
+
     const loadCardSets = () => {
         const loadedCardSets = FlashcardStorage.getCardSets();
         setCardSets(loadedCardSets);
 
-        // 기본 선택: 첫 번째 카드셋
-        if (loadedCardSets.length > 0 && !selectedCardSetId) {
+        // initialCardSetId가 있으면 그것을 선택, 없으면 첫 번째 카드셋 선택
+        if (initialCardSetId) {
+            setSelectedCardSetId(initialCardSetId);
+        } else if (loadedCardSets.length > 0 && !selectedCardSetId) {
             setSelectedCardSetId(loadedCardSets[0].id);
         }
     };
