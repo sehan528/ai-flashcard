@@ -8,9 +8,10 @@ interface HomeProps {
     cardSets: CardSet[];
     onRefresh: () => void;
     onStartStudy: (cardSet: CardSet, isRandom: boolean) => void;
+    onEditCardSet: (cardSetId: string) => void;
 }
 
-const Home = ({ cardSets, onRefresh, onStartStudy } : HomeProps) => {
+const Home = ({ cardSets, onRefresh, onStartStudy, onEditCardSet } : HomeProps) => {
     const [isRandom, setIsRandom] = useState(false);
 
     // 이벤트 핸들러들
@@ -19,8 +20,7 @@ const Home = ({ cardSets, onRefresh, onStartStudy } : HomeProps) => {
     };
 
     const handleEditCardSet = (cardSet: CardSet) => {
-        console.log('카드셋 수정:', cardSet.name);
-        // TODO: 수정 모드로 전환
+        onEditCardSet(cardSet.id);
     };
 
     const handleDuplicateCardSet = (cardSet: CardSet) => {
