@@ -1,6 +1,7 @@
 import type {CardSet, FlashCard} from '../dtos/FlashCard';
 
 const STORAGE_KEY = 'ai-flashcard-sets';
+const INIT_FLAG_KEY = 'ai-flashcard-initialized';
 
 export class FlashcardStorage {
 
@@ -100,6 +101,13 @@ export class FlashcardStorage {
     // 개발용: 면접 대비 테스트 데이터 생성 (JSON 파일에서 로드)
     static async createInterviewTestData(): Promise<void> {
         try {
+            // 이미 초기화되었는지 확인 (중복 실행 방지)
+            const isInitialized = localStorage.getItem(INIT_FLAG_KEY);
+            if (isInitialized === 'true') {
+                console.log('테스트 데이터가 이미 초기화되었습니다.');
+                return;
+            }
+
             // 기존 카드셋 목록 가져오기
             const existingCardSets = this.getCardSets();
             const existingNames = new Set(existingCardSets.map(set => set.name));
@@ -166,6 +174,11 @@ export class FlashcardStorage {
             }
 
             console.log(`면접 대비 테스트 데이터 생성 완료! (생성: ${importedCount}개, 건너뜀: ${skippedCount}개)`);
+
+            // 초기화 완료 플래그 저장
+            if (importedCount > 0) {
+                localStorage.setItem(INIT_FLAG_KEY, 'true');
+            }
         } catch (error) {
             console.error('테스트 데이터 생성 실패:', error);
         }
@@ -419,6 +432,7 @@ export class FlashcardStorage {
     // 모든 데이터 삭제
     static clearAllData(): void {
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(INIT_FLAG_KEY); // 초기화 플래그도 함께 삭제
     }
 
     // 데이터 통계 정보

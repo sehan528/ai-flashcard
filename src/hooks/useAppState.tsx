@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 import type { AppTab } from '../components/Layout/Header';
@@ -8,6 +8,7 @@ export const useAppState = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [currentTab, setCurrentTab] = useState<AppTab>('home');
     const [selectedCardSetId, setSelectedCardSetId] = useState<string | null>(null);
+    const isInitializedRef = useRef(false); // 초기화 완료 플래그
 
     // 데이터 새로고침 함수
     const refreshCardSets = () => {
@@ -18,6 +19,11 @@ export const useAppState = () => {
     // 초기 데이터 로드
     useEffect(() => {
         const initializeData = async () => {
+            // 이미 초기화되었으면 건너뛰기 (StrictMode 중복 실행 방지)
+            if (isInitializedRef.current) {
+                return;
+            }
+
             try {
                 const loadedCardSets = FlashcardStorage.getCardSets();
                 setCardSets(loadedCardSets);
@@ -30,6 +36,9 @@ export const useAppState = () => {
                     const updatedCardSets = FlashcardStorage.getCardSets();
                     setCardSets(updatedCardSets);
                 }
+
+                // 초기화 완료 표시
+                isInitializedRef.current = true;
             } catch (error) {
                 console.error('데이터 로드 실패:', error);
             } finally {
