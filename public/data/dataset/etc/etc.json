@@ -343,6 +343,63 @@
       "id": "etc-024",
       "createdAt": "2025-11-17T15:00:00.000024",
       "studyCount": 0
+    },
+    {
+      "question": "Singleton의 장단점에 대해 설명해 주세요.",
+      "answer": "Singleton 패턴의 장점과 단점:\n\n**장점:**\n\n1. **단일 인스턴스 보장**\n   - 클래스의 인스턴스가 정확히 하나만 존재하도록 보장합니다.\n   - 메모리 낭비를 방지할 수 있습니다.\n\n2. **전역 접근점 제공**\n   - 애플리케이션 어디서나 접근 가능한 전역 접근점을 제공합니다.\n   - 인스턴스에 대한 일관된 접근 방법을 제공합니다.\n\n3. **지연 초기화(Lazy Initialization)**\n   - 실제로 필요할 때까지 인스턴스 생성을 지연시킬 수 있습니다.\n   - 리소스를 효율적으로 사용할 수 있습니다.\n\n4. **공유 리소스 관리**\n   - 데이터베이스 연결, 로거, 설정 관리 등 공유 리소스를 효과적으로 관리할 수 있습니다.\n\n**단점:**\n\n1. **전역 상태(Global State)**\n   - 전역 변수와 유사한 문제를 발생시킵니다.\n   - 프로그램의 여러 부분이 암묵적으로 연결되어 결합도가 높아집니다.\n\n2. **테스트 어려움**\n   - 단위 테스트 시 Mock 객체로 대체하기 어렵습니다.\n   - 테스트 간 상태 공유로 인해 독립적인 테스트가 어렵습니다.\n\n3. **동시성 문제**\n   - 멀티스레드 환경에서 동기화 처리가 필요합니다.\n   - 잘못 구현하면 여러 인스턴스가 생성될 수 있습니다.\n\n4. **단일 책임 원칙(SRP) 위반**\n   - 비즈니스 로직과 인스턴스 생성 관리라는 두 가지 책임을 가집니다.\n\n5. **의존성 주입(DI) 불가**\n   - 의존성을 외부에서 주입받기 어려워 유연성이 떨어집니다.\n   - 대체 구현을 제공하기 어렵습니다.\n\n6. **상속 제한**\n   - Private 생성자로 인해 상속이 어렵거나 불가능합니다.\n\n**권장 사항:**\nSingleton은 신중하게 사용해야 하며, 가능하면 의존성 주입(DI) 컨테이너를 통한 스코프 관리를 고려하는 것이 좋습니다.",
+      "type": "essay",
+      "tags": [
+        "CS",
+        "개발상식",
+        "디자인패턴",
+        "싱글톤"
+      ],
+      "id": "etc-025",
+      "createdAt": "2025-11-17T15:00:00.000025",
+      "studyCount": 0
+    },
+    {
+      "question": "Singleton이 하나의 객체를 생성한다는 것을 어떻게 보장할 수 있을까요?",
+      "answer": "Singleton이 단일 인스턴스를 보장하는 여러 방법:\n\n**1. Private 생성자**\n- 외부에서 new 키워드로 인스턴스를 생성하지 못하도록 생성자를 private으로 선언합니다.\n- 클래스 내부에서만 인스턴스를 생성할 수 있게 합니다.\n\n**2. Static 인스턴스 변수**\n- 클래스 내부에 static 변수로 유일한 인스턴스를 저장합니다.\n- 클래스 레벨에서 하나만 존재하도록 보장합니다.\n\n**3. 멀티스레드 환경에서의 안전성 보장 방법:**\n\n**A. Eager Initialization (즉시 초기화)**\n- 클래스 로딩 시점에 인스턴스를 생성합니다.\n- 클래스 로더가 스레드 안전성을 보장합니다.\n- 단점: 사용하지 않아도 인스턴스가 생성됩니다.\n\n**B. Synchronized Method (동기화 메서드)**\n- 인스턴스를 반환하는 메서드에 synchronized 키워드를 사용합니다.\n- 스레드 안전성을 보장하지만 성능 오버헤드가 있습니다.\n\n**C. Double-Checked Locking (이중 확인 잠금)**\n- 인스턴스가 null인지 두 번 확인하여 불필요한 동기화를 줄입니다.\n- volatile 키워드를 함께 사용하여 가시성 문제를 해결합니다.\n- 성능과 안전성의 균형을 맞춥니다.\n\n**D. Bill Pugh Solution (Inner Static Helper Class)**\n- 내부 정적 클래스를 사용하여 인스턴스를 보유합니다.\n- 클래스 로딩 시점이 달라 Lazy Initialization과 Thread Safety를 모두 보장합니다.\n- Java에서 가장 권장되는 방법 중 하나입니다.\n\n**E. Enum (Java 전용)**\n- Enum 타입으로 Singleton을 구현합니다.\n- 직렬화와 리플렉션 공격에도 안전합니다.\n- Joshua Bloch가 \"Effective Java\"에서 권장하는 방법입니다.\n\n**4. 추가 고려사항:**\n- **리플렉션 공격 방지**: 생성자에서 이미 인스턴스가 존재하면 예외를 던집니다.\n- **직렬화/역직렬화**: readResolve 메서드를 구현하여 역직렬화 시에도 동일한 인스턴스를 반환합니다.\n- **클래스 로더 문제**: 여러 클래스 로더 환경에서는 각 로더마다 인스턴스가 생성될 수 있습니다.\n\n각 방법은 상황에 따라 장단점이 있으므로, 요구사항에 맞는 방법을 선택해야 합니다.",
+      "type": "essay",
+      "tags": [
+        "CS",
+        "개발상식",
+        "디자인패턴",
+        "싱글톤",
+        "동시성"
+      ],
+      "id": "etc-026",
+      "createdAt": "2025-11-17T15:00:00.000026",
+      "studyCount": 0
+    },
+    {
+      "question": "GC에 대해 설명해 주세요.",
+      "answer": "GC(Garbage Collection, 가비지 컬렉션)는 프로그램이 동적으로 할당한 메모리 중 더 이상 사용하지 않는 메모리를 자동으로 회수하는 메모리 관리 기법입니다.\n\n**GC의 목적:**\n- 메모리 누수(Memory Leak) 방지\n- 댕글링 포인터(Dangling Pointer) 문제 해결\n- 이중 해제(Double Free) 오류 방지\n- 개발자의 메모리 관리 부담 감소\n\n**GC의 기본 원리:**\n\n1. **도달 가능성(Reachability) 판단**\n   - GC Root로부터 참조 체인을 따라갈 수 있는 객체는 \"살아있는(Live)\" 객체입니다.\n   - 도달할 수 없는 객체는 \"가비지\"로 간주되어 회수 대상이 됩니다.\n\n2. **GC Root의 종류**\n   - 스택의 지역 변수\n   - 정적 변수\n   - JNI 참조 (Java의 경우)\n   - 활성화된 스레드\n\n**주요 GC 알고리즘:**\n\n1. **Reference Counting (참조 카운팅)**\n   - 각 객체의 참조 횟수를 추적합니다.\n   - 참조 횟수가 0이 되면 즉시 회수합니다.\n   - 순환 참조 문제가 있습니다.\n\n2. **Mark and Sweep (표시 및 수거)**\n   - Mark 단계: GC Root부터 도달 가능한 객체를 표시합니다.\n   - Sweep 단계: 표시되지 않은 객체의 메모리를 회수합니다.\n   - 메모리 단편화가 발생할 수 있습니다.\n\n3. **Mark and Compact (표시 및 압축)**\n   - Mark and Sweep에 압축 단계를 추가합니다.\n   - 살아있는 객체를 한쪽으로 모아 단편화를 해결합니다.\n\n4. **Generational GC (세대별 수집)**\n   - 객체의 수명을 기준으로 Young Generation과 Old Generation으로 나눕니다.\n   - 대부분의 객체는 금방 죽는다는 \"Weak Generational Hypothesis\"에 기반합니다.\n   - Young Generation을 자주, Old Generation을 드물게 수집합니다.\n\n5. **Copying (복사)**\n   - 메모리를 두 영역으로 나누어 사용합니다.\n   - 살아있는 객체를 다른 영역으로 복사합니다.\n   - 단편화가 없지만 메모리 사용량이 2배입니다.\n\n**GC의 동작 방식:**\n- **Stop-the-World**: GC가 실행될 때 애플리케이션 스레드를 일시 정지합니다.\n- **Concurrent GC**: 애플리케이션과 동시에 실행되어 일시 정지 시간을 줄입니다.\n\nGC는 메모리 관리를 자동화하여 개발 생산성을 높이지만, 성능 오버헤드와 예측 불가능한 일시 정지 시간이 발생할 수 있습니다.",
+      "type": "essay",
+      "tags": [
+        "CS",
+        "개발상식",
+        "메모리관리",
+        "GC"
+      ],
+      "id": "etc-027",
+      "createdAt": "2025-11-17T15:00:00.000027",
+      "studyCount": 0
+    },
+    {
+      "question": "본인이 사용하는 언어에서는 GC를 어떻게 구현했나요?",
+      "answer": "주요 프로그래밍 언어별 GC 구현 방식:\n\n**Java (JVM)**\n\n1. **Generational GC 기반**\n   - Young Generation: Eden, Survivor 0, Survivor 1로 구성\n   - Old Generation: 오래 살아남은 객체 저장\n   - Permanent/Metaspace: 클래스 메타데이터 저장\n\n2. **다양한 GC 알고리즘 제공**\n   - **Serial GC**: 단일 스레드, 작은 애플리케이션용\n   - **Parallel GC**: 멀티 스레드, 처리량 중심\n   - **CMS (Concurrent Mark Sweep)**: 낮은 지연 시간 목표\n   - **G1 GC**: 대용량 힙, 예측 가능한 일시 정지 시간\n   - **ZGC/Shenandoah**: 매우 낮은 지연 시간 (밀리초 이하)\n\n3. **Minor GC vs Major GC**\n   - Minor GC: Young Generation 수집 (빠름)\n   - Major/Full GC: 전체 힙 수집 (느림)\n\n**Python**\n\n1. **Reference Counting (주 메커니즘)**\n   - 각 객체의 참조 횟수를 추적합니다.\n   - 참조 횟수가 0이 되면 즉시 메모리를 회수합니다.\n   - 실시간성이 좋지만 순환 참조를 처리하지 못합니다.\n\n2. **Cycle Detector (순환 참조 탐지)**\n   - Generational GC 알고리즘을 사용합니다.\n   - 3세대(Generation 0, 1, 2)로 나누어 관리합니다.\n   - 주기적으로 순환 참조를 탐지하고 회수합니다.\n\n**JavaScript (V8 엔진)**\n\n1. **Generational GC**\n   - Young Generation (New Space): Scavenger 알고리즘 사용\n   - Old Generation (Old Space): Mark-Sweep-Compact 사용\n\n2. **Incremental Marking**\n   - GC 작업을 작은 단위로 나누어 일시 정지 시간을 줄입니다.\n\n3. **Concurrent Marking**\n   - 메인 스레드와 병렬로 마킹 작업을 수행합니다.\n\n**Go**\n\n1. **Concurrent Mark-Sweep**\n   - 애플리케이션과 동시에 실행되는 GC\n   - 일시 정지 시간을 밀리초 이하로 유지하는 것이 목표\n\n2. **삼색 표시(Tri-color Marking)**\n   - 흰색(미방문), 회색(방문 중), 검은색(방문 완료)로 객체를 분류합니다.\n\n3. **Write Barrier**\n   - 포인터 변경을 추적하여 일관성을 유지합니다.\n\n**C# (.NET)**\n\n1. **Generational GC**\n   - 3세대(Gen 0, 1, 2)로 구성\n   - Large Object Heap (LOH): 85KB 이상 객체 저장\n\n2. **Workstation vs Server GC**\n   - Workstation: 낮은 지연 시간\n   - Server: 높은 처리량\n\n각 언어는 사용 사례와 성능 목표에 맞춰 서로 다른 GC 전략을 채택하고 있습니다.",
+      "type": "essay",
+      "tags": [
+        "CS",
+        "개발상식",
+        "메모리관리",
+        "GC"
+      ],
+      "id": "etc-028",
+      "createdAt": "2025-11-17T15:00:00.000028",
+      "studyCount": 0
     }
   ]
 }
