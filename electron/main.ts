@@ -39,7 +39,7 @@ function createWindow() {
     if (isDev) {
         console.log('Loading dev server...');
         mainWindow.loadURL('http://localhost:5173');
-        mainWindow.webContents.openDevTools();
+        mainWindow.webContents.openDevTools(); // 개발 모드에서만 DevTools
     } else {
         // 프로덕션 경로 계산
         const indexPath = path.join(__dirname, '../dist/index.html');
@@ -47,7 +47,7 @@ function createWindow() {
 
         mainWindow.loadFile(indexPath).then(() => {
             console.log('File loaded successfully!');
-            mainWindow?.webContents.openDevTools();
+            // 프로덕션에서는 DevTools 자동 열기 제거
         }).catch((err) => {
             console.error('Failed to load file:', err);
 

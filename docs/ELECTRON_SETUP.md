@@ -125,208 +125,44 @@ public/
 - **AppImage**: 실행 권한 부여 후 바로 실행
 - **DEB**: `sudo dpkg -i ai-flashcard_1.0.0_amd64.deb`
 
-## 8. 문제 해결
+## 8. 빌드 확인
 
-### Windows에서 빌드가 중단되는 경우 ⚠️
+### 빌드 후 확인사항
 
-**증상**: `npm run build:win` 실행 시 로그만 출력되고 exe 파일이 생성되지 않음
+빌드가 완료되면 다음을 확인하세요:
 
 ```powershell
-PS C:\works\ai-flashcard> npm run build:win
-> ai-flashcard@1.0.0 prebuild
-> npm run generate:index
-> python3 scripts/generate-dataset-index.py
-# 여기서 멈춤...
-```
-
-**원인**: Windows에서 `python3` 명령어를 찾을 수 없어서 prebuild가 실패
-
-**해결 방법**:
-
-#### 방법 1: Python 설치 확인 (권장)
-```powershell
-# Python이 설치되어 있는지 확인
-python --version
-# 또는
-py --version
-
-# Python이 없다면 Microsoft Store에서 Python 설치
-# 또는 https://www.python.org/downloads/ 에서 설치
-```
-
-Python 설치 후 다시 시도:
-```powershell
-npm run build:win
-```
-
-#### 방법 2: 데이터셋 인덱스 미리 생성
-```powershell
-# Python으로 index.json 생성 (한 번만 실행)
-python scripts/generate-dataset-index.py
-
-# 또는 py 명령어 사용
-py scripts/generate-dataset-index.py
-
-# 이제 빌드 실행 (prebuild 스킵)
-npm run build:no-prebuild
-electron-builder --win
-```
-
-#### 방법 3: 수동으로 index.json 확인
-`public/data/dataset/index.json` 파일이 이미 있다면:
-```powershell
-# prebuild 없이 바로 빌드
-npm run build:no-prebuild
-electron-builder --win
-```
-
-### electron-builder가 실행되지 않는 경우
-
-**증상**: Vite 빌드는 성공했지만 electron-builder가 실행되지 않음
-
-**체크리스트**:
-
-1. **Electron 패키지 설치 확인**
-```powershell
-# devDependencies에 electron, electron-builder가 있는지 확인
-npm list electron electron-builder
-
-# 없다면 설치
-npm install --save-dev electron electron-builder vite-plugin-electron vite-plugin-electron-renderer
-```
-
-2. **dist 폴더 확인**
-```powershell
-# dist 폴더가 생성되었는지 확인
-dir dist
-
-# dist 폴더가 없거나 비어있다면
-npm run build:no-prebuild
-```
-
-3. **dist-electron 폴더 확인**
-```powershell
-# dist-electron 폴더에 main.js가 있는지 확인
-dir dist-electron
-
-# 없다면 Vite Electron 플러그인 재설치
-npm install --save-dev vite-plugin-electron
-npm run build:no-prebuild
-```
-
-4. **수동으로 electron-builder 실행**
-```powershell
-# 빌드가 완료되었다면 직접 실행
-npx electron-builder --win
-```
-
-### 빌드는 성공했는데 exe를 찾을 수 없는 경우
-
-**확인할 위치**:
-```powershell
-# release 폴더 확인
+# Windows - release 폴더 확인
 dir release
 
-# release 폴더가 없다면 electron-builder가 실행되지 않은 것
+# 예상 결과물:
+# - AI Flashcard Setup 1.0.0.exe (설치 파일)
+# - AI Flashcard 1.0.0.exe (Portable 버전)
+# - win-unpacked/ (압축 해제된 파일들)
 ```
 
-**예상 결과물 위치**:
-```
-release/
-├── AI Flashcard Setup 1.0.0.exe      # 설치 파일
-├── AI Flashcard 1.0.0.exe            # Portable 버전
-├── win-unpacked/                      # 압축 해제된 파일들
-└── builder-debug.yml                  # 디버그 정보
-```
+### 빌드 과정 체크리스트
 
-### PowerShell 실행 정책 오류
+- [ ] `npm install`로 모든 패키지 설치 완료
+- [ ] `package.json`에 electron 관련 패키지 확인
+- [ ] `npm run build:no-prebuild` 성공 (dist 폴더 생성)
+- [ ] `dist/` 폴더에 index.html 및 assets 존재
+- [ ] `dist-electron/` 폴더에 main.js, preload.js 존재
+- [ ] `electron-builder` 실행 성공
+- [ ] `release/` 폴더에 실행 파일 생성
 
-**증상**: `이 시스템에서 스크립트를 실행할 수 없으므로...`
+### 문제가 발생한 경우
 
-**해결 방법**:
-```powershell
-# 현재 세션에서만 실행 정책 변경
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+빌드 중 문제가 발생하거나 실행 파일이 정상적으로 작동하지 않는다면, 별도의 트러블슈팅 가이드를 참고하세요:
 
-# 이후 빌드 명령어 실행
-npm run build:win
-```
+📖 **[ELECTRON_TROUBLESHOOTING.md](./ELECTRON_TROUBLESHOOTING.md)** - 모든 알려진 문제와 해결 방법
 
-### Windows에서 창이 표시되지 않는 경우 ⚠️⚠️
-
-**증상**: exe 파일 실행 시 프로세스는 있지만 GUI가 나타나지 않음
-
-**디버깅 방법**:
-
-#### 1. PowerShell에서 직접 실행하여 로그 확인
-```powershell
-# release 폴더로 이동
-cd release\win-unpacked
-
-# 직접 실행 (콘솔 로그가 표시됨)
-."AI Flashcard.exe"
-
-# 또는 절대 경로로
-& "C:\works\ai-flashcard\release\win-unpacked\AI Flashcard.exe"
-```
-
-**확인할 로그**:
-```
-Creating window...
-__dirname: C:\...\resources\app.asar\dist-electron
-app.getAppPath(): C:\...\resources\app.asar
-Window created, loading content...
-Loading file: C:\...\resources\app.asar\dist\index.html
-```
-
-#### 2. 로그 파일로 저장
-```powershell
-# 로그를 파일로 저장
-."AI Flashcard.exe" > log.txt 2>&1
-
-# 로그 파일 확인
-cat log.txt
-```
-
-#### 3. 일반적인 원인과 해결
-
-**원인 1**: dist 폴더가 패키징에 포함되지 않음
-```powershell
-# electron-builder.json 확인
-# "files": ["dist/**/*"] 가 있는지 확인
-
-# 다시 빌드
-npm run build:win
-```
-
-**원인 2**: 경로 문제로 index.html을 찾지 못함
-- 로그에 "Failed to load file" 에러가 있는지 확인
-- 에러 페이지가 표시되면 경로 정보 확인
-
-**원인 3**: 창이 화면 밖으로 나감
-```powershell
-# 작업 관리자에서 프로세스 강제 종료 후
-# 다시 실행하면 기본 위치에 표시됨
-```
-
-### Electron 다운로드 오류
-```bash
-# 캐시 삭제 후 재시도
-rm -rf node_modules
-npm install
-```
-
-### 빌드 실패 시
-```bash
-# dist 폴더 정리
-rm -rf dist dist-electron release
-npm run build:win
-```
-
-### 개발 모드에서 창이 안 열릴 때
-1. Vite dev server가 실행 중인지 확인
-2. `http://localhost:5173` 접근 가능한지 확인
-3. 포트가 다르면 `electron/main.ts`에서 포트 번호 수정
+주요 트러블슈팅 항목:
+- Package 버전 호환성 문제
+- Windows Python 의존성 문제
+- Window가 표시되지 않는 문제
+- ES 모듈 환경에서 __dirname 문제
+- 효과적인 디버깅 기법
 
 ## 9. 고급 기능
 
