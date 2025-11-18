@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "generatedAt": "AUTO_GENERATED",
-  "totalDatasets": 2,
+  "totalDatasets": 13,
   "categories": {
     "db": [
       {
@@ -22,6 +22,116 @@
         "cardCount": 62,
         "fileName": "ds.json"
       }
+    ],
+    "elasticsearch": [
+      {
+        "category": "elasticsearch",
+        "path": "/data/dataset/elasticsearch/elasticsearch.json",
+        "name": "Elasticsearch",
+        "description": "Elasticsearch 검색 엔진의 아키텍처, 쿼리, 성능 최적화 등 핵심 개념",
+        "cardCount": 50,
+        "fileName": "elasticsearch.json"
+      }
+    ],
+    "etc": [
+      {
+        "category": "etc",
+        "path": "/data/dataset/etc/etc.json",
+        "name": "개발상식 (CS 기타)",
+        "description": "가상화, Docker, CI/CD, static 등 개발 필수 지식",
+        "cardCount": 44,
+        "fileName": "etc.json"
+      }
+    ],
+    "javascript": [
+      {
+        "category": "javascript",
+        "path": "/data/dataset/javascript/javascript.json",
+        "name": "자바스크립트",
+        "description": "JavaScript 핵심 개념 및 면접 질문",
+        "cardCount": 60,
+        "fileName": "javascript.json"
+      }
+    ],
+    "kafka": [
+      {
+        "category": "kafka",
+        "path": "/data/dataset/kafka/kafka.json",
+        "name": "Kafka",
+        "description": "Apache Kafka의 아키텍처, 메시징 시스템, 스트리밍 처리 등 핵심 개념",
+        "cardCount": 4,
+        "fileName": "kafka.json"
+      }
+    ],
+    "network": [
+      {
+        "category": "network",
+        "path": "/data/dataset/network/network.json",
+        "name": "네트워크",
+        "description": "네트워크 핵심 개념 및 면접 질문",
+        "cardCount": 104,
+        "fileName": "network.json"
+      }
+    ],
+    "os": [
+      {
+        "category": "os",
+        "path": "/data/dataset/os/os.json",
+        "name": "운영체제",
+        "description": "운영체제 핵심 개념 및 면접 질문",
+        "cardCount": 122,
+        "fileName": "os.json"
+      }
+    ],
+    "pl": [
+      {
+        "category": "pl",
+        "path": "/data/dataset/pl/pl.json",
+        "name": "프로그래밍 언어",
+        "description": "프로그래밍 언어 핵심 개념 및 면접 질문",
+        "cardCount": 125,
+        "fileName": "pl.json"
+      }
+    ],
+    "react": [
+      {
+        "category": "react",
+        "path": "/data/dataset/react/react.json",
+        "name": "리액트",
+        "description": "React 핵심 개념 및 면접 질문",
+        "cardCount": 62,
+        "fileName": "react.json"
+      }
+    ],
+    "redis": [
+      {
+        "category": "redis",
+        "path": "/data/dataset/redis/redis.json",
+        "name": "Redis",
+        "description": "Redis 핵심 개념 및 면접 질문",
+        "cardCount": 32,
+        "fileName": "redis.json"
+      }
+    ],
+    "spring": [
+      {
+        "category": "spring",
+        "path": "/data/dataset/spring/spring.json",
+        "name": "스프링",
+        "description": "Spring Framework 핵심 개념 및 면접 질문",
+        "cardCount": 85,
+        "fileName": "spring.json"
+      }
+    ],
+    "websocket": [
+      {
+        "category": "websocket",
+        "path": "/data/dataset/websocket/websocket.json",
+        "name": "WebSocket",
+        "description": "WebSocket 핵심 개념 및 실무 질문",
+        "cardCount": 30,
+        "fileName": "websocket.json"
+      }
     ]
   },
   "datasets": [
@@ -40,6 +150,94 @@
       "description": "자료구조 핵심 개념 및 면접 질문",
       "cardCount": 62,
       "fileName": "ds.json"
+    },
+    {
+      "category": "elasticsearch",
+      "path": "/data/dataset/elasticsearch/elasticsearch.json",
+      "name": "Elasticsearch",
+      "description": "Elasticsearch 검색 엔진의 아키텍처, 쿼리, 성능 최적화 등 핵심 개념",
+      "cardCount": 50,
+      "fileName": "elasticsearch.json"
+    },
+    {
+      "category": "etc",
+      "path": "/data/dataset/etc/etc.json",
+      "name": "개발상식 (CS 기타)",
+      "description": "가상화, Docker, CI/CD, static 등 개발 필수 지식",
+      "cardCount": 44,
+      "fileName": "etc.json"
+    },
+    {
+      "category": "javascript",
+      "path": "/data/dataset/javascript/javascript.json",
+      "name": "자바스크립트",
+      "description": "JavaScript 핵심 개념 및 면접 질문",
+      "cardCount": 60,
+      "fileName": "javascript.json"
+    },
+    {
+      "category": "kafka",
+      "path": "/data/dataset/kafka/kafka.json",
+      "name": "Kafka",
+      "description": "Apache Kafka의 아키텍처, 메시징 시스템, 스트리밍 처리 등 핵심 개념",
+      "cardCount": 4,
+      "fileName": "kafka.json"
+    },
+    {
+      "category": "network",
+      "path": "/data/dataset/network/network.json",
+      "name": "네트워크",
+      "description": "네트워크 핵심 개념 및 면접 질문",
+      "cardCount": 104,
+      "fileName": "network.json"
+    },
+    {
+      "category": "os",
+      "path": "/data/dataset/os/os.json",
+      "name": "운영체제",
+      "description": "운영체제 핵심 개념 및 면접 질문",
+      "cardCount": 122,
+      "fileName": "os.json"
+    },
+    {
+      "category": "pl",
+      "path": "/data/dataset/pl/pl.json",
+      "name": "프로그래밍 언어",
+      "description": "프로그래밍 언어 핵심 개념 및 면접 질문",
+      "cardCount": 125,
+      "fileName": "pl.json"
+    },
+    {
+      "category": "react",
+      "path": "/data/dataset/react/react.json",
+      "name": "리액트",
+      "description": "React 핵심 개념 및 면접 질문",
+      "cardCount": 62,
+      "fileName": "react.json"
+    },
+    {
+      "category": "redis",
+      "path": "/data/dataset/redis/redis.json",
+      "name": "Redis",
+      "description": "Redis 핵심 개념 및 면접 질문",
+      "cardCount": 32,
+      "fileName": "redis.json"
+    },
+    {
+      "category": "spring",
+      "path": "/data/dataset/spring/spring.json",
+      "name": "스프링",
+      "description": "Spring Framework 핵심 개념 및 면접 질문",
+      "cardCount": 85,
+      "fileName": "spring.json"
+    },
+    {
+      "category": "websocket",
+      "path": "/data/dataset/websocket/websocket.json",
+      "name": "WebSocket",
+      "description": "WebSocket 핵심 개념 및 실무 질문",
+      "cardCount": 30,
+      "fileName": "websocket.json"
     }
   ]
 }
