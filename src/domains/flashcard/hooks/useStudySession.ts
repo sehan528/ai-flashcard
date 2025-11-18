@@ -136,14 +136,27 @@ export const useStudySession = (): StudySessionState & StudySessionActions => {
         });
     };
 
-    // 카드 순서 다시 섞기
+    // 카드 순서 다시 섞기 (남은 카드만 섞음)
     const shuffleCards = () => {
         if (sessionState.cardSet) {
-            const newOrder = generateCardOrder(sessionState.totalCards, true);
+            const currentIndex = sessionState.currentCardIndex;
+
+            // 이미 본 카드들 (현재 카드 포함)
+            const viewedCards = sessionState.cardOrder.slice(0, currentIndex + 1);
+
+            // 아직 안 본 카드들
+            const remainingCards = sessionState.cardOrder.slice(currentIndex + 1);
+
+            // 남은 카드들만 섞기
+            const shuffledRemaining = shuffleArray(remainingCards);
+
+            // 이미 본 카드 + 섞인 남은 카드
+            const newOrder = [...viewedCards, ...shuffledRemaining];
+
             setSessionState(prev => ({
                 ...prev,
                 cardOrder: newOrder,
-                currentCardIndex: 0, // 처음부터 다시 시작
+                // currentCardIndex는 유지 (현재 위치에서 계속)
                 isRandomMode: true,
             }));
         }
