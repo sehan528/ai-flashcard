@@ -11,6 +11,12 @@ const MultipleStudyCard = ({ card }: MultipleStudyCardProps) => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [answerState, setAnswerState] = useState<AnswerState>('unanswered');
 
+    // 카드가 변경되면 상태 초기화
+    React.useEffect(() => {
+        setSelectedIndex(null);
+        setAnswerState('unanswered');
+    }, [card.id]);
+
     // 답변 선택
     const handleSelectChoice = (index: number) => {
         if (answerState === 'unanswered') {
