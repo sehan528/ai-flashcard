@@ -187,124 +187,119 @@ const Statistics = () => {
                 </div>
             </div>
 
-            {/* 월별 캘린더 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 xl:p-6 mb-6 xl:mb-8">
-                {/* 월 네비게이션 */}
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg xl:text-xl font-semibold text-gray-800">📅 학습 활동</h3>
-                    <div className="flex items-center gap-2">
-                        {!isCurrentMonth && (
+            {/* 학습 활동 & 전체 통계 - PC에서는 2열, 모바일에서는 1열 */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 mb-6 xl:mb-8">
+                {/* 월별 캘린더 */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 xl:p-6">
+                    {/* 월 네비게이션 */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                        <h3 className="text-lg xl:text-xl font-semibold text-gray-800 flex-shrink-0">📅 학습 활동</h3>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                            {!isCurrentMonth && (
+                                <button
+                                    onClick={goToToday}
+                                    className="px-3 py-1.5 text-sm text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 transition-colors whitespace-nowrap"
+                                >
+                                    오늘
+                                </button>
+                            )}
                             <button
-                                onClick={goToToday}
-                                className="px-3 py-1.5 text-sm text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 transition-colors"
+                                onClick={goToPreviousMonth}
+                                className="p-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex-shrink-0"
+                                title="이전 달"
                             >
-                                오늘
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
                             </button>
-                        )}
-                        <button
-                            onClick={goToPreviousMonth}
-                            className="p-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                            title="이전 달"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-                        <div className="min-w-[120px] text-center font-semibold text-gray-800">
-                            {currentYear}년 {monthNames[currentMonth]}
+                            <div className="min-w-[100px] text-center font-semibold text-gray-800 whitespace-nowrap">
+                                {currentYear}년 {monthNames[currentMonth]}
+                            </div>
+                            <button
+                                onClick={goToNextMonth}
+                                className="p-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex-shrink-0"
+                                title="다음 달"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
                         </div>
-                        <button
-                            onClick={goToNextMonth}
-                            className="p-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                            title="다음 달"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
+                    </div>
+
+                    {/* 캘린더 - GitHub 스타일 */}
+                    <div>
+                        {/* 요일 헤더 */}
+                        <div className="grid grid-cols-7 gap-1 xl:gap-1.5 mb-2">
+                            {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
+                                <div key={day} className={`text-center text-xs font-medium ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-gray-600'}`}>
+                                    {day}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* 날짜 그리드 - 작은 사각형 */}
+                        <div className="space-y-1 xl:space-y-1.5">
+                            {monthCalendar.map((week, weekIndex) => (
+                                <div key={weekIndex} className="grid grid-cols-7 gap-1 xl:gap-1.5">
+                                    {week.map((day, dayIndex) => {
+                                        if (!day) {
+                                            return <div key={`empty-${weekIndex}-${dayIndex}`} className="w-full aspect-square" />;
+                                        }
+
+                                        const date = new Date(day.date);
+                                        const dayNum = date.getDate();
+                                        const isToday = day.date === FlashcardStorage.getDateString();
+
+                                        return (
+                                            <div
+                                                key={day.date}
+                                                className={`
+                                                    w-full aspect-square rounded border
+                                                    ${getHeatmapColor(day.cardsStudied)}
+                                                    ${isToday ? 'ring-2 ring-blue-500 border-blue-500' : 'border-gray-300'}
+                                                    hover:ring-2 hover:ring-blue-400 cursor-pointer transition-all
+                                                `}
+                                                title={`${date.getMonth() + 1}월 ${dayNum}일: ${day.cardsStudied}개 카드 학습${day.sessionsCount > 0 ? `, ${day.sessionsCount}회 세션` : ''}`}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* 범례 */}
+                        <div className="flex items-center justify-center gap-2 mt-6 text-xs text-gray-600">
+                            <span>적음</span>
+                            <div className="flex gap-1">
+                                <div className="w-3 h-3 bg-gray-100 rounded border border-gray-300"></div>
+                                <div className="w-3 h-3 bg-green-200 rounded"></div>
+                                <div className="w-3 h-3 bg-green-400 rounded"></div>
+                                <div className="w-3 h-3 bg-green-600 rounded"></div>
+                                <div className="w-3 h-3 bg-green-800 rounded"></div>
+                            </div>
+                            <span>많음</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* 캘린더 - GitHub 스타일 */}
-                <div className="max-w-full xl:max-w-md xl:mx-auto">
-                    {/* 요일 헤더 */}
-                    <div className="grid grid-cols-7 gap-1 xl:gap-1.5 mb-2">
-                        {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
-                            <div key={day} className={`text-center text-xs font-medium ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-gray-600'}`}>
-                                {day}
-                            </div>
-                        ))}
-                    </div>
+                {/* 전체 통계 */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 xl:p-6">
+                    <h3 className="text-lg xl:text-xl font-semibold text-gray-800 mb-4">📊 전체 통계</h3>
 
-                    {/* 날짜 그리드 - 작은 사각형 */}
-                    <div className="space-y-1 xl:space-y-1.5">
-                        {monthCalendar.map((week, weekIndex) => (
-                            <div key={weekIndex} className="grid grid-cols-7 gap-1 xl:gap-1.5">
-                                {week.map((day, dayIndex) => {
-                                    if (!day) {
-                                        return <div key={`empty-${weekIndex}-${dayIndex}`} className="w-full aspect-square xl:w-12 xl:h-12" />;
-                                    }
-
-                                    const date = new Date(day.date);
-                                    const dayNum = date.getDate();
-                                    const isToday = day.date === FlashcardStorage.getDateString();
-
-                                    return (
-                                        <div
-                                            key={day.date}
-                                            className={`
-                                                w-full aspect-square xl:w-12 xl:h-12 rounded border
-                                                ${getHeatmapColor(day.cardsStudied)}
-                                                ${isToday ? 'ring-2 ring-blue-500 border-blue-500' : 'border-gray-300'}
-                                                hover:ring-2 hover:ring-blue-400 cursor-pointer transition-all
-                                                relative group
-                                            `}
-                                            title={`${date.getMonth() + 1}월 ${dayNum}일: ${day.cardsStudied}개 카드 학습${day.sessionsCount > 0 ? `, ${day.sessionsCount}회 세션` : ''}`}
-                                        >
-                                            {/* 날짜 표시 - hover 시에만 또는 1일에만 */}
-                                            {dayNum === 1 && (
-                                                <div className="absolute -top-5 left-0 text-[10px] text-gray-500 font-medium">
-                                                    {date.getMonth() + 1}월
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* 범례 */}
-                    <div className="flex items-center justify-center gap-2 mt-6 text-xs text-gray-600">
-                        <span>적음</span>
-                        <div className="flex gap-1">
-                            <div className="w-3 h-3 bg-gray-100 rounded border border-gray-300"></div>
-                            <div className="w-3 h-3 bg-green-200 rounded"></div>
-                            <div className="w-3 h-3 bg-green-400 rounded"></div>
-                            <div className="w-3 h-3 bg-green-600 rounded"></div>
-                            <div className="w-3 h-3 bg-green-800 rounded"></div>
+                    <div className="grid grid-cols-1 gap-4 xl:gap-6">
+                        <div className="text-center p-4 bg-blue-50 rounded-lg">
+                            <div className="text-3xl xl:text-4xl font-bold text-blue-600">{totalStats.totalCardSets}</div>
+                            <div className="text-sm text-gray-600 mt-1">카드셋</div>
                         </div>
-                        <span>많음</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* 전체 통계 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 xl:p-6">
-                <h3 className="text-lg xl:text-xl font-semibold text-gray-800 mb-4">📊 전체 통계</h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 xl:gap-6">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                        <div className="text-3xl xl:text-4xl font-bold text-blue-600">{totalStats.totalCardSets}</div>
-                        <div className="text-sm text-gray-600 mt-1">카드셋</div>
-                    </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                        <div className="text-3xl xl:text-4xl font-bold text-green-600">{totalStats.totalCards}</div>
-                        <div className="text-sm text-gray-600 mt-1">총 카드 수</div>
-                    </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                        <div className="text-3xl xl:text-4xl font-bold text-purple-600">{totalStats.totalStudyCount}</div>
-                        <div className="text-sm text-gray-600 mt-1">총 학습 횟수</div>
+                        <div className="text-center p-4 bg-green-50 rounded-lg">
+                            <div className="text-3xl xl:text-4xl font-bold text-green-600">{totalStats.totalCards}</div>
+                            <div className="text-sm text-gray-600 mt-1">총 카드 수</div>
+                        </div>
+                        <div className="text-center p-4 bg-purple-50 rounded-lg">
+                            <div className="text-3xl xl:text-4xl font-bold text-purple-600">{totalStats.totalStudyCount}</div>
+                            <div className="text-sm text-gray-600 mt-1">총 학습 횟수</div>
+                        </div>
                     </div>
                 </div>
             </div>
