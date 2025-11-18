@@ -3,6 +3,7 @@ import type { FlashCard, CardSet } from '../../dtos/FlashCard';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
+import ContextMenu from '../../../../components/UI/ContextMenu';
 
 interface CardListManagerProps {
     cardSet: CardSet;
@@ -13,34 +14,47 @@ interface CardListManagerProps {
 
 const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: CardListManagerProps) => {
     const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
-    const [showActionsCardId, setShowActionsCardId] = useState<string | null>(null);
+    const [contextMenu, setContextMenu] = useState<{ x: number; y: number; cardId: string } | null>(null);
 
     // 카드 확장/축소 토글
     const toggleCardExpansion = (cardId: string) => {
         setExpandedCardId(expandedCardId === cardId ? null : cardId);
     };
 
-    // 액션 버튼 표시/숨김 토글
-    const toggleActions = (cardId: string, event: React.MouseEvent) => {
+    // 옵션 메뉴 표시
+    const handleOptionsClick = (cardId: string, event: React.MouseEvent) => {
         event.stopPropagation();
-        setShowActionsCardId(showActionsCardId === cardId ? null : cardId);
+        const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+        setContextMenu({
+            x: rect.left,
+            y: rect.bottom + 4,
+            cardId,
+        });
+    };
+
+    const closeContextMenu = () => {
+        setContextMenu(null);
     };
 
     // 카드 삭제 확인
-    const handleDeleteCard = (card: FlashCard, event: React.MouseEvent) => {
-        event.stopPropagation();
+    const handleDeleteCard = (card: FlashCard) => {
         if (confirm(`"${card.question.slice(0, 30)}..." 카드를 삭제하시겠습니까?`)) {
             onDeleteCard(card.id);
-            setShowActionsCardId(null);
+            closeContextMenu();
         }
     };
 
     // 카드 편집
-    const handleEditCard = (card: FlashCard, event: React.MouseEvent) => {
-        event.stopPropagation();
+    const handleEditCard = (card: FlashCard) => {
         onEditCard(card);
-        setShowActionsCardId(null);
+        closeContextMenu();
     };
+
+    // 컨텍스트 메뉴 아이템 생성
+    const getContextMenuItems = (card: FlashCard) => [
+        { label: '수정', icon: '✏️', onClick: () => handleEditCard(card) },
+        { label: '삭제', icon: '🗑️', onClick: () => handleDeleteCard(card), danger: true },
+    ];
 
     // 답변 미리보기 생성
     const getAnswerPreview = (card: FlashCard): string => {
@@ -106,7 +120,6 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                     {cardSet.cards.map((card, index) => {
                         const typeInfo = getCardTypeInfo(card.type);
                         const isExpanded = expandedCardId === card.id;
-                        const showActions = showActionsCardId === card.id;
 
                         return (
                             <div
@@ -162,54 +175,22 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                                             )}
                                         </div>
 
-                                        {/* 화살표 버튼 (우측 상단) */}
+                                        {/* 옵션 버튼 (우측 상단) */}
                                         <button
                                             className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
-                                            onClick={(e) => toggleActions(card.id, e)}
-                                            title={showActions ? "액션 숨기기" : "액션 보기"}
+                                            onClick={(e) => handleOptionsClick(card.id, e)}
+                                            title="옵션"
                                         >
                                             <svg
-                                                className={`w-5 h-5 text-gray-600 transform transition-transform duration-200 ${
-                                                    showActions ? 'rotate-180' : ''
-                                                }`}
-                                                fill="none"
-                                                stroke="currentColor"
+                                                className="w-5 h-5 text-gray-600"
+                                                fill="currentColor"
                                                 viewBox="0 0 24 24"
                                             >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M19 9l-7 7-7-7"
-                                                />
+                                                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                                             </svg>
                                         </button>
                                     </div>
                                 </div>
-
-                                {/* 액션 버튼들 (화살표 클릭 시 표시) */}
-                                {showActions && (
-                                    <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
-                                        <div className="flex gap-2 justify-end">
-                                            <button
-                                                onClick={(e) => handleEditCard(card, e)}
-                                                className="flex items-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm"
-                                                title="수정"
-                                            >
-                                                <span>✏️</span>
-                                                <span>수정</span>
-                                            </button>
-                                            <button
-                                                onClick={(e) => handleDeleteCard(card, e)}
-                                                className="flex items-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
-                                                title="삭제"
-                                            >
-                                                <span>🗑️</span>
-                                                <span>삭제</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
 
                                 {/* 카드 상세 정보 (확장 시 표시) */}
                                 {isExpanded && (
@@ -294,6 +275,18 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                         );
                     })}
                 </div>
+            )}
+
+            {/* 컨텍스트 메뉴 */}
+            {contextMenu && (
+                <ContextMenu
+                    x={contextMenu.x}
+                    y={contextMenu.y}
+                    items={getContextMenuItems(
+                        cardSet.cards.find(c => c.id === contextMenu.cardId)!
+                    )}
+                    onClose={closeContextMenu}
+                />
             )}
         </div>
     );

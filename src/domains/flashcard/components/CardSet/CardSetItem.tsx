@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { CardSet } from '../../dtos/FlashCard';
+import ContextMenu from '../../../../components/UI/ContextMenu';
 
 interface CardSetItemProps {
     cardSet: CardSet;
@@ -16,95 +17,92 @@ const CardSetItem = ({
                          onDuplicate,
                          onDelete,
                      }: CardSetItemProps) => {
-    const [showActions, setShowActions] = useState(false);
+    const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
 
-    const handleToggleActions = (event: React.MouseEvent) => {
+    const handleOptionsClick = (event: React.MouseEvent) => {
         event.stopPropagation();
-        setShowActions(!showActions);
+        const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+        setContextMenu({
+            x: rect.left,
+            y: rect.bottom + 4,
+        });
     };
 
-    const handleEdit = (event: React.MouseEvent) => {
-        event.stopPropagation();
+    const closeContextMenu = () => {
+        setContextMenu(null);
+    };
+
+    const handleEdit = () => {
         onEdit(cardSet);
-        setShowActions(false);
+        closeContextMenu();
     };
 
-    const handleDelete = (event: React.MouseEvent) => {
-        event.stopPropagation();
-        onDelete(cardSet);
-        setShowActions(false);
+    const handleDuplicate = () => {
+        onDuplicate(cardSet);
+        closeContextMenu();
     };
+
+    const handleDelete = () => {
+        onDelete(cardSet);
+        closeContextMenu();
+    };
+
+    const contextMenuItems = [
+        { label: '수정', icon: '✏️', onClick: handleEdit },
+        { label: '복제', icon: '📋', onClick: handleDuplicate },
+        { label: '삭제', icon: '🗑️', onClick: handleDelete, danger: true },
+    ];
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 relative">
-            {/* 메인 카드 영역 (클릭 시 학습 시작) */}
-            <div
-                className="p-6 cursor-pointer"
-                onClick={() => onStartStudy(cardSet)}
-            >
-                <h3 className="text-xl font-semibold text-gray-800 mb-2 pr-8">
-                    {cardSet.name}
-                </h3>
-
-                <p className="text-gray-600 mb-4">
-                    {cardSet.description}
-                </p>
-
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                    <span>{cardSet.cards.length}개 카드</span>
-                    <span>
-                        생성일: {cardSet.createdAt.toLocaleDateString()}
-                    </span>
-                </div>
-            </div>
-
-            {/* 화살표 버튼 (우측 상단) */}
-            <button
-                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
-                onClick={handleToggleActions}
-                title={showActions ? "액션 숨기기" : "액션 보기"}
-            >
-                <svg
-                    className={`w-5 h-5 text-gray-600 transform transition-transform duration-200 ${
-                        showActions ? 'rotate-180' : ''
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+        <>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 relative">
+                {/* 메인 카드 영역 (클릭 시 학습 시작) */}
+                <div
+                    className="p-6 cursor-pointer"
+                    onClick={() => onStartStudy(cardSet)}
                 >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                    />
-                </svg>
-            </button>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2 pr-8">
+                        {cardSet.name}
+                    </h3>
 
-            {/* 액션 버튼들 (화살표 클릭 시 표시) */}
-            {showActions && (
-                <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-xl">
-                    <div className="flex gap-2 justify-end">
-                        <button
-                            onClick={handleEdit}
-                            className="flex items-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm"
-                            title="수정"
-                        >
-                            <span>✏️</span>
-                            <span>수정</span>
-                        </button>
-                        <button
-                            onClick={handleDelete}
-                            className="flex items-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
-                            title="삭제"
-                        >
-                            <span>🗑️</span>
-                            <span>삭제</span>
-                        </button>
+                    <p className="text-gray-600 mb-4">
+                        {cardSet.description}
+                    </p>
+
+                    <div className="flex justify-between items-center text-sm text-gray-500">
+                        <span>{cardSet.cards.length}개 카드</span>
+                        <span>
+                            생성일: {cardSet.createdAt.toLocaleDateString()}
+                        </span>
                     </div>
                 </div>
+
+                {/* 옵션 버튼 (우측 상단) */}
+                <button
+                    className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+                    onClick={handleOptionsClick}
+                    title="옵션"
+                >
+                    <svg
+                        className="w-5 h-5 text-gray-600"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                    </svg>
+                </button>
+            </div>
+
+            {/* 컨텍스트 메뉴 */}
+            {contextMenu && (
+                <ContextMenu
+                    x={contextMenu.x}
+                    y={contextMenu.y}
+                    items={contextMenuItems}
+                    onClose={closeContextMenu}
+                />
             )}
-        </div>
+        </>
     );
 };
 
