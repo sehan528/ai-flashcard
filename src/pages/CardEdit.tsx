@@ -296,37 +296,35 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 flex-1 overflow-hidden">
                 {/* 왼쪽: 카드셋 선택 영역 - 데스크톱 전용 */}
-                <div className="hidden xl:block xl:col-span-1 overflow-hidden">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col max-h-[calc(100vh-200px)]">
-                        <div className="flex-1 overflow-y-auto">
-                            <CardSetSelector
-                                cardSets={cardSets}
-                                selectedCardSetId={selectedCardSetId}
-                                onSelectCardSet={(cardSetId) => {
-                                    setSelectedCardSetId(cardSetId);
-                                    setEditMode('list'); // 카드셋 변경 시 목록 모드로
-                                    setEditingCard(null);
-                                }}
-                                onCreateNewSet={handleCreateNewCardSet}
-                                onEditCardSet={handleEditCardSet}
-                                onDeleteCardSet={handleDeleteCardSet}
-                            />
+                <div className="hidden xl:block xl:col-span-1 overflow-y-auto scrollbar-hide">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-0">
+                        <CardSetSelector
+                            cardSets={cardSets}
+                            selectedCardSetId={selectedCardSetId}
+                            onSelectCardSet={(cardSetId) => {
+                                setSelectedCardSetId(cardSetId);
+                                setEditMode('list'); // 카드셋 변경 시 목록 모드로
+                                setEditingCard(null);
+                            }}
+                            onCreateNewSet={handleCreateNewCardSet}
+                            onEditCardSet={handleEditCardSet}
+                            onDeleteCardSet={handleDeleteCardSet}
+                        />
 
-                            {/* 선택된 카드셋 정보 */}
-                            {selectedCardSet && (
-                                <div className="mt-4 p-3 bg-blue-50 rounded-lg flex-shrink-0">
-                                    <h4 className="font-medium text-blue-900 mb-1">
-                                        현재 편집 중
-                                    </h4>
-                                    <div className="text-sm text-blue-700">
-                                        <div>{selectedCardSet.name}</div>
-                                        <div className="opacity-75">
-                                            {selectedCardSet.cards.length}개 카드
-                                        </div>
+                        {/* 선택된 카드셋 정보 */}
+                        {selectedCardSet && (
+                            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                                <h4 className="font-medium text-blue-900 mb-1">
+                                    현재 편집 중
+                                </h4>
+                                <div className="text-sm text-blue-700">
+                                    <div>{selectedCardSet.name}</div>
+                                    <div className="opacity-75">
+                                        {selectedCardSet.cards.length}개 카드
                                     </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
