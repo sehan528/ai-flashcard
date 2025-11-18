@@ -681,4 +681,120 @@ export class FlashcardStorage {
     static clearStudyHistory(): void {
         localStorage.removeItem(STUDY_HISTORY_KEY);
     }
+
+    // 특정 카드셋의 학습 기록 삭제 (카드셋 삭제 시 호출)
+    static removeStudyRecordsByCardSetId(cardSetId: string): void {
+        const history = this.getStudyHistory();
+
+        // 해당 카드셋의 기록 제거
+        const filteredRecords = history.records.filter(record => record.cardSetId !== cardSetId);
+
+        // dailyStats 재계산
+        const newDailyStats: { [date: string]: DailyStats } = {};
+
+        filteredRecords.forEach(record => {
+            if (!newDailyStats[record.date]) {
+                newDailyStats[record.date] = {
+                    date: record.date,
+                    cardsStudied: 0,
+                    sessionsCount: history.dailyStats[record.date]?.sessionsCount || 0,
+                    cardSetIds: []
+                };
+            }
+
+            newDailyStats[record.date].cardsStudied += 1;
+
+            if (!newDailyStats[record.date].cardSetIds.includes(record.cardSetId)) {
+                newDailyStats[record.date].cardSetIds.push(record.cardSetId);
+            }
+        });
+
+        this.saveStudyHistory({
+            records: filteredRecords,
+            dailyStats: newDailyStats
+        });
+    }
+
+    // 특정 카드의 학습 기록 삭제 (카드 삭제 시 호출)
+    static removeStudyRecordsByCardId(cardId: string): void {
+        const history = this.getStudyHistory();
+
+        // 해당 카드의 기록 제거
+        const filteredRecords = history.records.filter(record => record.cardId !== cardId);
+
+        // dailyStats 재계산
+        const newDailyStats: { [date: string]: DailyStats } = {};
+
+        filteredRecords.forEach(record => {
+            if (!newDailyStats[record.date]) {
+                newDailyStats[record.date] = {
+                    date: record.date,
+                    cardsStudied: 0,
+                    sessionsCount: history.dailyStats[record.date]?.sessionsCount || 0,
+                    cardSetIds: []
+                };
+            }
+
+            newDailyStats[record.date].cardsStudied += 1;
+
+            if (!newDailyStats[record.date].cardSetIds.includes(record.cardSetId)) {
+                newDailyStats[record.date].cardSetIds.push(record.cardSetId);
+            }
+        });
+
+        this.saveStudyHistory({
+            records: filteredRecords,
+            dailyStats: newDailyStats
+        });
+    }
+
+    // 존재하지 않는 카드셋/카드의 학습 기록 정리 (데이터 무결성 유지)
+    static cleanupStudyHistory(): void {
+        const history = this.getStudyHistory();
+        const cardSets = this.getCardSets();
+
+        // 존재하는 카드셋 ID와 카드 ID 맵 생성
+        const validCardSetIds = new Set(cardSets.map(set => set.id));
+        const validCardIds = new Set<string>();
+
+        cardSets.forEach(cardSet => {
+            cardSet.cards.forEach(card => {
+                validCardIds.add(card.id);
+            });
+        });
+
+        // 유효한 기록만 필터링
+        const filteredRecords = history.records.filter(record =>
+            validCardSetIds.has(record.cardSetId) && validCardIds.has(record.cardId)
+        );
+
+        // 기록이 변경되었으면 dailyStats 재계산
+        if (filteredRecords.length !== history.records.length) {
+            const newDailyStats: { [date: string]: DailyStats } = {};
+
+            filteredRecords.forEach(record => {
+                if (!newDailyStats[record.date]) {
+                    newDailyStats[record.date] = {
+                        date: record.date,
+                        cardsStudied: 0,
+                        sessionsCount: history.dailyStats[record.date]?.sessionsCount || 0,
+                        cardSetIds: []
+                    };
+                }
+
+                newDailyStats[record.date].cardsStudied += 1;
+
+                if (!newDailyStats[record.date].cardSetIds.includes(record.cardSetId)) {
+                    newDailyStats[record.date].cardSetIds.push(record.cardSetId);
+                }
+            });
+
+            this.saveStudyHistory({
+                records: filteredRecords,
+                dailyStats: newDailyStats
+            });
+
+            console.log(`학습 기록 정리 완료: ${history.records.length - filteredRecords.length}개 기록 제거`);
+        }
+    }
 }

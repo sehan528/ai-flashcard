@@ -98,6 +98,9 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
 
             FlashcardStorage.saveCardSets(filteredSets);
 
+            // 해당 카드셋의 학습 기록도 함께 삭제
+            FlashcardStorage.removeStudyRecordsByCardSetId(cardSetId);
+
             // 현재 선택된 카드셋이 삭제된 경우
             if (selectedCardSetId === cardSetId) {
                 setSelectedCardSetId(filteredSets.length > 0 ? filteredSets[0].id : null);
@@ -191,6 +194,10 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
             });
 
             FlashcardStorage.saveCardSets(updatedSets);
+
+            // 해당 카드의 학습 기록도 함께 삭제
+            FlashcardStorage.removeStudyRecordsByCardId(cardId);
+
             loadCardSets();
             showSuccessMessage('카드가 삭제되었습니다!');
             onCardChanged?.();

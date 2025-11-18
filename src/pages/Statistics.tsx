@@ -14,6 +14,8 @@ const Statistics = () => {
     const [monthStats, setMonthStats] = useState<DailyStats[]>([]);
 
     useEffect(() => {
+        // 첫 로드 시 데이터 무결성 확인
+        FlashcardStorage.cleanupStudyHistory();
         loadStatistics();
     }, [currentYear, currentMonth]);
 
@@ -223,24 +225,24 @@ const Statistics = () => {
                     </div>
                 </div>
 
-                {/* 캘린더 */}
+                {/* 캘린더 - GitHub 스타일 */}
                 <div>
                     {/* 요일 헤더 */}
-                    <div className="grid grid-cols-7 gap-1 xl:gap-2 mb-2">
+                    <div className="grid grid-cols-7 gap-1 mb-2">
                         {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
-                            <div key={day} className={`text-center text-xs xl:text-sm font-medium ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-gray-600'}`}>
+                            <div key={day} className={`text-center text-xs font-medium ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-gray-600'}`}>
                                 {day}
                             </div>
                         ))}
                     </div>
 
-                    {/* 날짜 그리드 */}
-                    <div className="space-y-1 xl:space-y-2">
+                    {/* 날짜 그리드 - 작은 사각형 */}
+                    <div className="space-y-1">
                         {monthCalendar.map((week, weekIndex) => (
-                            <div key={weekIndex} className="grid grid-cols-7 gap-1 xl:gap-2">
+                            <div key={weekIndex} className="grid grid-cols-7 gap-1">
                                 {week.map((day, dayIndex) => {
                                     if (!day) {
-                                        return <div key={`empty-${weekIndex}-${dayIndex}`} className="aspect-square" />;
+                                        return <div key={`empty-${weekIndex}-${dayIndex}`} className="w-full aspect-square" />;
                                     }
 
                                     const date = new Date(day.date);
@@ -251,19 +253,18 @@ const Statistics = () => {
                                         <div
                                             key={day.date}
                                             className={`
-                                                aspect-square rounded-lg border-2 flex flex-col items-center justify-center
+                                                w-full aspect-square rounded border
                                                 ${getHeatmapColor(day.cardsStudied)}
-                                                ${isToday ? 'border-blue-500 ring-2 ring-blue-300' : 'border-transparent'}
+                                                ${isToday ? 'ring-2 ring-blue-500 border-blue-500' : 'border-gray-300'}
                                                 hover:ring-2 hover:ring-blue-400 cursor-pointer transition-all
+                                                relative group
                                             `}
-                                            title={`${day.date}: ${day.cardsStudied}개 카드 학습${day.sessionsCount > 0 ? `, ${day.sessionsCount}회 세션` : ''}`}
+                                            title={`${date.getMonth() + 1}월 ${dayNum}일: ${day.cardsStudied}개 카드 학습${day.sessionsCount > 0 ? `, ${day.sessionsCount}회 세션` : ''}`}
                                         >
-                                            <div className="text-xs xl:text-sm font-semibold">
-                                                {dayNum}
-                                            </div>
-                                            {day.cardsStudied > 0 && (
-                                                <div className="text-[10px] xl:text-xs font-bold text-green-700">
-                                                    {day.cardsStudied}
+                                            {/* 날짜 표시 - hover 시에만 또는 1일에만 */}
+                                            {dayNum === 1 && (
+                                                <div className="absolute -top-5 left-0 text-[10px] text-gray-500 font-medium">
+                                                    {date.getMonth() + 1}월
                                                 </div>
                                             )}
                                         </div>
@@ -274,14 +275,14 @@ const Statistics = () => {
                     </div>
 
                     {/* 범례 */}
-                    <div className="flex items-center justify-center gap-2 mt-4 text-xs text-gray-600">
+                    <div className="flex items-center justify-center gap-2 mt-6 text-xs text-gray-600">
                         <span>적음</span>
                         <div className="flex gap-1">
-                            <div className="w-4 h-4 bg-gray-100 rounded border border-gray-300"></div>
-                            <div className="w-4 h-4 bg-green-200 rounded"></div>
-                            <div className="w-4 h-4 bg-green-400 rounded"></div>
-                            <div className="w-4 h-4 bg-green-600 rounded"></div>
-                            <div className="w-4 h-4 bg-green-800 rounded"></div>
+                            <div className="w-3 h-3 bg-gray-100 rounded border border-gray-300"></div>
+                            <div className="w-3 h-3 bg-green-200 rounded"></div>
+                            <div className="w-3 h-3 bg-green-400 rounded"></div>
+                            <div className="w-3 h-3 bg-green-600 rounded"></div>
+                            <div className="w-3 h-3 bg-green-800 rounded"></div>
                         </div>
                         <span>많음</span>
                     </div>
