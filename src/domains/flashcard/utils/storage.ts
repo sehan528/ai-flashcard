@@ -123,7 +123,8 @@ export class FlashcardStorage {
             let categories: string[] = [];
 
             try {
-                const indexResponse = await fetch('/data/dataset/index.json');
+                // Electron 환경에서도 작동하도록 상대 경로 사용
+                const indexResponse = await fetch('./data/dataset/index.json');
                 if (indexResponse.ok) {
                     const indexData = await indexResponse.json();
                     testDataFiles = indexData.datasets.map((ds: any) => ds.path);
