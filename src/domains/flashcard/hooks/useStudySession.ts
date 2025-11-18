@@ -136,7 +136,7 @@ export const useStudySession = (): StudySessionState & StudySessionActions => {
         });
     };
 
-    // 카드 순서 다시 섞기 (남은 카드만 섞음)
+    // 카드 순서 다시 섞기 (현재 카드 포함해서 남은 카드들 섞음)
     const shuffleCards = () => {
         if (sessionState.cardSet) {
             const currentIndex = sessionState.currentCardIndex;
@@ -145,27 +145,27 @@ export const useStudySession = (): StudySessionState & StudySessionActions => {
             console.log('Current Index:', currentIndex);
             console.log('Current cardOrder:', sessionState.cardOrder);
 
-            // 이미 본 카드들 (현재 카드 포함)
-            const viewedCards = sessionState.cardOrder.slice(0, currentIndex + 1);
-            console.log('Viewed Cards:', viewedCards);
+            // 이미 본 카드들 (현재 카드 제외)
+            const viewedCards = sessionState.cardOrder.slice(0, currentIndex);
+            console.log('Viewed Cards (excluding current):', viewedCards);
 
-            // 아직 안 본 카드들
-            const remainingCards = sessionState.cardOrder.slice(currentIndex + 1);
-            console.log('Remaining Cards (before shuffle):', remainingCards);
+            // 현재 카드부터 끝까지 (현재 카드 포함)
+            const cardsToShuffle = sessionState.cardOrder.slice(currentIndex);
+            console.log('Cards to shuffle (including current):', cardsToShuffle);
 
-            // 남은 카드들만 섞기
-            const shuffledRemaining = shuffleArray(remainingCards);
-            console.log('Remaining Cards (after shuffle):', shuffledRemaining);
+            // 현재 카드 포함해서 남은 카드들 섞기
+            const shuffledCards = shuffleArray(cardsToShuffle);
+            console.log('Shuffled cards:', shuffledCards);
 
-            // 이미 본 카드 + 섞인 남은 카드
-            const newOrder = [...viewedCards, ...shuffledRemaining];
+            // 이미 본 카드 + 섞인 카드들
+            const newOrder = [...viewedCards, ...shuffledCards];
             console.log('New Order:', newOrder);
             console.log('===================');
 
             setSessionState(prev => ({
                 ...prev,
                 cardOrder: newOrder,
-                // currentCardIndex는 유지 (현재 위치에서 계속)
+                // currentCardIndex는 유지 (현재 위치에서 계속, 하지만 카드는 바뀜)
                 isRandomMode: true,
             }));
         } else {

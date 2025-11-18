@@ -145,12 +145,12 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* 셔플 알림 (토스트) */}
+            {/* 셔플 알림 (중앙 오버레이) */}
             {showShuffleNotification && (
-                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
-                    <div className="bg-orange-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
-                        <span className="text-lg">🔀</span>
-                        <span className="font-medium">남은 카드를 섞었습니다!</span>
+                <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+                    <div className="bg-orange-600 text-white px-8 py-4 rounded-lg shadow-2xl flex items-center gap-3 animate-fade-in">
+                        <span className="text-2xl">🔀</span>
+                        <span className="font-semibold text-lg">남은 카드를 섞었습니다!</span>
                     </div>
                 </div>
             )}
