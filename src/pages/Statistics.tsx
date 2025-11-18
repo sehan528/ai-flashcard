@@ -141,7 +141,7 @@ const Statistics = () => {
     const isCurrentMonth = currentYear === new Date().getFullYear() && currentMonth === new Date().getMonth();
 
     return (
-        <div className="max-w-7xl mx-auto p-4 xl:p-8">
+        <div className="max-w-4xl xl:max-w-7xl mx-auto p-4 xl:p-8">
             <h2 className="text-2xl xl:text-3xl font-bold text-gray-800 mb-6 xl:mb-8">📊 학습 통계</h2>
 
             {/* 주요 통계 카드 */}
@@ -228,9 +228,9 @@ const Statistics = () => {
                     </div>
 
                     {/* 캘린더 - GitHub 스타일 */}
-                    <div>
+                    <div className="max-w-sm mx-auto sm:max-w-md lg:max-w-lg xl:max-w-none">
                         {/* 요일 헤더 */}
-                        <div className="grid grid-cols-7 gap-1 xl:gap-1.5 mb-2">
+                        <div className="grid grid-cols-7 gap-1.5 mb-2">
                             {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
                                 <div key={day} className={`text-center text-xs font-medium ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-gray-600'}`}>
                                     {day}
@@ -239,9 +239,9 @@ const Statistics = () => {
                         </div>
 
                         {/* 날짜 그리드 - 작은 사각형 */}
-                        <div className="space-y-1 xl:space-y-1.5">
+                        <div className="space-y-1.5">
                             {monthCalendar.map((week, weekIndex) => (
-                                <div key={weekIndex} className="grid grid-cols-7 gap-1 xl:gap-1.5">
+                                <div key={weekIndex} className="grid grid-cols-7 gap-1.5">
                                     {week.map((day, dayIndex) => {
                                         if (!day) {
                                             return <div key={`empty-${weekIndex}-${dayIndex}`} className="w-full aspect-square" />;
