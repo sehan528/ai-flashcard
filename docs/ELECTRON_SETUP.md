@@ -252,6 +252,63 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm run build:win
 ```
 
+### Windows에서 창이 표시되지 않는 경우 ⚠️⚠️
+
+**증상**: exe 파일 실행 시 프로세스는 있지만 GUI가 나타나지 않음
+
+**디버깅 방법**:
+
+#### 1. PowerShell에서 직접 실행하여 로그 확인
+```powershell
+# release 폴더로 이동
+cd release\win-unpacked
+
+# 직접 실행 (콘솔 로그가 표시됨)
+."AI Flashcard.exe"
+
+# 또는 절대 경로로
+& "C:\works\ai-flashcard\release\win-unpacked\AI Flashcard.exe"
+```
+
+**확인할 로그**:
+```
+Creating window...
+__dirname: C:\...\resources\app.asar\dist-electron
+app.getAppPath(): C:\...\resources\app.asar
+Window created, loading content...
+Loading file: C:\...\resources\app.asar\dist\index.html
+```
+
+#### 2. 로그 파일로 저장
+```powershell
+# 로그를 파일로 저장
+."AI Flashcard.exe" > log.txt 2>&1
+
+# 로그 파일 확인
+cat log.txt
+```
+
+#### 3. 일반적인 원인과 해결
+
+**원인 1**: dist 폴더가 패키징에 포함되지 않음
+```powershell
+# electron-builder.json 확인
+# "files": ["dist/**/*"] 가 있는지 확인
+
+# 다시 빌드
+npm run build:win
+```
+
+**원인 2**: 경로 문제로 index.html을 찾지 못함
+- 로그에 "Failed to load file" 에러가 있는지 확인
+- 에러 페이지가 표시되면 경로 정보 확인
+
+**원인 3**: 창이 화면 밖으로 나감
+```powershell
+# 작업 관리자에서 프로세스 강제 종료 후
+# 다시 실행하면 기본 위치에 표시됨
+```
+
 ### Electron 다운로드 오류
 ```bash
 # 캐시 삭제 후 재시도
