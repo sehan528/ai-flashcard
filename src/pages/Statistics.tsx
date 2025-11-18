@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 import type { DailyStats } from '../domains/flashcard/dtos/FlashCard';
 
-const Statistics = () => {
+interface StatisticsProps {
+    onRefresh?: () => void;
+}
+
+const Statistics = ({ onRefresh }: StatisticsProps) => {
     const [studyStreak, setStudyStreak] = useState(0);
     const [todayStats, setTodayStats] = useState<DailyStats | null>(null);
     const [weekStats, setWeekStats] = useState<DailyStats[]>([]);

@@ -42,9 +42,9 @@ const AppRouter = ({
                 />
             );
         case 'statistics':
-            return <Statistics />;
+            return <Statistics onRefresh={onRefresh} />;
         case 'settings':
-            return <Settings />;
+            return <Settings onRefresh={onRefresh} />;
         default:
             return (
                 <Home

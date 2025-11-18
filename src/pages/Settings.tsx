@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 
-const Settings = () => {
+interface SettingsProps {
+    onRefresh?: () => void;
+}
+
+const Settings = ({ onRefresh }: SettingsProps) => {
     const navigate = useNavigate();
     const [statistics, setStatistics] = useState({
         totalCardSets: 0,
@@ -120,6 +124,7 @@ const Settings = () => {
             if (result.success) {
                 showMessage('success', `${result.totalImported}개의 카드셋을 가져왔습니다!`);
                 loadStatistics();
+                onRefresh?.(); // 전역 상태 갱신
             } else {
                 // 에러가 있는 경우 더 자세한 메시지
                 if (result.errors.length > 0) {
@@ -141,6 +146,7 @@ const Settings = () => {
                 if (result.totalImported > 0) {
                     showMessage('success', `${result.totalImported}개의 카드셋은 성공적으로 가져왔습니다.`);
                     loadStatistics();
+                    onRefresh?.(); // 전역 상태 갱신
                 }
             }
         } catch (error) {
@@ -157,6 +163,7 @@ const Settings = () => {
     const handleClearData = () => {
         FlashcardStorage.clearAllData();
         loadStatistics();
+        onRefresh?.(); // 전역 상태 갱신
         setShowDeleteConfirm(false);
         showMessage('success', '모든 데이터가 삭제되었습니다.');
     };
@@ -166,6 +173,7 @@ const Settings = () => {
         try {
             const result = await FlashcardStorage.createInterviewTestData();
             loadStatistics();
+            onRefresh?.(); // 전역 상태 갱신
 
             if (result.success) {
                 if (result.importedCount === 0) {
@@ -212,6 +220,7 @@ const Settings = () => {
             if (result.success) {
                 showMessage('success', `${result.importedRecords || 0}개의 학습 기록을 가져왔습니다!`);
                 loadStatistics();
+                onRefresh?.(); // 전역 상태 갱신
             } else {
                 showMessage('error', result.error || '학습 기록 가져오기에 실패했습니다.');
             }
@@ -229,6 +238,7 @@ const Settings = () => {
     const handleClearStudyHistory = () => {
         FlashcardStorage.clearStudyHistory();
         loadStatistics();
+        onRefresh?.(); // 전역 상태 갱신
         setShowStudyHistoryDeleteConfirm(false);
         showMessage('success', '모든 학습 기록이 삭제되었습니다.');
     };
