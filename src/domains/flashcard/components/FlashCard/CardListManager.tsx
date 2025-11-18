@@ -102,7 +102,7 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                 </div>
             ) : (
                 /* 카드 목록 (스크롤 가능) */
-                <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+                <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3 pr-2">
                     {cardSet.cards.map((card, index) => {
                         const typeInfo = getCardTypeInfo(card.type);
                         const isExpanded = expandedCardId === card.id;

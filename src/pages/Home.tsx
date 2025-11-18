@@ -93,7 +93,7 @@ const Home = ({ cardSets, onRefresh, onStartStudy, onEditCardSet } : HomeProps) 
             </div>
 
             {/* 스크롤 가능한 카드 그리드 영역 */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto scrollbar-hide">
                 <CardSetGrid
                     cardSets={cardSets}
                     onStartStudy={handleStartStudy}
