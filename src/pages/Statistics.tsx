@@ -226,9 +226,9 @@ const Statistics = () => {
                 </div>
 
                 {/* 캘린더 - GitHub 스타일 */}
-                <div>
+                <div className="max-w-full xl:max-w-md xl:mx-auto">
                     {/* 요일 헤더 */}
-                    <div className="grid grid-cols-7 gap-1 mb-2">
+                    <div className="grid grid-cols-7 gap-1 xl:gap-1.5 mb-2">
                         {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
                             <div key={day} className={`text-center text-xs font-medium ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-gray-600'}`}>
                                 {day}
@@ -237,12 +237,12 @@ const Statistics = () => {
                     </div>
 
                     {/* 날짜 그리드 - 작은 사각형 */}
-                    <div className="space-y-1">
+                    <div className="space-y-1 xl:space-y-1.5">
                         {monthCalendar.map((week, weekIndex) => (
-                            <div key={weekIndex} className="grid grid-cols-7 gap-1">
+                            <div key={weekIndex} className="grid grid-cols-7 gap-1 xl:gap-1.5">
                                 {week.map((day, dayIndex) => {
                                     if (!day) {
-                                        return <div key={`empty-${weekIndex}-${dayIndex}`} className="w-full aspect-square" />;
+                                        return <div key={`empty-${weekIndex}-${dayIndex}`} className="w-full aspect-square xl:w-12 xl:h-12" />;
                                     }
 
                                     const date = new Date(day.date);
@@ -253,7 +253,7 @@ const Statistics = () => {
                                         <div
                                             key={day.date}
                                             className={`
-                                                w-full aspect-square rounded border
+                                                w-full aspect-square xl:w-12 xl:h-12 rounded border
                                                 ${getHeatmapColor(day.cardsStudied)}
                                                 ${isToday ? 'ring-2 ring-blue-500 border-blue-500' : 'border-gray-300'}
                                                 hover:ring-2 hover:ring-blue-400 cursor-pointer transition-all
