@@ -11,6 +11,7 @@ const Settings = () => {
         totalStudyCount: 0
     });
     const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+    const [isMessageExiting, setIsMessageExiting] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showExportModal, setShowExportModal] = useState(false);
     const [selectedCardSets, setSelectedCardSets] = useState<Set<string>>(new Set());
@@ -47,7 +48,17 @@ const Settings = () => {
 
     const showMessage = (type: 'success' | 'error' | 'info', text: string, duration: number = 3000) => {
         setMessage({ type, text });
-        setTimeout(() => setMessage(null), duration);
+        setIsMessageExiting(false);
+
+        // duration 후에 fade-out 애니메이션 시작
+        setTimeout(() => {
+            setIsMessageExiting(true);
+            // fade-out 애니메이션 완료 후 메시지 제거 (300ms)
+            setTimeout(() => {
+                setMessage(null);
+                setIsMessageExiting(false);
+            }, 300);
+        }, duration);
     };
 
     // Export 모달 열기
@@ -236,7 +247,9 @@ const Settings = () => {
             {/* 메시지 알림 (화면 중앙 toast) */}
             {message && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-                    <div className={`max-w-md mx-4 p-6 rounded-xl shadow-2xl whitespace-pre-line pointer-events-auto animate-fade-in ${
+                    <div className={`max-w-md mx-4 p-6 rounded-xl shadow-2xl whitespace-pre-line pointer-events-auto ${
+                        isMessageExiting ? 'animate-fade-out' : 'animate-fade-in'
+                    } ${
                         message.type === 'success'
                             ? 'bg-green-50 text-green-800 border-2 border-green-300'
                             : message.type === 'error'

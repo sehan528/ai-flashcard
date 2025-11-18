@@ -31,6 +31,22 @@
       transform: translateY(0);
     }
   }
+
+  /* 페이드 아웃 애니메이션 */
+  .animate-fade-out {
+    animation: fadeOut 0.3s ease-in-out;
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
 }
 
 body {
