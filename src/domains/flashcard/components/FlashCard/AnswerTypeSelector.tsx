@@ -20,7 +20,7 @@ const AnswerTypeSelector  = ({ selectedType , onTypeChange } : AnswerTypeSelecto
     ];
 
     return (
-        <div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {answerTypes.map((type)=>(
                 <button
                     key={type.id}
