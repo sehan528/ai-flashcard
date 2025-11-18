@@ -2,6 +2,7 @@ import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 import type { AppTab } from './Layout/Header';
 import Home from '../pages/Home';
 import CardEdit from '../pages/CardEdit';
+import Statistics from '../pages/Statistics';
 import Settings from '../pages/Settings';
 
 interface AppRouterProps {
@@ -40,6 +41,8 @@ const AppRouter = ({
                     onCardChanged={onCardChanged} // 카드 변경 완료 콜백 전달
                 />
             );
+        case 'statistics':
+            return <Statistics />;
         case 'settings':
             return <Settings />;
         default:

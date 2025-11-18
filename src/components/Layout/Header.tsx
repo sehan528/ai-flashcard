@@ -1,4 +1,4 @@
-export type AppTab = 'home' | 'card-edit' | 'settings';
+export type AppTab = 'home' | 'card-edit' | 'statistics' | 'settings';
 
 interface HeaderProps {
     currentTab: AppTab;
@@ -9,6 +9,7 @@ const Header = ({ currentTab, onTabChange }: HeaderProps) => {
     const navItems = [
         { id: 'home' as AppTab, label: '홈' },
         { id: 'card-edit' as AppTab, label: '카드편집' },
+        { id: 'statistics' as AppTab, label: '학습통계' },
         { id: 'settings' as AppTab, label: '설정' },
     ];
 

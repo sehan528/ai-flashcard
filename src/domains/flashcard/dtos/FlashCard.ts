@@ -33,3 +33,29 @@ export interface AIUsage {
     dailyLimit: number;           // 일일 제한 (50회)
     lastResetDate: string;        // 마지막 리셋 날짜
 }
+
+// 학습 기록 (개별 카드 학습 1회)
+export interface StudyRecord {
+    id: string;                   // 기록 고유 ID
+    cardId: string;               // 학습한 카드 ID
+    cardSetId: string;            // 카드가 속한 카드셋 ID
+    cardSetName: string;          // 카드셋 이름 (조회 편의성)
+    timestamp: Date;              // 학습 시각
+    date: string;                 // 날짜 (YYYY-MM-DD 형식, 집계용)
+}
+
+// 일별 학습 통계
+export interface DailyStats {
+    date: string;                 // YYYY-MM-DD
+    cardsStudied: number;         // 학습한 카드 수
+    sessionsCount: number;        // 학습 세션 수
+    cardSetIds: string[];         // 학습한 카드셋 ID들
+}
+
+// 학습 기록 전체 (localStorage 저장용)
+export interface StudyHistory {
+    records: StudyRecord[];       // 모든 학습 기록
+    dailyStats: {                 // 날짜별 통계 (빠른 조회용)
+        [date: string]: DailyStats;
+    };
+}

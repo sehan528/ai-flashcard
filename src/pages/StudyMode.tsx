@@ -3,6 +3,7 @@ import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 import { useStudySession } from '../domains/flashcard/hooks/useStudySession';
 import EssayStudyCard from '../domains/flashcard/components/Study/EssayStudyCard';
 import MultipleStudyCard from '../domains/flashcard/components/Study/MultipleStudyCard';
+import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 
 interface StudyModeProps {
     cardSet: CardSet;
@@ -33,6 +34,9 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
     React.useEffect(() => {
         startSession(cardSet, isRandom);
 
+        // 학습 세션 시작 기록
+        FlashcardStorage.recordStudySession(cardSet.id);
+
         // 컴포넌트 언마운트 시 세션 종료
         return () => {
             endSession();
@@ -60,6 +64,12 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
             alert('정답을 확인한 후 다음 카드로 넘어갈 수 있습니다.');
             return;
         }
+
+        // 현재 카드 학습 기록 저장
+        if (currentCard) {
+            FlashcardStorage.addStudyRecord(currentCard.id, cardSet.id, cardSet.name);
+        }
+
         goToNextCard();
     };
 
