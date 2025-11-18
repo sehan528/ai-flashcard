@@ -141,17 +141,26 @@ export const useStudySession = (): StudySessionState & StudySessionActions => {
         if (sessionState.cardSet) {
             const currentIndex = sessionState.currentCardIndex;
 
+            console.log('=== Shuffle Debug ===');
+            console.log('Current Index:', currentIndex);
+            console.log('Current cardOrder:', sessionState.cardOrder);
+
             // 이미 본 카드들 (현재 카드 포함)
             const viewedCards = sessionState.cardOrder.slice(0, currentIndex + 1);
+            console.log('Viewed Cards:', viewedCards);
 
             // 아직 안 본 카드들
             const remainingCards = sessionState.cardOrder.slice(currentIndex + 1);
+            console.log('Remaining Cards (before shuffle):', remainingCards);
 
             // 남은 카드들만 섞기
             const shuffledRemaining = shuffleArray(remainingCards);
+            console.log('Remaining Cards (after shuffle):', shuffledRemaining);
 
             // 이미 본 카드 + 섞인 남은 카드
             const newOrder = [...viewedCards, ...shuffledRemaining];
+            console.log('New Order:', newOrder);
+            console.log('===================');
 
             setSessionState(prev => ({
                 ...prev,
@@ -159,6 +168,8 @@ export const useStudySession = (): StudySessionState & StudySessionActions => {
                 // currentCardIndex는 유지 (현재 위치에서 계속)
                 isRandomMode: true,
             }));
+        } else {
+            console.log('Cannot shuffle: No cardSet available');
         }
     };
 
