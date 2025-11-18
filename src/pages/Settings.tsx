@@ -406,12 +406,9 @@ const Settings = () => {
 
             {/* 전체 데이터 삭제 (위험 섹션) */}
             <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6 mb-6">
-                <h3 className="text-lg font-semibold text-red-700 mb-2">
+                <h3 className="text-lg font-semibold text-red-700 mb-4">
                     위험 구역
                 </h3>
-                <p className="text-sm text-gray-600 mb-4">
-                    모든 데이터를 한번에 삭제합니다.
-                </p>
 
                 <div>
                     <button
