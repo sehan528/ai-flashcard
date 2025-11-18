@@ -407,7 +407,7 @@ const Settings = () => {
             {/* 전체 데이터 삭제 (위험 섹션) */}
             <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6 mb-6">
                 <h3 className="text-lg font-semibold text-red-700 mb-4">
-                    ⚠️
+
                 </h3>
 
                 <div>
