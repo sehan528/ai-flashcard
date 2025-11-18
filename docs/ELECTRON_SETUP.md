@@ -127,6 +127,131 @@ public/
 
 ## 8. 문제 해결
 
+### Windows에서 빌드가 중단되는 경우 ⚠️
+
+**증상**: `npm run build:win` 실행 시 로그만 출력되고 exe 파일이 생성되지 않음
+
+```powershell
+PS C:\works\ai-flashcard> npm run build:win
+> ai-flashcard@1.0.0 prebuild
+> npm run generate:index
+> python3 scripts/generate-dataset-index.py
+# 여기서 멈춤...
+```
+
+**원인**: Windows에서 `python3` 명령어를 찾을 수 없어서 prebuild가 실패
+
+**해결 방법**:
+
+#### 방법 1: Python 설치 확인 (권장)
+```powershell
+# Python이 설치되어 있는지 확인
+python --version
+# 또는
+py --version
+
+# Python이 없다면 Microsoft Store에서 Python 설치
+# 또는 https://www.python.org/downloads/ 에서 설치
+```
+
+Python 설치 후 다시 시도:
+```powershell
+npm run build:win
+```
+
+#### 방법 2: 데이터셋 인덱스 미리 생성
+```powershell
+# Python으로 index.json 생성 (한 번만 실행)
+python scripts/generate-dataset-index.py
+
+# 또는 py 명령어 사용
+py scripts/generate-dataset-index.py
+
+# 이제 빌드 실행 (prebuild 스킵)
+npm run build:no-prebuild
+electron-builder --win
+```
+
+#### 방법 3: 수동으로 index.json 확인
+`public/data/dataset/index.json` 파일이 이미 있다면:
+```powershell
+# prebuild 없이 바로 빌드
+npm run build:no-prebuild
+electron-builder --win
+```
+
+### electron-builder가 실행되지 않는 경우
+
+**증상**: Vite 빌드는 성공했지만 electron-builder가 실행되지 않음
+
+**체크리스트**:
+
+1. **Electron 패키지 설치 확인**
+```powershell
+# devDependencies에 electron, electron-builder가 있는지 확인
+npm list electron electron-builder
+
+# 없다면 설치
+npm install --save-dev electron electron-builder vite-plugin-electron vite-plugin-electron-renderer
+```
+
+2. **dist 폴더 확인**
+```powershell
+# dist 폴더가 생성되었는지 확인
+dir dist
+
+# dist 폴더가 없거나 비어있다면
+npm run build:no-prebuild
+```
+
+3. **dist-electron 폴더 확인**
+```powershell
+# dist-electron 폴더에 main.js가 있는지 확인
+dir dist-electron
+
+# 없다면 Vite Electron 플러그인 재설치
+npm install --save-dev vite-plugin-electron
+npm run build:no-prebuild
+```
+
+4. **수동으로 electron-builder 실행**
+```powershell
+# 빌드가 완료되었다면 직접 실행
+npx electron-builder --win
+```
+
+### 빌드는 성공했는데 exe를 찾을 수 없는 경우
+
+**확인할 위치**:
+```powershell
+# release 폴더 확인
+dir release
+
+# release 폴더가 없다면 electron-builder가 실행되지 않은 것
+```
+
+**예상 결과물 위치**:
+```
+release/
+├── AI Flashcard Setup 1.0.0.exe      # 설치 파일
+├── AI Flashcard 1.0.0.exe            # Portable 버전
+├── win-unpacked/                      # 압축 해제된 파일들
+└── builder-debug.yml                  # 디버그 정보
+```
+
+### PowerShell 실행 정책 오류
+
+**증상**: `이 시스템에서 스크립트를 실행할 수 없으므로...`
+
+**해결 방법**:
+```powershell
+# 현재 세션에서만 실행 정책 변경
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# 이후 빌드 명령어 실행
+npm run build:win
+```
+
 ### Electron 다운로드 오류
 ```bash
 # 캐시 삭제 후 재시도
