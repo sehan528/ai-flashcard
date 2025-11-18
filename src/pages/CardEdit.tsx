@@ -207,7 +207,7 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
     };
 
     return (
-        <div className="max-w-full mx-auto h-[calc(100vh-200px)] flex flex-col overflow-hidden">
+        <div className="max-w-full mx-auto h-[calc(100vh-160px)] flex flex-col overflow-hidden">
             {/* 성공 메시지 */}
             {successMessage && (
                 <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex-shrink-0">
@@ -218,7 +218,7 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 flex-1 overflow-hidden">
                 {/* 왼쪽: 카드셋 선택 영역 */}
                 <div className="xl:col-span-1 overflow-hidden">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col max-h-[calc(100vh-240px)]">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col max-h-[calc(100vh-200px)]">
                         <div className="flex-1 overflow-y-auto">
                             <CardSetSelector
                                 cardSets={cardSets}

@@ -79,10 +79,17 @@ const Home = ({ cardSets, onRefresh, onStartStudy, onEditCardSet } : HomeProps) 
                     내 플래시카드 ({cardSets.length}개)
                 </h2>
 
-                <RandomToggle
-                    isRandom={isRandom}
-                    onToggle={setIsRandom}
-                />
+                <div className="flex flex-col items-center gap-2">
+                    <RandomToggle
+                        isRandom={isRandom}
+                        onToggle={setIsRandom}
+                    />
+                    <p className="text-xs text-gray-500">
+                        {isRandom
+                            ? '학습 시 카드셋 내 문제들이 랜덤 순서로 출제됩니다'
+                            : '학습 시 카드셋 내 문제들이 순서대로 출제됩니다'}
+                    </p>
+                </div>
             </div>
 
             {/* 스크롤 가능한 카드 그리드 영역 */}
