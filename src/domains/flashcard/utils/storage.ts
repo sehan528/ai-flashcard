@@ -453,10 +453,11 @@ export class FlashcardStorage {
         };
     }
 
-    // 모든 데이터 삭제
+    // 모든 데이터 삭제 (카드셋 + 학습 기록)
     static clearAllData(): void {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(INIT_FLAG_KEY); // 초기화 플래그도 함께 삭제
+        localStorage.removeItem(STUDY_HISTORY_KEY); // 학습 기록도 함께 삭제
     }
 
     // 데이터 통계 정보
@@ -795,6 +796,157 @@ export class FlashcardStorage {
             });
 
             console.log(`학습 기록 정리 완료: ${history.records.length - filteredRecords.length}개 기록 제거`);
+        }
+    }
+
+    // ============ 유저 데이터 (학습 기록) Export/Import ============
+
+    // 학습 기록 JSON 문자열로 내보내기
+    static exportStudyHistoryToJSON(): string {
+        const history = this.getStudyHistory();
+        return JSON.stringify(history, null, 2);
+    }
+
+    // 학습 기록 JSON 파일로 다운로드
+    static downloadStudyHistory(): void {
+        const jsonString = this.exportStudyHistoryToJSON();
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        link.download = `study-history-export-${timestamp}.json`;
+        link.href = url;
+        link.click();
+
+        URL.revokeObjectURL(url);
+    }
+
+    // 학습 기록 유효성 검증
+    static validateStudyHistory(data: any): { valid: boolean; error?: string } {
+        if (typeof data !== 'object' || data === null) {
+            return { valid: false, error: '올바른 학습 기록 형식이 아닙니다.' };
+        }
+
+        if (!Array.isArray(data.records)) {
+            return { valid: false, error: '기록(records)이 배열 형태가 아닙니다.' };
+        }
+
+        if (typeof data.dailyStats !== 'object' || data.dailyStats === null) {
+            return { valid: false, error: '일별 통계(dailyStats)가 올바르지 않습니다.' };
+        }
+
+        // records 배열 검증
+        for (const record of data.records) {
+            if (typeof record !== 'object' || record === null) {
+                return { valid: false, error: '기록 데이터가 올바르지 않습니다.' };
+            }
+
+            if (!record.id || !record.cardId || !record.cardSetId || !record.timestamp || !record.date) {
+                return { valid: false, error: '기록에 필수 필드가 누락되었습니다.' };
+            }
+        }
+
+        return { valid: true };
+    }
+
+    // JSON 문자열에서 학습 기록 가져오기
+    static importStudyHistoryFromJSON(jsonString: string, mergeMode: 'merge' | 'replace' = 'merge'): {
+        success: boolean;
+        error?: string;
+        importedRecords?: number;
+    } {
+        try {
+            const data = JSON.parse(jsonString);
+
+            // 유효성 검증
+            const validation = this.validateStudyHistory(data);
+            if (!validation.valid) {
+                return { success: false, error: validation.error };
+            }
+
+            // Date 객체 복원
+            const importedHistory: StudyHistory = {
+                records: data.records.map((record: any) => ({
+                    ...record,
+                    timestamp: new Date(record.timestamp)
+                })),
+                dailyStats: data.dailyStats
+            };
+
+            if (mergeMode === 'replace') {
+                // 기존 데이터 덮어쓰기
+                this.saveStudyHistory(importedHistory);
+            } else {
+                // 기존 데이터와 병합 (중복 ID 제거)
+                const existingHistory = this.getStudyHistory();
+                const existingRecordIds = new Set(existingHistory.records.map(r => r.id));
+
+                const newRecords = importedHistory.records.filter(r => !existingRecordIds.has(r.id));
+                const mergedRecords = [...existingHistory.records, ...newRecords];
+
+                // dailyStats 병합
+                const mergedDailyStats = { ...existingHistory.dailyStats };
+                Object.keys(importedHistory.dailyStats).forEach(date => {
+                    if (!mergedDailyStats[date]) {
+                        mergedDailyStats[date] = importedHistory.dailyStats[date];
+                    } else {
+                        // 기존 날짜 데이터가 있으면 합산
+                        mergedDailyStats[date].cardsStudied += importedHistory.dailyStats[date].cardsStudied;
+                        mergedDailyStats[date].sessionsCount += importedHistory.dailyStats[date].sessionsCount;
+
+                        // cardSetIds 병합 (중복 제거)
+                        const uniqueCardSetIds = new Set([
+                            ...mergedDailyStats[date].cardSetIds,
+                            ...importedHistory.dailyStats[date].cardSetIds
+                        ]);
+                        mergedDailyStats[date].cardSetIds = Array.from(uniqueCardSetIds);
+                    }
+                });
+
+                this.saveStudyHistory({
+                    records: mergedRecords,
+                    dailyStats: mergedDailyStats
+                });
+            }
+
+            return {
+                success: true,
+                importedRecords: mergeMode === 'replace' ? importedHistory.records.length : importedHistory.records.filter(r => !this.getStudyHistory().records.some(er => er.id === r.id)).length
+            };
+        } catch (error) {
+            console.error('학습 기록 Import 실패:', error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'JSON 파싱에 실패했습니다.'
+            };
+        }
+    }
+
+    // 파일에서 학습 기록 가져오기
+    static async importStudyHistoryFromFile(file: File): Promise<{
+        success: boolean;
+        error?: string;
+        importedRecords?: number;
+    }> {
+        try {
+            // JSON 파일인지 확인
+            if (!file.name.toLowerCase().endsWith('.json')) {
+                return { success: false, error: 'JSON 파일이 아닙니다.' };
+            }
+
+            const content = await file.text();
+
+            // JSON 파싱 가능 여부 먼저 확인
+            try {
+                JSON.parse(content);
+            } catch (parseError) {
+                return { success: false, error: '올바른 JSON 형식이 아닙니다.' };
+            }
+
+            return this.importStudyHistoryFromJSON(content, 'merge');
+        } catch (error) {
+            return { success: false, error: '파일 읽기에 실패했습니다.' };
         }
     }
 }
