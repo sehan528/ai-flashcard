@@ -215,7 +215,7 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 flex-1 overflow-hidden">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 flex-1 overflow-hidden">
                 {/* 왼쪽: 카드셋 선택 영역 */}
                 <div className="xl:col-span-1 overflow-hidden">
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col max-h-[calc(100vh-240px)]">
@@ -252,7 +252,7 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                 </div>
 
                 {/* 오른쪽: 카드 관리 영역 */}
-                <div className="xl:col-span-3 overflow-hidden flex flex-col">
+                <div className="xl:col-span-2 overflow-hidden flex flex-col">
                     {!selectedCardSetId ? (
                         /* 카드셋 미선택 상태 */
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">

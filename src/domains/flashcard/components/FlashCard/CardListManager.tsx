@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import type { FlashCard, CardSet } from '../../dtos/FlashCard';
+import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
 
 interface CardListManagerProps {
     cardSet: CardSet;
@@ -227,9 +230,11 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                                                 </h5>
 
                                                 {card.type === 'essay' ? (
-                                                    <p className="text-gray-800 leading-relaxed bg-gray-50 p-3 rounded">
-                                                        {typeof card.answer === 'string' ? card.answer : '답변 오류'}
-                                                    </p>
+                                                    <div className="text-gray-800 leading-relaxed bg-gray-50 p-3 rounded prose prose-sm max-w-none">
+                                                        <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                                                            {typeof card.answer === 'string' ? card.answer : '답변 오류'}
+                                                        </ReactMarkdown>
+                                                    </div>
                                                 ) : (
                                                     <div className="space-y-2">
                                                         {Array.isArray(card.answer) && card.answer.map((choice, choiceIndex) => (

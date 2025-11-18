@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import type { FlashCard } from '../../dtos/FlashCard';
+import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
 
 import { useAIEvaluation } from '../../hooks/useAIEvaluation';
 import AIFeedbackModal from '../FlashCard/AIFeedbackModal';
@@ -164,9 +167,11 @@ const EssayStudyCard = ({ card }: EssayStudyCardProps) => {
                         <div className="flex items-center gap-2 mb-2">
                             <span className="text-sm font-medium text-gray-700">✅ 정답:</span>
                         </div>
-                        <p className="text-gray-800 leading-relaxed">
-                            {typeof card.answer === 'string' ? card.answer : '정답 데이터 오류'}
-                        </p>
+                        <div className="text-gray-800 leading-relaxed prose prose-sm max-w-none">
+                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                                {typeof card.answer === 'string' ? card.answer : '정답 데이터 오류'}
+                            </ReactMarkdown>
+                        </div>
                     </div>
                 )}
 
