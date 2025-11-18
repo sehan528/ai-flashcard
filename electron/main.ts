@@ -12,13 +12,19 @@ function createWindow() {
         height: 800,
         minWidth: 800,
         minHeight: 600,
+        show: false, // 준비될 때까지 숨김
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             nodeIntegration: false,
         },
         title: 'AI Flashcard',
-        icon: path.join(__dirname, '../public/icon.png'), // 아이콘이 있다면
+        icon: path.join(__dirname, '../public/icon.png'),
+    });
+
+    // 창이 준비되면 표시
+    mainWindow.once('ready-to-show', () => {
+        mainWindow?.show();
     });
 
     // 개발 모드에서는 Vite dev server 사용
@@ -28,7 +34,20 @@ function createWindow() {
     } else {
         // 프로덕션에서는 빌드된 파일 로드
         mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+
+        // 디버깅을 위해 프로덕션에서도 개발자 도구 열기 (임시)
+        mainWindow.webContents.openDevTools();
     }
+
+    // 로드 에러 처리
+    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+        console.error('Failed to load:', errorCode, errorDescription);
+    });
+
+    // 콘솔 메시지 출력
+    mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+        console.log('Renderer:', message);
+    });
 
     mainWindow.on('closed', () => {
         mainWindow = null;
