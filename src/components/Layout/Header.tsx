@@ -13,7 +13,7 @@ const Header = ({ currentTab, onTabChange }: HeaderProps) => {
     ];
 
     return (
-        <header className="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg">
+        <header className="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg">
             <div className="container mx-auto px-4 py-6">
                 <div className="text-center mb-4">
                     <h1 className="text-3xl font-bold mb-2">

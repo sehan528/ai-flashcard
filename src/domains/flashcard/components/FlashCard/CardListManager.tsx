@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import type { FlashCard, CardSet } from '../../dtos/FlashCard';
+import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css';
 
 interface CardListManagerProps {
     cardSet: CardSet;
@@ -10,17 +13,33 @@ interface CardListManagerProps {
 
 const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: CardListManagerProps) => {
     const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+    const [showActionsCardId, setShowActionsCardId] = useState<string | null>(null);
 
     // 카드 확장/축소 토글
     const toggleCardExpansion = (cardId: string) => {
         setExpandedCardId(expandedCardId === cardId ? null : cardId);
     };
 
+    // 액션 버튼 표시/숨김 토글
+    const toggleActions = (cardId: string, event: React.MouseEvent) => {
+        event.stopPropagation();
+        setShowActionsCardId(showActionsCardId === cardId ? null : cardId);
+    };
+
     // 카드 삭제 확인
-    const handleDeleteCard = (card: FlashCard) => {
+    const handleDeleteCard = (card: FlashCard, event: React.MouseEvent) => {
+        event.stopPropagation();
         if (confirm(`"${card.question.slice(0, 30)}..." 카드를 삭제하시겠습니까?`)) {
             onDeleteCard(card.id);
+            setShowActionsCardId(null);
         }
+    };
+
+    // 카드 편집
+    const handleEditCard = (card: FlashCard, event: React.MouseEvent) => {
+        event.stopPropagation();
+        onEditCard(card);
+        setShowActionsCardId(null);
     };
 
     // 답변 미리보기 생성
@@ -43,9 +62,9 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
     };
 
     return (
-        <div className="space-y-4">
-            {/* 헤더 */}
-            <div className="flex items-center justify-between">
+        <div className="flex flex-col h-full p-6">
+            {/* 헤더 (고정) */}
+            <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <div>
                     <h3 className="text-lg font-semibold text-gray-800">
                         카드 목록
@@ -82,11 +101,12 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                     </button>
                 </div>
             ) : (
-                /* 카드 목록 */
-                <div className="space-y-3">
+                /* 카드 목록 (스크롤 가능) */
+                <div className="flex-1 overflow-y-auto space-y-3 pr-2">
                     {cardSet.cards.map((card, index) => {
                         const typeInfo = getCardTypeInfo(card.type);
                         const isExpanded = expandedCardId === card.id;
+                        const showActions = showActionsCardId === card.id;
 
                         return (
                             <div
@@ -97,13 +117,13 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                             >
                                 {/* 카드 헤더 (항상 표시) */}
                                 <div
-                                    className={`p-4 cursor-pointer hover:bg-gray-50 ${
+                                    className={`p-4 cursor-pointer hover:bg-gray-50 relative ${
                                         isExpanded ? typeInfo.bgColor : ''
                                     }`}
                                     onClick={() => toggleCardExpansion(card.id)}
                                 >
                                     <div className="flex items-start justify-between">
-                                        <div className="flex-1 min-w-0">
+                                        <div className="flex-1 min-w-0 pr-12">
                                             {/* 카드 타입 및 태그 */}
                                             <div className="flex items-center gap-2 mb-2">
                                                 <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${typeInfo.bgColor} ${typeInfo.textColor}`}>
@@ -142,43 +162,54 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                                             )}
                                         </div>
 
-                                        {/* 버튼들 */}
-                                        <div className="flex items-center gap-2 ml-4">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    onEditCard(card);
-                                                }}
-                                                className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                                                title="카드 수정"
+                                        {/* 화살표 버튼 (우측 상단) */}
+                                        <button
+                                            className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+                                            onClick={(e) => toggleActions(card.id, e)}
+                                            title={showActions ? "액션 숨기기" : "액션 보기"}
+                                        >
+                                            <svg
+                                                className={`w-5 h-5 text-gray-600 transform transition-transform duration-200 ${
+                                                    showActions ? 'rotate-180' : ''
+                                                }`}
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                             >
-                                                ✏️
-                                            </button>
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M19 9l-7 7-7-7"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
 
+                                {/* 액션 버튼들 (화살표 클릭 시 표시) */}
+                                {showActions && (
+                                    <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
+                                        <div className="flex gap-2 justify-end">
                                             <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDeleteCard(card);
-                                                }}
-                                                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                                                title="카드 삭제"
+                                                onClick={(e) => handleEditCard(card, e)}
+                                                className="flex items-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm"
+                                                title="수정"
                                             >
-                                                🗑️
+                                                <span>✏️</span>
+                                                <span>수정</span>
                                             </button>
-
                                             <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleCardExpansion(card.id);
-                                                }}
-                                                className="p-2 text-gray-400 hover:text-gray-600 rounded transition-colors"
-                                                title={isExpanded ? "접기" : "자세히 보기"}
+                                                onClick={(e) => handleDeleteCard(card, e)}
+                                                className="flex items-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
+                                                title="삭제"
                                             >
-                                                {isExpanded ? '▲' : '▼'}
+                                                <span>🗑️</span>
+                                                <span>삭제</span>
                                             </button>
                                         </div>
                                     </div>
-                                </div>
+                                )}
 
                                 {/* 카드 상세 정보 (확장 시 표시) */}
                                 {isExpanded && (
@@ -199,9 +230,11 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                                                 </h5>
 
                                                 {card.type === 'essay' ? (
-                                                    <p className="text-gray-800 leading-relaxed bg-gray-50 p-3 rounded">
-                                                        {typeof card.answer === 'string' ? card.answer : '답변 오류'}
-                                                    </p>
+                                                    <div className="text-gray-800 leading-relaxed bg-gray-50 p-3 rounded prose prose-sm max-w-none">
+                                                        <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                                                            {typeof card.answer === 'string' ? card.answer : '답변 오류'}
+                                                        </ReactMarkdown>
+                                                    </div>
                                                 ) : (
                                                     <div className="space-y-2">
                                                         {Array.isArray(card.answer) && card.answer.map((choice, choiceIndex) => (

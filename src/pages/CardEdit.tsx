@@ -207,50 +207,52 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
     };
 
     return (
-        <div className="max-w-full mx-auto">
+        <div className="max-w-full mx-auto h-[calc(100vh-160px)] flex flex-col overflow-hidden">
             {/* 성공 메시지 */}
             {successMessage && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex-shrink-0">
                     ✅ {successMessage}
                 </div>
             )}
 
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 flex-1 overflow-hidden">
                 {/* 왼쪽: 카드셋 선택 영역 */}
-                <div className="xl:col-span-1">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-6">
-                        <CardSetSelector
-                            cardSets={cardSets}
-                            selectedCardSetId={selectedCardSetId}
-                            onSelectCardSet={(cardSetId) => {
-                                setSelectedCardSetId(cardSetId);
-                                setEditMode('list'); // 카드셋 변경 시 목록 모드로
-                                setEditingCard(null);
-                            }}
-                            onCreateNewSet={handleCreateNewCardSet}
-                            onEditCardSet={handleEditCardSet}
-                            onDeleteCardSet={handleDeleteCardSet}
-                        />
+                <div className="xl:col-span-1 overflow-hidden">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col max-h-[calc(100vh-200px)]">
+                        <div className="flex-1 overflow-y-auto">
+                            <CardSetSelector
+                                cardSets={cardSets}
+                                selectedCardSetId={selectedCardSetId}
+                                onSelectCardSet={(cardSetId) => {
+                                    setSelectedCardSetId(cardSetId);
+                                    setEditMode('list'); // 카드셋 변경 시 목록 모드로
+                                    setEditingCard(null);
+                                }}
+                                onCreateNewSet={handleCreateNewCardSet}
+                                onEditCardSet={handleEditCardSet}
+                                onDeleteCardSet={handleDeleteCardSet}
+                            />
 
-                        {/* 선택된 카드셋 정보 */}
-                        {selectedCardSet && (
-                            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                                <h4 className="font-medium text-blue-900 mb-1">
-                                    현재 편집 중
-                                </h4>
-                                <div className="text-sm text-blue-700">
-                                    <div>{selectedCardSet.name}</div>
-                                    <div className="opacity-75">
-                                        {selectedCardSet.cards.length}개 카드
+                            {/* 선택된 카드셋 정보 */}
+                            {selectedCardSet && (
+                                <div className="mt-4 p-3 bg-blue-50 rounded-lg flex-shrink-0">
+                                    <h4 className="font-medium text-blue-900 mb-1">
+                                        현재 편집 중
+                                    </h4>
+                                    <div className="text-sm text-blue-700">
+                                        <div>{selectedCardSet.name}</div>
+                                        <div className="opacity-75">
+                                            {selectedCardSet.cards.length}개 카드
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
 
                 {/* 오른쪽: 카드 관리 영역 */}
-                <div className="xl:col-span-3">
+                <div className="xl:col-span-2 overflow-hidden flex flex-col">
                     {!selectedCardSetId ? (
                         /* 카드셋 미선택 상태 */
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
@@ -264,7 +266,7 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                         </div>
                     ) : editMode === 'list' ? (
                         /* 카드 목록 모드 */
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 min-h-[600px]">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex-1 overflow-hidden flex flex-col">
                             <CardListManager
                                 cardSet={selectedCardSet!}
                                 onEditCard={handleEditCard}
@@ -274,7 +276,7 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                         </div>
                     ) : (
                         /* 카드 추가/편집 모드 */
-                        <div className="space-y-4">
+                        <div className="space-y-4 flex-1 overflow-y-auto">
                             {/* 뒤로가기 버튼 */}
                             <button
                                 onClick={handleBackToList}

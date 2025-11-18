@@ -72,34 +72,45 @@ const Home = ({ cardSets, onRefresh, onStartStudy, onEditCardSet } : HomeProps) 
     };
 
     return (
-        <div>
-            <div className="mb-8 text-center">
+        <div className="flex flex-col h-[calc(100vh-200px)]">
+            {/* 고정 헤더 영역 */}
+            <div className="sticky top-[200px] z-40 bg-gray-50 pb-4 mb-4 text-center">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                     내 플래시카드 ({cardSets.length}개)
                 </h2>
 
-                <RandomToggle
-                    isRandom={isRandom}
-                    onToggle={setIsRandom}
-                />
+                <div className="flex flex-col items-center gap-2">
+                    <RandomToggle
+                        isRandom={isRandom}
+                        onToggle={setIsRandom}
+                    />
+                    <p className="text-xs text-gray-500">
+                        {isRandom
+                            ? '학습 시 카드셋 내 문제들이 랜덤 순서로 출제됩니다'
+                            : '학습 시 카드셋 내 문제들이 순서대로 출제됩니다'}
+                    </p>
+                </div>
             </div>
 
-            <CardSetGrid
-                cardSets={cardSets}
-                onStartStudy={handleStartStudy}
-                onEdit={handleEditCardSet}
-                onDuplicate={handleDuplicateCardSet}
-                onDelete={handleDeleteCardSet}
-            />
+            {/* 스크롤 가능한 카드 그리드 영역 */}
+            <div className="flex-1 overflow-y-auto">
+                <CardSetGrid
+                    cardSets={cardSets}
+                    onStartStudy={handleStartStudy}
+                    onEdit={handleEditCardSet}
+                    onDuplicate={handleDuplicateCardSet}
+                    onDelete={handleDeleteCardSet}
+                />
 
-            {/* 개발용 버튼 */}
-            <div className="mt-8 text-center">
-                <button
-                    onClick={handleAddSampleData}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                    샘플 데이터 추가하기
-                </button>
+                {/* 개발용 버튼 */}
+                <div className="mt-8 mb-8 text-center">
+                    <button
+                        onClick={handleAddSampleData}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                        샘플 데이터 추가하기
+                    </button>
+                </div>
             </div>
         </div>
     );

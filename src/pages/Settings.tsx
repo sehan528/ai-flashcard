@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 
 const Settings = () => {
+    const navigate = useNavigate();
     const [statistics, setStatistics] = useState({
         totalCardSets: 0,
         totalCards: 0,
@@ -155,11 +157,15 @@ const Settings = () => {
             if (result.success) {
                 if (result.importedCount === 0) {
                     showMessage('success', '데이터셋이 이미 불러와져 있습니다.');
+                    // 이미 있어도 메인으로 이동 (사용자가 확인할 수 있도록)
+                    setTimeout(() => navigate('/'), 1500);
                 } else {
                     const categoriesText = result.categories.length > 0
                         ? ` (${result.categories.join(', ').toUpperCase()})`
                         : '';
                     showMessage('success', `${result.importedCount}개 카드셋 (${result.totalCards}개 카드)을 불러왔습니다!${categoriesText}`);
+                    // 성공 메시지를 보여주고 1.5초 후 메인 화면으로 이동
+                    setTimeout(() => navigate('/'), 1500);
                 }
             } else {
                 showMessage('error', '데이터셋 불러오기에 실패했습니다.');
@@ -275,10 +281,10 @@ const Settings = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        데이터셋 불러오기 (DB, DS, OS 등)
+                        예제 데이터 생성하기
                     </button>
                     <p className="text-xs text-gray-500 mt-2">
-                        public/data/dataset 폴더의 모든 데이터셋을 자동으로 불러옵니다. (현재: DB 60문제)
+                        예제 카드셋 데이터들을 생성합니다.
                     </p>
                 </div>
 

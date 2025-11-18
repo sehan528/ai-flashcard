@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* 스크롤바 숨기기 - 모든 브라우저 지원 */
+  .scrollbar-hide {
+    /* Firefox */
+    scrollbar-width: none;
+    /* IE and Edge */
+    -ms-overflow-style: none;
+  }
+
+  /* Chrome, Safari, Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

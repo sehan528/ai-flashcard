@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import type { CardSet } from '../../dtos/FlashCard';
-import ContextMenu from '../../../../components/UI/ContextMenu';
 
 interface CardSetItemProps {
     cardSet: CardSet;
@@ -11,61 +10,38 @@ interface CardSetItemProps {
 }
 
 const CardSetItem = ({
-                                                        cardSet,
-                                                        onStartStudy,
-                                                        onEdit,
-                                                        onDuplicate,
-                                                        onDelete,
-                                                    } : CardSetItemProps) => {
-    const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
+                         cardSet,
+                         onStartStudy,
+                         onEdit,
+                         onDuplicate,
+                         onDelete,
+                     }: CardSetItemProps) => {
+    const [showActions, setShowActions] = useState(false);
 
-    const handleContextMenu = (event: React.MouseEvent) => {
-        event.preventDefault();
+    const handleToggleActions = (event: React.MouseEvent) => {
         event.stopPropagation();
-
-        setContextMenu({
-            x: event.clientX,
-            y: event.clientY,
-        });
+        setShowActions(!showActions);
     };
 
-    const closeContextMenu = () => {
-        setContextMenu(null);
+    const handleEdit = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        onEdit(cardSet);
+        setShowActions(false);
     };
 
-    const contextMenuItems = [
-        {
-            label: '복제',
-            icon: '📋',
-            onClick: () => onDuplicate(cardSet),
-        },
-        {
-            label: '수정',
-            icon: '✏️',
-            onClick: () => onEdit(cardSet),
-        },
-        {
-            label: '삭제',
-            icon: '🗑️',
-            onClick: () => onDelete(cardSet),
-            danger: true,
-        },
-    ];
+    const handleDelete = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        onDelete(cardSet);
+        setShowActions(false);
+    };
 
     return (
-        <>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 relative">
+            {/* 메인 카드 영역 (클릭 시 학습 시작) */}
             <div
-                className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 p-6 cursor-pointer relative"
+                className="p-6 cursor-pointer"
                 onClick={() => onStartStudy(cardSet)}
             >
-                {/* 컨텍스트 메뉴 트리거 */}
-                <div
-                    className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 transition-colors"
-                    onClick={handleContextMenu}
-                >
-                    <span className="text-lg">⋮</span>
-                </div>
-
                 <h3 className="text-xl font-semibold text-gray-800 mb-2 pr-8">
                     {cardSet.name}
                 </h3>
@@ -82,16 +58,53 @@ const CardSetItem = ({
                 </div>
             </div>
 
-            {/* 컨텍스트 메뉴 */}
-            {contextMenu && (
-                <ContextMenu
-                    x={contextMenu.x}
-                    y={contextMenu.y}
-                    items={contextMenuItems}
-                    onClose={closeContextMenu}
-                />
+            {/* 화살표 버튼 (우측 상단) */}
+            <button
+                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+                onClick={handleToggleActions}
+                title={showActions ? "액션 숨기기" : "액션 보기"}
+            >
+                <svg
+                    className={`w-5 h-5 text-gray-600 transform transition-transform duration-200 ${
+                        showActions ? 'rotate-180' : ''
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                    />
+                </svg>
+            </button>
+
+            {/* 액션 버튼들 (화살표 클릭 시 표시) */}
+            {showActions && (
+                <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-xl">
+                    <div className="flex gap-2 justify-end">
+                        <button
+                            onClick={handleEdit}
+                            className="flex items-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm"
+                            title="수정"
+                        >
+                            <span>✏️</span>
+                            <span>수정</span>
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                            className="flex items-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
+                            title="삭제"
+                        >
+                            <span>🗑️</span>
+                            <span>삭제</span>
+                        </button>
+                    </div>
+                </div>
             )}
-        </>
+        </div>
     );
 };
 

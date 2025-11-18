@@ -145,7 +145,7 @@ const CardSetSelector = ({
                     ) : (
                         <div className="space-y-2">
                             {/* 기존 카드셋 목록 */}
-                            <div className="grid gap-2 max-h-60 overflow-y-auto">
+                            <div className="grid gap-2 max-h-[24rem] overflow-y-auto scrollbar-hide">
                                 {cardSets.map((cardSet) => (
                                     <div
                                         key={cardSet.id}
