@@ -59,9 +59,9 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
     };
 
     return (
-        <div className="space-y-4">
-            {/* 헤더 */}
-            <div className="flex items-center justify-between">
+        <div className="flex flex-col h-full p-6">
+            {/* 헤더 (고정) */}
+            <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <div>
                     <h3 className="text-lg font-semibold text-gray-800">
                         카드 목록
@@ -98,8 +98,8 @@ const CardListManager = ({ cardSet, onEditCard, onDeleteCard, onAddNewCard }: Ca
                     </button>
                 </div>
             ) : (
-                /* 카드 목록 */
-                <div className="space-y-3">
+                /* 카드 목록 (스크롤 가능) */
+                <div className="flex-1 overflow-y-auto space-y-3 pr-2">
                     {cardSet.cards.map((card, index) => {
                         const typeInfo = getCardTypeInfo(card.type);
                         const isExpanded = expandedCardId === card.id;
