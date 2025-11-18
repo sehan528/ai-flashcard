@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { FlashCard } from '../../dtos/FlashCard';
 
 interface MultipleStudyCardProps {
@@ -93,6 +93,49 @@ const MultipleStudyCard = ({ card }: MultipleStudyCardProps) => {
 
     const choices = Array.isArray(card.answer) ? card.answer : [];
     const isCorrect = selectedIndex === card.correctIndex;
+
+    // 키보드 단축키 (숫자 키로 선택, Enter로 확인)
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // 입력 필드에 포커스 있으면 무시
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT') {
+                return;
+            }
+
+            // 숫자 키로 선택 (1-9는 0-8번 인덱스, 0은 9번 인덱스)
+            if (answerState === 'unanswered') {
+                if (e.key >= '1' && e.key <= '9') {
+                    const index = parseInt(e.key) - 1;
+                    if (index < choices.length) {
+                        e.preventDefault();
+                        handleSelectChoice(index);
+                    }
+                } else if (e.key === '0') {
+                    // 0번 키는 10번째 선택지 (인덱스 9)
+                    if (choices.length >= 10) {
+                        e.preventDefault();
+                        handleSelectChoice(9);
+                    }
+                }
+            }
+
+            // Enter로 정답 확인 또는 다시 풀기
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (answerState === 'unanswered') {
+                    handleCheckAnswer();
+                } else if (answerState === 'answered' || answerState === 'revealed') {
+                    handleReset();
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [answerState, selectedIndex, choices.length]);
 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 min-h-[400px] flex flex-col">
@@ -200,8 +243,13 @@ const MultipleStudyCard = ({ card }: MultipleStudyCardProps) => {
             </div>
 
             {/* 도움말 */}
-            <div className="mt-4 text-xs text-gray-500 text-center">
-                💡 선택지를 클릭하여 답을 선택한 후 정답을 확인해보세요.
+            <div className="mt-4 space-y-2">
+                <div className="text-xs text-gray-500 text-center">
+                    💡 선택지를 클릭하여 답을 선택한 후 정답을 확인해보세요.
+                </div>
+                <div className="text-xs text-gray-400 text-center border-t border-gray-100 pt-2">
+                    ⌨️ 단축키: <strong>1-0</strong> 선택 | <strong>Enter</strong> 정답 확인 | <strong>← →</strong> 이전/다음 카드
+                </div>
             </div>
         </div>
     );

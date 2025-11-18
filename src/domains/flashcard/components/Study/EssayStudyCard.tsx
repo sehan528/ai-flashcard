@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { FlashCard } from '../../dtos/FlashCard';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
@@ -104,6 +104,27 @@ const EssayStudyCard = ({ card }: EssayStudyCardProps) => {
     };
 
     const aiButtonState = getAIButtonState();
+
+    // 키보드 단축키 (Enter로 정답 보기)
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // textarea에 포커스 있으면 무시 (Enter는 개행으로 동작)
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT') {
+                return;
+            }
+
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleShowAnswer();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [showAnswer]);
 
     return (
         <>
@@ -214,6 +235,9 @@ const EssayStudyCard = ({ card }: EssayStudyCardProps) => {
                 <div className="mt-4 space-y-2">
                     <div className="text-xs text-gray-500 text-center">
                         💡 답변을 작성한 후 AI 평가를 받아보세요. 정답과 비교하여 학습 효과를 높일 수 있습니다.
+                    </div>
+                    <div className="text-xs text-gray-400 text-center border-t border-gray-100 pt-2">
+                        ⌨️ 단축키: <strong>Enter</strong> 정답 보기 | <strong>← →</strong> 이전/다음 카드
                     </div>
 
                     {remainingUsage <= 10 && remainingUsage > 0 && (

@@ -33,6 +33,34 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
         };
     }, [cardSet, isRandom]);
 
+    // 키보드 단축키 (화살표 키로 네비게이션)
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // 입력 중인 요소가 있으면 무시 (textarea, input 등)
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT') {
+                return;
+            }
+
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentCardIndex > 0) {
+                    goToPreviousCard();
+                }
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (currentCardIndex < totalCards - 1) {
+                    goToNextCard();
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [currentCardIndex, totalCards, goToPreviousCard, goToNextCard]);
+
 
     // 학습 종료
     const handleExit = () => {
