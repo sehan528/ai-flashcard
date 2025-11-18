@@ -275,10 +275,10 @@ const Settings = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        데이터셋 불러오기 (DB, DS, OS 등)
+                        예제 데이터 생성하기
                     </button>
                     <p className="text-xs text-gray-500 mt-2">
-                        public/data/dataset 폴더의 모든 데이터셋을 자동으로 불러옵니다. (현재: DB 60문제)
+                        예제 카드셋 데이터들을 생성합니다.
                     </p>
                 </div>
 
