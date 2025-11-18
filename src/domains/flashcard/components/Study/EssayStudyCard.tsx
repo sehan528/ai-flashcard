@@ -9,9 +9,10 @@ import AIFeedbackModal from '../FlashCard/AIFeedbackModal';
 
 interface EssayStudyCardProps {
     card: FlashCard;
+    onAnswerViewed?: () => void;
 }
 
-const EssayStudyCard = ({ card }: EssayStudyCardProps) => {
+const EssayStudyCard = ({ card, onAnswerViewed }: EssayStudyCardProps) => {
     const [userAnswer, setUserAnswer] = useState('');
     const [showAnswer, setShowAnswer] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -56,7 +57,13 @@ const EssayStudyCard = ({ card }: EssayStudyCardProps) => {
     };
 
     const handleShowAnswer = () => {
-        setShowAnswer(!showAnswer);
+        const newShowAnswer = !showAnswer;
+        setShowAnswer(newShowAnswer);
+
+        // 정답을 처음 볼 때 부모에게 알림
+        if (newShowAnswer && onAnswerViewed) {
+            onAnswerViewed();
+        }
     };
 
     const handleReset = () => {
@@ -104,6 +111,13 @@ const EssayStudyCard = ({ card }: EssayStudyCardProps) => {
     };
 
     const aiButtonState = getAIButtonState();
+
+    // 카드 변경 시 상태 초기화
+    React.useEffect(() => {
+        setUserAnswer('');
+        setShowAnswer(false);
+        resetAI();
+    }, [card.id]);
 
     // 키보드 단축키 (Enter로 정답 보기)
     React.useEffect(() => {
