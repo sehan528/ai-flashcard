@@ -2,6 +2,10 @@ import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 
+// ES 모듈에서 __dirname 구현
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // 개발 모드 여부
 const isDev = process.env.NODE_ENV === 'development';
 
