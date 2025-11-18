@@ -254,11 +254,46 @@ export class FlashcardStorage {
         });
     }
 
+    // 데이터 타입 감지 (카드셋 vs 학습 기록)
+    static detectDataType(data: any): 'cardset' | 'studyhistory' | 'unknown' {
+        if (typeof data !== 'object' || data === null) {
+            return 'unknown';
+        }
+
+        // 학습 기록 타입 체크 (records와 dailyStats가 있는 경우)
+        if (data.records !== undefined || data.dailyStats !== undefined) {
+            return 'studyhistory';
+        }
+
+        // 카드셋 배열인 경우
+        if (Array.isArray(data)) {
+            if (data.length > 0 && data[0].cards !== undefined) {
+                return 'cardset';
+            }
+            return 'unknown';
+        }
+
+        // 단일 카드셋인 경우 (id, name, cards 필드가 있는 경우)
+        if (data.id !== undefined && data.name !== undefined && data.cards !== undefined) {
+            return 'cardset';
+        }
+
+        return 'unknown';
+    }
+
     // Import: 단일 카드셋 유효성 검증
     static validateCardSet(set: any): { valid: boolean; error?: string } {
         // 기본 타입 체크
         if (typeof set !== 'object' || set === null) {
             return { valid: false, error: '올바른 플래시카드 형식이 아닙니다.' };
+        }
+
+        // 학습 기록 데이터가 아닌지 먼저 확인
+        if (set.records !== undefined || set.dailyStats !== undefined) {
+            return {
+                valid: false,
+                error: '이 파일은 학습 기록 데이터입니다.\n\'유저 데이터 관리\' 섹션에서 가져오기를 사용하세요.'
+            };
         }
 
         // 필수 필드 존재 여부 및 타입 체크
@@ -829,12 +864,20 @@ export class FlashcardStorage {
             return { valid: false, error: '올바른 학습 기록 형식이 아닙니다.' };
         }
 
+        // 카드셋 데이터가 아닌지 먼저 확인 (cards 필드가 있거나 배열인 경우)
+        if (Array.isArray(data) || (data.cards !== undefined && Array.isArray(data.cards))) {
+            return {
+                valid: false,
+                error: '이 파일은 카드셋 데이터입니다.\n\'학습 데이터 관리\' 섹션에서 가져오기를 사용하세요.'
+            };
+        }
+
         if (!Array.isArray(data.records)) {
-            return { valid: false, error: '기록(records)이 배열 형태가 아닙니다.' };
+            return { valid: false, error: '학습 기록에 필수 필드(records)가 누락되었습니다.' };
         }
 
         if (typeof data.dailyStats !== 'object' || data.dailyStats === null) {
-            return { valid: false, error: '일별 통계(dailyStats)가 올바르지 않습니다.' };
+            return { valid: false, error: '학습 기록에 필수 필드(dailyStats)가 누락되었습니다.' };
         }
 
         // records 배열 검증

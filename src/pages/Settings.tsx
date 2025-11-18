@@ -19,6 +19,13 @@ const Settings = () => {
     const studyHistoryFileInputRef = useRef<HTMLInputElement>(null);
     const [showStudyHistoryDeleteConfirm, setShowStudyHistoryDeleteConfirm] = useState(false);
 
+    // Electron 환경 감지
+    const isElectron = window.location.protocol === 'file:' ||
+                       (window.location.href.includes('localhost') && (window as any).electronAPI);
+
+    // 데이터가 비어있는지 확인 (마이그레이션 안내용)
+    const hasNoData = statistics.totalCardSets === 0 && statistics.totalStudyCount === 0;
+
     // 통계 정보 로드
     useEffect(() => {
         loadStatistics();
@@ -270,6 +277,30 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Electron 환경 마이그레이션 안내 */}
+            {isElectron && hasNoData && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+                    <div className="flex items-start gap-3">
+                        <svg className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <h4 className="font-semibold text-blue-900 mb-2">
+                                💡 웹 버전에서 데이터 가져오기
+                            </h4>
+                            <p className="text-sm text-blue-800 mb-3">
+                                Electron 데스크톱 앱은 웹 버전과 독립적인 저장소를 사용합니다.
+                                웹 버전에서 사용하던 데이터를 가져오려면:
+                            </p>
+                            <ol className="text-sm text-blue-800 space-y-2 ml-4 list-decimal">
+                                <li>웹 버전에서 <strong>'카드셋 내보내기'</strong>와 <strong>'학습 기록 내보내기'</strong> 실행</li>
+                                <li>다운로드된 JSON 파일들을 데스크톱 앱에서 <strong>'가져오기'</strong> 사용</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* 학습 데이터 관리 (카드셋) */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
@@ -575,10 +606,17 @@ const Settings = () => {
                 </h3>
                 <div className="space-y-2 text-sm text-gray-600">
                     <p><strong>버전:</strong> 1.0.0</p>
+                    <p><strong>환경:</strong> {isElectron ? 'Electron 데스크톱 앱' : '웹 애플리케이션'}</p>
                     <p><strong>개발:</strong> React + TypeScript + Vite</p>
-                    <p><strong>데이터 저장:</strong> LocalStorage</p>
+                    <p><strong>데이터 저장:</strong> LocalStorage {isElectron && '(독립 저장소)'}</p>
                     <p><strong>AI 평가:</strong> Hugging Face DialoGPT-medium</p>
                 </div>
+                {isElectron && (
+                    <div className="mt-4 pt-4 border-t border-gray-200 text-xs text-gray-500">
+                        <p>💡 데스크톱 앱과 웹 버전은 독립적인 LocalStorage를 사용합니다.</p>
+                        <p className="mt-1">데이터 이동은 '내보내기'/'가져오기' 기능을 사용하세요.</p>
+                    </div>
+                )}
             </div>
         </div>
     );
