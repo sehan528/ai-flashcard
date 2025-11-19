@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import type { CardSet, FlashCard } from '../domains/flashcard/dtos/FlashCard';
-import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 import CardSetSelector from '../domains/flashcard/components/CardSet/CardSetSelector';
 import CardListManager from '../domains/flashcard/components/FlashCard/CardListManager';
 import CardForm from '../domains/flashcard/components/FlashCard/CardForm';
+import { useFlashcardStore } from '../stores/flashcardStore';
 
 type EditMode = 'list' | 'add' | 'edit';
 
@@ -13,106 +13,72 @@ interface CardEditProps {
 }
 
 const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
-    const [cardSets, setCardSets] = useState<CardSet[]>([]);
+    // Zustand store
+    const { cardSets, addCardSet, updateCardSet, deleteCardSet, addCard, updateCard, deleteCard, showToast } = useFlashcardStore();
+
+    // 로컬 UI 상태
     const [selectedCardSetId, setSelectedCardSetId] = useState<string | null>(null);
     const [editMode, setEditMode] = useState<EditMode>('list');
     const [editingCard, setEditingCard] = useState<FlashCard | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [isCardSetSelectorExpanded, setIsCardSetSelectorExpanded] = useState(false);
 
-    // 카드셋 목록 로드
-    useEffect(() => {
-        loadCardSets();
-    }, []);
-
-    // initialCardSetId가 변경되면 선택된 카드셋 업데이트
+    // initialCardSetId 또는 cardSets 변경 시 선택 상태 업데이트
     useEffect(() => {
         if (initialCardSetId) {
             setSelectedCardSetId(initialCardSetId);
-            setEditMode('list'); // 리스트 모드로 전환
+            setEditMode('list');
+        } else if (cardSets.length > 0 && !selectedCardSetId) {
+            setSelectedCardSetId(cardSets[0].id);
         }
-    }, [initialCardSetId]);
-
-    const loadCardSets = () => {
-        const loadedCardSets = FlashcardStorage.getCardSets();
-        setCardSets(loadedCardSets);
-
-        // initialCardSetId가 있으면 그것을 선택, 없으면 첫 번째 카드셋 선택
-        if (initialCardSetId) {
-            setSelectedCardSetId(initialCardSetId);
-        } else if (loadedCardSets.length > 0 && !selectedCardSetId) {
-            setSelectedCardSetId(loadedCardSets[0].id);
-        }
-    };
+    }, [initialCardSetId, cardSets, selectedCardSetId]);
 
     // 선택된 카드셋 가져오기
     const selectedCardSet = cardSets.find(set => set.id === selectedCardSetId);
 
-    // 성공 메시지 표시
-    const showSuccessMessage = (message: string) => {
-        setSuccessMessage(message);
-        setTimeout(() => setSuccessMessage(null), 3000);
-    };
-
     // 새 카드셋 생성
     const handleCreateNewCardSet = (name: string, description: string) => {
         const newCardSet: CardSet = {
-            id: FlashcardStorage.generateId(),
+            id: crypto.randomUUID(),
             name,
             description,
             cards: [],
             createdAt: new Date(),
         };
 
-        FlashcardStorage.addCardSet(newCardSet);
-        loadCardSets();
+        addCardSet(newCardSet);
         setSelectedCardSetId(newCardSet.id);
-        showSuccessMessage(`"${name}" 카드셋이 생성되었습니다!`);
+        showToast('success', `"${name}" 카드셋이 생성되었습니다!`);
     };
 
     // 카드셋 편집
     const handleEditCardSet = (cardSetId: string, name: string, description: string) => {
         try {
-            const cardSets = FlashcardStorage.getCardSets();
-            const updatedSets = cardSets.map(set =>
-                set.id === cardSetId
-                    ? { ...set, name, description }
-                    : set
-            );
-
-            FlashcardStorage.saveCardSets(updatedSets);
-            loadCardSets();
-            showSuccessMessage('카드셋이 수정되었습니다!');
+            updateCardSet(cardSetId, { name, description });
+            showToast('success', '카드셋이 수정되었습니다!');
             onCardChanged?.();
         } catch (error) {
             console.error('카드셋 수정 실패:', error);
-            alert('카드셋 수정에 실패했습니다.');
+            showToast('error', '카드셋 수정에 실패했습니다.');
         }
     };
 
     // 카드셋 삭제
     const handleDeleteCardSet = (cardSetId: string) => {
         try {
-            const cardSets = FlashcardStorage.getCardSets();
-            const filteredSets = cardSets.filter(set => set.id !== cardSetId);
-
-            FlashcardStorage.saveCardSets(filteredSets);
-
-            // 해당 카드셋의 학습 기록도 함께 삭제
-            FlashcardStorage.removeStudyRecordsByCardSetId(cardSetId);
+            deleteCardSet(cardSetId);
 
             // 현재 선택된 카드셋이 삭제된 경우
             if (selectedCardSetId === cardSetId) {
-                setSelectedCardSetId(filteredSets.length > 0 ? filteredSets[0].id : null);
+                const remainingCardSets = cardSets.filter(set => set.id !== cardSetId);
+                setSelectedCardSetId(remainingCardSets.length > 0 ? remainingCardSets[0].id : null);
                 setEditMode('list');
             }
 
-            loadCardSets();
-            showSuccessMessage('카드셋이 삭제되었습니다!');
+            showToast('success', '카드셋이 삭제되었습니다!');
             onCardChanged?.();
         } catch (error) {
             console.error('카드셋 삭제 실패:', error);
-            alert('카드셋 삭제에 실패했습니다.');
+            showToast('error', '카드셋 삭제에 실패했습니다.');
         }
     };
 
@@ -137,43 +103,27 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                 // 새 카드 추가
                 const newCard: FlashCard = {
                     ...cardData,
-                    id: FlashcardStorage.generateId(),
+                    id: crypto.randomUUID(),
                     createdAt: new Date(),
                     studyCount: 0,
                 };
 
-                FlashcardStorage.addCardToSet(selectedCardSetId, newCard);
-                showSuccessMessage('새 카드가 추가되었습니다!');
+                addCard(selectedCardSetId, newCard);
+                showToast('success', '새 카드가 추가되었습니다!');
 
             } else if (editMode === 'edit' && editingCard) {
                 // 기존 카드 수정
-                const cardSets = FlashcardStorage.getCardSets();
-                const updatedSets = cardSets.map(set => {
-                    if (set.id === selectedCardSetId) {
-                        return {
-                            ...set,
-                            cards: set.cards.map(card =>
-                                card.id === editingCard.id
-                                    ? { ...card, ...cardData }
-                                    : card
-                            )
-                        };
-                    }
-                    return set;
-                });
-
-                FlashcardStorage.saveCardSets(updatedSets);
-                showSuccessMessage('카드가 수정되었습니다!');
+                updateCard(selectedCardSetId, editingCard.id, cardData);
+                showToast('success', '카드가 수정되었습니다!');
             }
 
-            loadCardSets();
             setEditMode('list');
             setEditingCard(null);
             onCardChanged?.();
 
         } catch (error) {
             console.error('카드 저장 실패:', error);
-            alert('카드 저장에 실패했습니다.');
+            showToast('error', '카드 저장에 실패했습니다.');
         }
     };
 
@@ -182,29 +132,12 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
         if (!selectedCardSetId) return;
 
         try {
-            const cardSets = FlashcardStorage.getCardSets();
-            const updatedSets = cardSets.map(set => {
-                if (set.id === selectedCardSetId) {
-                    return {
-                        ...set,
-                        cards: set.cards.filter(card => card.id !== cardId)
-                    };
-                }
-                return set;
-            });
-
-            FlashcardStorage.saveCardSets(updatedSets);
-
-            // 해당 카드의 학습 기록도 함께 삭제
-            FlashcardStorage.removeStudyRecordsByCardId(cardId);
-
-            loadCardSets();
-            showSuccessMessage('카드가 삭제되었습니다!');
+            deleteCard(selectedCardSetId, cardId);
+            showToast('success', '카드가 삭제되었습니다!');
             onCardChanged?.();
-
         } catch (error) {
             console.error('카드 삭제 실패:', error);
-            alert('카드 삭제에 실패했습니다.');
+            showToast('error', '카드 삭제에 실패했습니다.');
         }
     };
 
@@ -216,13 +149,6 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
 
     return (
         <div className="max-w-full mx-auto h-[calc(100vh-160px)] flex flex-col overflow-hidden">
-            {/* 성공 메시지 */}
-            {successMessage && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex-shrink-0">
-                    ✅ {successMessage}
-                </div>
-            )}
-
             {/* 모바일용 카드셋 선택 영역 (Collapsible) - 리스트 모드에서만 표시 */}
             {editMode === 'list' && (
                 <div className="xl:hidden mb-4 flex-shrink-0">

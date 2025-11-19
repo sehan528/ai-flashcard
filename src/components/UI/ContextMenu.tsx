@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ContextMenuItem {
     label: string;
@@ -16,6 +17,7 @@ interface ContextMenuProps {
 
 const ContextMenu = ({ x, y, items, onClose } : ContextMenuProps) => {
     const menuRef = useRef<HTMLDivElement>(null);
+    const [position, setPosition] = useState({ x, y });
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -39,13 +41,47 @@ const ContextMenu = ({ x, y, items, onClose } : ContextMenuProps) => {
         };
     }, [onClose]);
 
-    return (
+    // 화면 경계 체크 및 위치 조정
+    useEffect(() => {
+        if (menuRef.current) {
+            const rect = menuRef.current.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            let adjustedX = x;
+            let adjustedY = y;
+
+            // 오른쪽 경계 체크
+            if (adjustedX + rect.width > viewportWidth) {
+                adjustedX = viewportWidth - rect.width - 8; // 8px 여백
+            }
+
+            // 아래 경계 체크
+            if (adjustedY + rect.height > viewportHeight) {
+                adjustedY = viewportHeight - rect.height - 8; // 8px 여백
+            }
+
+            // 왼쪽 경계 체크
+            if (adjustedX < 8) {
+                adjustedX = 8;
+            }
+
+            // 위쪽 경계 체크
+            if (adjustedY < 8) {
+                adjustedY = 8;
+            }
+
+            setPosition({ x: adjustedX, y: adjustedY });
+        }
+    }, [x, y]);
+
+    return createPortal(
         <div
             ref={menuRef}
-            className="fixed bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50 min-w-[140px]"
+            className="fixed bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-[60] min-w-[140px]"
             style={{
-                left: x,
-                top: y,
+                left: position.x,
+                top: position.y,
             }}
         >
             {items.map((item, index) => (
@@ -64,7 +100,8 @@ const ContextMenu = ({ x, y, items, onClose } : ContextMenuProps) => {
                     {item.label}
                 </button>
             ))}
-        </div>
+        </div>,
+        document.body
     );
 };
 

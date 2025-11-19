@@ -1,33 +1,37 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { FlashcardStorage } from '../domains/flashcard/utils/storage';
-import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
+import { useFlashcardStore } from '../stores/flashcardStore';
 
-interface SettingsProps {
-    onRefresh?: () => void;
-}
-
-const Settings = ({ onRefresh }: SettingsProps) => {
+const Settings = () => {
     const navigate = useNavigate();
-    const [statistics, setStatistics] = useState({
-        totalCardSets: 0,
-        totalCards: 0,
-        totalStudyCount: 0
-    });
-    const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
-    const [isMessageExiting, setIsMessageExiting] = useState(false);
+
+    // Zustand store
+    const {
+        cardSets,
+        statistics,
+        showToast,
+        clearAllData,
+        importMultipleFiles,
+        createInterviewTestData,
+        clearStudyHistory,
+        importStudyHistory,
+    } = useFlashcardStore();
+
+    // 로컬 UI 상태
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showExportModal, setShowExportModal] = useState(false);
     const [selectedCardSets, setSelectedCardSets] = useState<Set<string>>(new Set());
-    const [cardSets, setCardSets] = useState<CardSet[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const studyHistoryFileInputRef = useRef<HTMLInputElement>(null);
     const [showStudyHistoryDeleteConfirm, setShowStudyHistoryDeleteConfirm] = useState(false);
 
-    // 통계 정보 로드
-    useEffect(() => {
-        loadStatistics();
-    }, []);
+    // Electron 환경 감지
+    const isElectron = typeof window !== 'undefined' &&
+        (window.navigator.userAgent.includes('Electron') ||
+         // @ts-ignore
+         (window.process && window.process.versions && window.process.versions.electron));
 
     // 모달 열릴 때 배경 스크롤 방지
     useEffect(() => {
@@ -42,28 +46,6 @@ const Settings = ({ onRefresh }: SettingsProps) => {
             document.body.style.overflow = 'unset';
         };
     }, [showExportModal, showDeleteConfirm, showStudyHistoryDeleteConfirm]);
-
-    const loadStatistics = () => {
-        const stats = FlashcardStorage.getStatistics();
-        const allCardSets = FlashcardStorage.getCardSets();
-        setStatistics(stats);
-        setCardSets(allCardSets);
-    };
-
-    const showMessage = (type: 'success' | 'error' | 'info', text: string, duration: number = 3000) => {
-        setMessage({ type, text });
-        setIsMessageExiting(false);
-
-        // duration 후에 fade-out 애니메이션 시작
-        setTimeout(() => {
-            setIsMessageExiting(true);
-            // fade-out 애니메이션 완료 후 메시지 제거 (300ms)
-            setTimeout(() => {
-                setMessage(null);
-                setIsMessageExiting(false);
-            }, 300);
-        }, duration);
-    };
 
     // Export 모달 열기
     const handleOpenExportModal = () => {
@@ -100,16 +82,16 @@ const Settings = ({ onRefresh }: SettingsProps) => {
     // Export 실행
     const handleExportSelected = () => {
         if (selectedCardSets.size === 0) {
-            showMessage('error', '내보낼 카드셋을 선택해주세요.');
+            showToast('error', '내보낼 카드셋을 선택해주세요.');
             return;
         }
 
         try {
             FlashcardStorage.downloadSelectedCardSets(Array.from(selectedCardSets));
-            showMessage('success', `${selectedCardSets.size}개의 카드셋을 내보냈습니다!`);
+            showToast('success', `${selectedCardSets.size}개의 카드셋을 내보냈습니다!`);
             handleCloseExportModal();
         } catch (error) {
-            showMessage('error', '데이터 내보내기에 실패했습니다.');
+            showToast('error', '데이터 내보내기에 실패했습니다.');
         }
     };
 
@@ -119,38 +101,24 @@ const Settings = ({ onRefresh }: SettingsProps) => {
         if (!files || files.length === 0) return;
 
         try {
-            const result = await FlashcardStorage.importMultipleFiles(files);
+            const result = await importMultipleFiles(files);
 
             if (result.success) {
-                showMessage('success', `${result.totalImported}개의 카드셋을 가져왔습니다!`);
-                loadStatistics();
-                onRefresh?.(); // 전역 상태 갱신
+                showToast('success', `${result.totalImported}개의 카드셋을 가져왔습니다!`);
             } else {
-                // 에러가 있는 경우 더 자세한 메시지
-                if (result.errors.length > 0) {
-                    // 에러가 3개 이하면 모두 표시, 그 이상이면 처음 3개만
-                    const displayErrors = result.errors.slice(0, 3);
-                    const remainingErrors = result.errors.length - 3;
+                // 에러 메시지 표시 (최대 5개까지)
+                const displayErrors = result.errors.slice(0, 5);
+                const remainingErrors = result.errors.length - 5;
 
-                    let errorMessage = `파일 가져오기 실패:\n${displayErrors.join('\n')}`;
-                    if (remainingErrors > 0) {
-                        errorMessage += `\n... 외 ${remainingErrors}개 파일`;
-                    }
-
-                    showMessage('error', errorMessage);
-                } else {
-                    showMessage('error', '데이터 가져오기에 실패했습니다.');
+                let errorMessage = displayErrors.join('\n');
+                if (remainingErrors > 0) {
+                    errorMessage += `\n... 외 ${remainingErrors}개 항목`;
                 }
 
-                // 일부 성공한 경우
-                if (result.totalImported > 0) {
-                    showMessage('success', `${result.totalImported}개의 카드셋은 성공적으로 가져왔습니다.`);
-                    loadStatistics();
-                    onRefresh?.(); // 전역 상태 갱신
-                }
+                showToast('error', errorMessage);
             }
         } catch (error) {
-            showMessage('error', '파일 읽기에 실패했습니다.');
+            showToast('error', '파일 읽기에 실패했습니다.');
         }
 
         // 파일 입력 초기화
@@ -161,38 +129,32 @@ const Settings = ({ onRefresh }: SettingsProps) => {
 
     // 전체 데이터 삭제
     const handleClearData = () => {
-        FlashcardStorage.clearAllData();
-        loadStatistics();
-        onRefresh?.(); // 전역 상태 갱신
+        clearAllData();
         setShowDeleteConfirm(false);
-        showMessage('success', '모든 데이터가 삭제되었습니다.');
+        showToast('success', '모든 데이터가 삭제되었습니다.');
     };
 
     // 데이터셋 불러오기
     const handleCreateTestData = async () => {
         try {
-            const result = await FlashcardStorage.createInterviewTestData();
-            loadStatistics();
-            onRefresh?.(); // 전역 상태 갱신
+            const result = await createInterviewTestData();
 
             if (result.success) {
                 if (result.importedCount === 0) {
-                    showMessage('success', '데이터셋이 이미 불러와져 있습니다.');
+                    showToast('success', '데이터셋이 이미 불러와져 있습니다.');
                     // 이미 있어도 메인으로 이동 (사용자가 확인할 수 있도록)
                     setTimeout(() => navigate('/'), 1500);
                 } else {
-                    const categoriesText = result.categories.length > 0
-                        ? ` (${result.categories.join(', ').toUpperCase()})`
-                        : '';
-                    showMessage('success', `${result.importedCount}개 카드셋 (${result.totalCards}개 카드)을 불러왔습니다!${categoriesText}`);
+                    const categoriesText = result.categories?.length ? ` (${result.categories.join(', ').toUpperCase()})` : '';
+                    showToast('success', `${result.importedCount}개 카드셋 (${result.totalCards}개 카드)을 불러왔습니다!${categoriesText}`);
                     // 성공 메시지를 보여주고 1.5초 후 메인 화면으로 이동
                     setTimeout(() => navigate('/'), 1500);
                 }
             } else {
-                showMessage('error', '데이터셋 불러오기에 실패했습니다.');
+                showToast('error', '데이터셋 불러오기에 실패했습니다.');
             }
         } catch (error) {
-            showMessage('error', '데이터셋 불러오기에 실패했습니다.');
+            showToast('error', '데이터셋 불러오기에 실패했습니다.');
             console.error('Dataset loading failed:', error);
         }
     };
@@ -203,9 +165,9 @@ const Settings = ({ onRefresh }: SettingsProps) => {
     const handleExportStudyHistory = () => {
         try {
             FlashcardStorage.downloadStudyHistory();
-            showMessage('success', '학습 기록을 내보냈습니다!');
+            showToast('success', '학습 기록을 내보냈습니다!');
         } catch (error) {
-            showMessage('error', '학습 기록 내보내기에 실패했습니다.');
+            showToast('error', '학습 기록 내보내기에 실패했습니다.');
         }
     };
 
@@ -215,17 +177,15 @@ const Settings = ({ onRefresh }: SettingsProps) => {
         if (!file) return;
 
         try {
-            const result = await FlashcardStorage.importStudyHistoryFromFile(file);
+            const result = await importStudyHistory(file);
 
             if (result.success) {
-                showMessage('success', `${result.importedRecords || 0}개의 학습 기록을 가져왔습니다!`);
-                loadStatistics();
-                onRefresh?.(); // 전역 상태 갱신
+                showToast('success', `${result.importedRecords || 0}개의 학습 기록을 가져왔습니다!`);
             } else {
-                showMessage('error', result.error || '학습 기록 가져오기에 실패했습니다.');
+                showToast('error', result.error || '학습 기록 가져오기에 실패했습니다.');
             }
         } catch (error) {
-            showMessage('error', '파일 읽기에 실패했습니다.');
+            showToast('error', '파일 읽기에 실패했습니다.');
         }
 
         // 파일 입력 초기화
@@ -236,11 +196,9 @@ const Settings = ({ onRefresh }: SettingsProps) => {
 
     // 학습 기록 삭제
     const handleClearStudyHistory = () => {
-        FlashcardStorage.clearStudyHistory();
-        loadStatistics();
-        onRefresh?.(); // 전역 상태 갱신
+        clearStudyHistory();
         setShowStudyHistoryDeleteConfirm(false);
-        showMessage('success', '모든 학습 기록이 삭제되었습니다.');
+        showToast('success', '모든 학습 기록이 삭제되었습니다.');
     };
 
     return (
@@ -253,25 +211,6 @@ const Settings = ({ onRefresh }: SettingsProps) => {
                     앱 설정과 데이터 관리
                 </p>
             </div>
-
-            {/* 메시지 알림 (화면 중앙 toast) */}
-            {message && (
-                <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-                    <div className={`max-w-md mx-4 p-6 rounded-xl shadow-2xl whitespace-pre-line pointer-events-auto ${
-                        isMessageExiting ? 'animate-fade-out' : 'animate-fade-in'
-                    } ${
-                        message.type === 'success'
-                            ? 'bg-green-50 text-green-800 border-2 border-green-300'
-                            : message.type === 'error'
-                            ? 'bg-red-50 text-red-800 border-2 border-red-300'
-                            : 'bg-blue-50 text-blue-800 border-2 border-blue-300'
-                    }`}>
-                        <div className="text-center">
-                            {message.text}
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {/* 데이터 통계 */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
@@ -350,21 +289,23 @@ const Settings = ({ onRefresh }: SettingsProps) => {
                     </p>
                 </div>
 
-                {/* 데이터셋 불러오기 버튼 */}
-                <div>
-                    <button
-                        onClick={handleCreateTestData}
-                        className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        예제 데이터 생성하기
-                    </button>
-                    <p className="text-xs text-gray-500 mt-2">
-                        예제 카드셋 데이터들을 생성합니다.
-                    </p>
-                </div>
+                {/* 데이터셋 불러오기 버튼 (Electron 환경에서는 숨김) */}
+                {!isElectron && (
+                    <div>
+                        <button
+                            onClick={handleCreateTestData}
+                            className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            예제 데이터 생성하기
+                        </button>
+                        <p className="text-xs text-gray-500 mt-2">
+                            예제 카드셋 데이터들을 생성합니다.
+                        </p>
+                    </div>
+                )}
             </div>
 
             {/* 유저 데이터 관리 (학습 통계) */}
@@ -436,7 +377,7 @@ const Settings = ({ onRefresh }: SettingsProps) => {
             {/* 전체 데이터 삭제 (위험 섹션) */}
             <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6 mb-6">
                 <h3 className="text-lg font-semibold text-red-700 mb-4">
-
+                    데이터 전체 삭제
                 </h3>
 
                 <div>
@@ -456,8 +397,15 @@ const Settings = ({ onRefresh }: SettingsProps) => {
             </div>
 
             {/* Export 모달 */}
-            {showExportModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            {showExportModal && createPortal(
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            handleCloseExportModal();
+                        }
+                    }}
+                >
                     <div className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-gray-800">
@@ -536,12 +484,20 @@ const Settings = ({ onRefresh }: SettingsProps) => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* 전체 데이터 삭제 확인 모달 */}
-            {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            {showDeleteConfirm && createPortal(
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowDeleteConfirm(false);
+                        }
+                    }}
+                >
                     <div className="bg-white rounded-xl p-6 max-w-md mx-4">
                         <h3 className="text-xl font-bold text-gray-800 mb-4">
                             정말 모두 삭제하시겠습니까?
@@ -565,12 +521,20 @@ const Settings = ({ onRefresh }: SettingsProps) => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* 학습 기록 삭제 확인 모달 */}
-            {showStudyHistoryDeleteConfirm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            {showStudyHistoryDeleteConfirm && createPortal(
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowStudyHistoryDeleteConfirm(false);
+                        }
+                    }}
+                >
                     <div className="bg-white rounded-xl p-6 max-w-md mx-4">
                         <h3 className="text-xl font-bold text-gray-800 mb-4">
                             학습 기록을 삭제하시겠습니까?
@@ -594,7 +558,8 @@ const Settings = ({ onRefresh }: SettingsProps) => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* 앱 정보 */}

@@ -4,7 +4,8 @@ AI 기반 답변 평가 기능을 갖춘 스마트 플래시카드 학습 애플
 
 ## 프로젝트 소개
 
-**AI Flashcard**는 React를 활용한 학습 도구로, 사용자가 직접 플래시카드를 만들고 학습할 수 있습니다. 서술형 문제의 경우 AI가 자동으로 답변을 평가하고 피드백을 제공합니다.
+**AI Flashcard**는 React를 활용한 학습 도구로, 사용자가 직접 플래시카드를 만들고 학습할 수 있습니다. </br>
+서술형 문제의 경우 AI가 자동으로 답변을 평가하고 피드백을 제공합니다.
 
 ## 주요 기능
 
@@ -20,6 +21,7 @@ AI 기반 답변 평가 기능을 갖춘 스마트 플래시카드 학습 애플
 - 마크다운 형식 답변 지원 (코드 블록 문법 강조 포함)
 - 태그 기반 분류
 - 카드별 학습 횟수 추적
+- AI와 같은 외부 도구를 활용하여 문제집 파일을 생성할 경우** 👉 [JSON 데이터 생성 가이드](docs/JSON_DATA_GUIDE.md) 문서를 참조하세요.
 
 ### 🎓 학습 모드
 - **순차 학습**: 카드를 순서대로 학습
@@ -71,8 +73,10 @@ AI 기반 답변 평가 기능을 갖춘 스마트 플래시카드 학습 애플
 - **TypeScript 5.8.3** - 타입 안정성
 - **Vite 7.0.0** - 빌드 도구 (HMR 지원)
 - **React Router DOM 7.6.3** - 라우팅
+- **Zustand 5.0.8** - 경량 상태 관리 라이브러리
 - **Tailwind CSS 3.4.17** - 유틸리티 기반 스타일링
-- **React Markdown** - 마크다운 렌더링 (코드 문법 강조 지원)
+- **React Markdown** - 마크다운 렌더링
+- **rehype-highlight** - 코드 블록 문법 강조
 
 ### Desktop
 - **Electron 33.2.0** - 크로스 플랫폼 데스크톱 앱 프레임워크
@@ -87,6 +91,7 @@ AI 기반 답변 평가 기능을 갖춘 스마트 플래시카드 학습 애플
 
 ### Development Tools
 - **ESLint 9.29.0** - 코드 품질 검사
+- **esbuild 0.27.0** - 빠른 JavaScript 번들러 (Electron 빌드용)
 - **PostCSS & Autoprefixer** - CSS 처리
 
 ## 시작하기
@@ -413,9 +418,19 @@ vercel
 
 ## 문서
 
+### 사용자 가이드
+- [JSON 데이터 생성 가이드](docs/JSON_DATA_GUIDE.md) - AI/문제집을 JSON으로 변환하는 방법
+
+### 개발 가이드
 - [개발 가이드](docs/DEVELOPMENT_GUIDE.md) - 프로젝트 구조, 개발 순서, 패턴 가이드
+- [esbuild & ESLint 가이드](docs/ESBUILD_ESLINT_GUIDE.md) - esbuild/ESLint 기초부터 실무 활용까지
+- [트러블슈팅 히스토리](docs/TROUBLESHOOTING.md) - 실제 발생한 문제와 해결 과정
+
+### Electron 가이드
 - [Electron 설정 가이드](docs/ELECTRON_SETUP.md) - Electron 앱 빌드 방법
 - [Electron 트러블슈팅](docs/ELECTRON_TROUBLESHOOTING.md) - 알려진 문제와 해결 방법
+
+### 디자인 가이드
 - [UI/UX 디자인 가이드](docs/UI_UX_DESIGN.md) - 디자인 결정사항과 구현 방법
 
 ## 라이선스

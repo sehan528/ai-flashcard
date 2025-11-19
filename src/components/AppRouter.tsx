@@ -7,7 +7,6 @@ import Settings from '../pages/Settings';
 
 interface AppRouterProps {
     currentTab: AppTab;
-    cardSets: CardSet[];
     selectedCardSetId: string | null;
     onRefresh: () => void;
     onStartStudy: (cardSet: CardSet, isRandom: boolean) => void;
@@ -17,7 +16,6 @@ interface AppRouterProps {
 
 const AppRouter = ({
                        currentTab,
-                       cardSets,
                        selectedCardSetId,
                        onRefresh,
                        onStartStudy,
@@ -28,8 +26,6 @@ const AppRouter = ({
         case 'home':
             return (
                 <Home
-                    cardSets={cardSets}
-                    onRefresh={onRefresh}
                     onStartStudy={onStartStudy}
                     onEditCardSet={onEditCardSet}
                 />
@@ -44,12 +40,10 @@ const AppRouter = ({
         case 'statistics':
             return <Statistics onRefresh={onRefresh} />;
         case 'settings':
-            return <Settings onRefresh={onRefresh} />;
+            return <Settings />;
         default:
             return (
                 <Home
-                    cardSets={cardSets}
-                    onRefresh={onRefresh}
                     onStartStudy={onStartStudy}
                     onEditCardSet={onEditCardSet}
                 />

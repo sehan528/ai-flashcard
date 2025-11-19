@@ -9,12 +9,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:electron": "npm run build:no-prebuild && electron-builder",
-    "build:win": "npm run build:no-prebuild && electron-builder --win",
-    "build:mac": "npm run build:no-prebuild && electron-builder --mac",
-    "build:linux": "npm run build:no-prebuild && electron-builder --linux",
+    "build:electron:main": "esbuild electron/main.ts --bundle --platform=node --outfile=dist-electron/main.js --external:electron --format=esm",
+    "build:electron:preload": "esbuild electron/preload.ts --bundle --platform=node --outfile=dist-electron/preload.js --external:electron --format=cjs",
+    "build:electron": "npm run build:no-prebuild && npm run build:electron:main && npm run build:electron:preload && electron-builder",
+    "build:win": "npm run build:no-prebuild && npm run build:electron:main && npm run build:electron:preload && electron-builder --win",
+    "build:mac": "npm run build:no-prebuild && npm run build:electron:main && npm run build:electron:preload && electron-builder --mac",
+    "build:linux": "npm run build:no-prebuild && npm run build:electron:main && npm run build:electron:preload && electron-builder --linux",
     "build:no-prebuild": "vite build",
-    "electron:dev": "vite",
+    "electron:watch:main": "esbuild electron/main.ts --bundle --platform=node --outfile=dist-electron/main.js --external:electron --format=esm --watch",
+    "electron:watch:preload": "esbuild electron/preload.ts --bundle --platform=node --outfile=dist-electron/preload.js --external:electron --format=cjs --watch",
+    "electron:start": "wait-on dist-electron/main.js dist-electron/preload.js && wait-on http://localhost:5173 && cross-env NODE_ENV=development nodemon --watch dist-electron --exec electron .",
+    "electron:dev": "concurrently -k \"vite\" \"npm run electron:watch:main\" \"npm run electron:watch:preload\" \"npm run electron:start\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test:dataset": "node scripts/test-dataset-import.js",
@@ -28,7 +33,8 @@
     "react-dom": "^19.1.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.6.3",
-    "rehype-highlight": "^7.0.2"
+    "rehype-highlight": "^7.0.2",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
@@ -37,18 +43,24 @@
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.5.2",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
+    "esbuild": "^0.27.0",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.2.0",
+    "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.20.6",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.34.1",
     "vite": "^7.0.0",
     "vite-plugin-electron": "^0.28.8",
-    "vite-plugin-electron-renderer": "^0.14.5"
+    "vite-plugin-electron-renderer": "^0.14.5",
+    "wait-on": "^9.0.3"
   }
 }
