@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 import CardSetGrid from '../domains/flashcard/components/CardSet/CardSetGrid';
 import RandomToggle from '../components/UI/RandomToggle';
@@ -106,8 +107,15 @@ const Home = ({ onStartStudy, onEditCardSet } : HomeProps) => {
         </div>
 
         {/* 삭제 확인 다이얼로그 */}
-        {deleteConfirm.isOpen && deleteConfirm.cardSet && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+        {deleteConfirm.isOpen && deleteConfirm.cardSet && createPortal(
+            <div
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4"
+                onClick={(e) => {
+                    if (e.target === e.currentTarget) {
+                        setDeleteConfirm({ isOpen: false, cardSet: null });
+                    }
+                }}
+            >
                 <div className="bg-white rounded-xl p-6 max-w-md mx-4">
                     <h3 className="text-xl font-bold text-gray-800 mb-4">
                         카드셋 삭제 확인
@@ -134,7 +142,8 @@ const Home = ({ onStartStudy, onEditCardSet } : HomeProps) => {
                         </button>
                     </div>
                 </div>
-            </div>
+            </div>,
+            document.body
         )}
     </>
     );

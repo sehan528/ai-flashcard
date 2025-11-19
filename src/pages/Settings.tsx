@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 import { useFlashcardStore } from '../stores/flashcardStore';
@@ -396,8 +397,15 @@ const Settings = () => {
             </div>
 
             {/* Export 모달 */}
-            {showExportModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            {showExportModal && createPortal(
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            handleCloseExportModal();
+                        }
+                    }}
+                >
                     <div className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-gray-800">
@@ -476,12 +484,20 @@ const Settings = () => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* 전체 데이터 삭제 확인 모달 */}
-            {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            {showDeleteConfirm && createPortal(
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowDeleteConfirm(false);
+                        }
+                    }}
+                >
                     <div className="bg-white rounded-xl p-6 max-w-md mx-4">
                         <h3 className="text-xl font-bold text-gray-800 mb-4">
                             정말 모두 삭제하시겠습니까?
@@ -505,12 +521,20 @@ const Settings = () => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* 학습 기록 삭제 확인 모달 */}
-            {showStudyHistoryDeleteConfirm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            {showStudyHistoryDeleteConfirm && createPortal(
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowStudyHistoryDeleteConfirm(false);
+                        }
+                    }}
+                >
                     <div className="bg-white rounded-xl p-6 max-w-md mx-4">
                         <h3 className="text-xl font-bold text-gray-800 mb-4">
                             학습 기록을 삭제하시겠습니까?
@@ -534,7 +558,8 @@ const Settings = () => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
             {/* 앱 정보 */}

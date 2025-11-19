@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import type { CardSet } from '../../dtos/FlashCard';
 
 interface CardSetEditModalProps {
@@ -60,8 +61,15 @@ const CardSetEditModal = ({ cardSet, isOpen, onClose, onSave }: CardSetEditModal
 
     if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+    return createPortal(
+        <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4"
+            onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    handleCancel();
+                }
+            }}
+        >
             <div className="bg-white rounded-xl shadow-lg max-w-md w-full">
                 <div className="p-6">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">
@@ -142,7 +150,8 @@ const CardSetEditModal = ({ cardSet, isOpen, onClose, onSave }: CardSetEditModal
                     </form>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

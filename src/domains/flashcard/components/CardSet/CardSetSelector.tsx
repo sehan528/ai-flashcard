@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { CardSet } from '../../dtos/FlashCard';
 import ContextMenu from '../../../../components/UI/ContextMenu';
 import CardSetEditModal from './CardSetEditModal';
@@ -302,8 +303,15 @@ const CardSetSelector = ({
             )}
 
             {/* 삭제 확인 다이얼로그 */}
-            {deleteConfirm.isOpen && deleteConfirm.cardSet && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+            {deleteConfirm.isOpen && deleteConfirm.cardSet && createPortal(
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setDeleteConfirm({ isOpen: false, cardSet: null });
+                        }
+                    }}
+                >
                     <div className="bg-white rounded-xl p-6 max-w-md mx-4">
                         <h3 className="text-xl font-bold text-gray-800 mb-4">
                             카드셋 삭제 확인
@@ -330,7 +338,8 @@ const CardSetSelector = ({
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );
