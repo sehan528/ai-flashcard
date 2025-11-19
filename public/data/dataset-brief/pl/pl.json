@@ -1,0 +1,1140 @@
+{
+  "name": "프로그래밍 언어 (간략버전)",
+  "description": "Programming Language 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "컴파일 언어와 인터프리터 언어의 차이는?",
+      "answer": "**컴파일 언어:**\n- 전체 번역 후 실행\n- 빠름\n- C, C++, Go\n\n**인터프리터 언어:**\n- 한 줄씩 번역/실행\n- 느림, 유연함\n- Python, JavaScript\n\n**JIT:** 혼합 (Java, C#)",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Compiler"
+      ]
+    },
+    {
+      "question": "정적 타입과 동적 타입의 차이는?",
+      "answer": "**정적 타입:**\n- 컴파일 시 타입 결정\n- 안전, 빠름\n- Java, C, TypeScript\n\n**동적 타입:**\n- 런타임에 타입 결정\n- 유연, 느림\n- Python, JavaScript, Ruby",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Type"
+      ]
+    },
+    {
+      "question": "강타입과 약타입의 차이는?",
+      "answer": "**강타입 (Strong):**\n- 암시적 형변환 적음\n- 엄격\n- Python, Java\n\n**약타입 (Weak):**\n- 암시적 형변환 많음\n- 유연\n- JavaScript, C\n\n**예:** \"1\" + 1 = \"11\" (JS) vs Error (Python)",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Type"
+      ]
+    },
+    {
+      "question": "패러다임의 종류 4가지는?",
+      "answer": "1. **명령형** - 어떻게 (How)\n   - 절차형, 객체지향\n2. **선언형** - 무엇을 (What)\n   - 함수형, 논리형\n3. **객체지향** - 캡슐화, 상속, 다형성\n4. **함수형** - 불변성, 순수 함수\n\n**다중 패러다임:** Python, JavaScript",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Paradigm"
+      ]
+    },
+    {
+      "question": "객체지향의 4대 특징은?",
+      "answer": "1. **캡슐화** - 데이터 은닉, 정보 은닉\n2. **상속** - 코드 재사용\n3. **다형성** - 오버로딩, 오버라이딩\n4. **추상화** - 공통 특성 추출\n\n**목적:** 재사용성, 유지보수성",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "OOP"
+      ]
+    },
+    {
+      "question": "오버로딩과 오버라이딩의 차이는?",
+      "answer": "**오버로딩 (Overloading):**\n- 같은 이름, 다른 매개변수\n- 컴파일 타임 다형성\n- 메서드 시그니처\n\n**오버라이딩 (Overriding):**\n- 상속, 재정의\n- 런타임 다형성\n- 동적 바인딩",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "OOP"
+      ]
+    },
+    {
+      "question": "추상 클래스와 인터페이스의 차이는?",
+      "answer": "**추상 클래스:**\n- 일부 구현 가능\n- 단일 상속\n- is-a 관계\n\n**인터페이스:**\n- 선언만 (Java 8+ default)\n- 다중 구현\n- can-do 관계\n\n**Java 8+:** 인터페이스에 default, static 메서드",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "OOP"
+      ]
+    },
+    {
+      "question": "상속과 조합(Composition)의 차이는?",
+      "answer": "**상속:**\n- is-a 관계\n- 강한 결합\n- 화이트박스 재사용\n\n**조합:**\n- has-a 관계\n- 약한 결합\n- 블랙박스 재사용\n- 유연함\n\n**원칙:** 상속보다 조합을 선호",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "OOP"
+      ]
+    },
+    {
+      "question": "함수형 프로그래밍의 특징 4가지는?",
+      "answer": "1. **순수 함수** - 부작용 없음\n2. **불변성** - 데이터 변경 안함\n3. **일급 함수** - 함수를 값처럼\n4. **고차 함수** - 함수를 인자/반환\n\n**장점:** 예측 가능, 테스트 쉬움, 병렬 처리",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Functional"
+      ]
+    },
+    {
+      "question": "순수 함수의 조건 2가지는?",
+      "answer": "1. **동일 입력 → 동일 출력** (결정적)\n2. **부작용 없음** (Side Effect Free)\n   - 외부 상태 변경 X\n   - 전역 변수 수정 X\n   - I/O X\n\n**장점:** 예측 가능, 캐싱, 병렬화",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Functional"
+      ]
+    },
+    {
+      "question": "일급 객체(First-Class Citizen)의 조건 3가지는?",
+      "answer": "1. **변수에 할당** 가능\n2. **인자로 전달** 가능\n3. **반환값**으로 사용 가능\n\n**일급 함수:** 함수가 일급 객체\n\n**예:** JavaScript, Python 함수",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Functional"
+      ]
+    },
+    {
+      "question": "고차 함수(Higher-Order Function)란?",
+      "answer": "**개념:** 함수를 인자로 받거나 반환하는 함수\n\n**예:**\n- map, filter, reduce\n- 데코레이터\n- 커링\n\n**장점:** 추상화, 재사용성",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Functional"
+      ]
+    },
+    {
+      "question": "클로저(Closure)의 개념은?",
+      "answer": "**개념:** 외부 함수의 변수를 내부 함수가 참조\n\n**특징:**\n- 렉시컬 스코프\n- 상태 은닉\n- 데이터 캡슐화\n\n**활용:**\n- 팩토리 함수\n- private 변수\n- 이벤트 핸들러",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Closure"
+      ]
+    },
+    {
+      "question": "커링(Currying)의 개념은?",
+      "answer": "**개념:** 여러 인자 함수 → 단일 인자 함수들의 체인\n\n**예:**\n```\nf(a, b, c) → f(a)(b)(c)\n```\n\n**장점:**\n- 부분 적용\n- 재사용성\n\n**vs Partial Application**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Functional"
+      ]
+    },
+    {
+      "question": "메모이제이션의 개념과 조건은?",
+      "answer": "**개념:** 함수 결과 캐싱\n\n**조건:** 순수 함수\n\n**장점:**\n- 중복 계산 제거\n- 성능 향상\n\n**예:**\n- 피보나치\n- DP\n\n**Trade-off:** 메모리",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Memoization"
+      ]
+    },
+    {
+      "question": "Call by Value와 Call by Reference의 차이는?",
+      "answer": "**Call by Value:**\n- 값 복사\n- 원본 불변\n- Java 기본형\n\n**Call by Reference:**\n- 주소 전달\n- 원본 변경 가능\n- C++ 참조, Python 객체\n\n**Java:** 객체는 참조값의 복사",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Parameter"
+      ]
+    },
+    {
+      "question": "얕은 복사와 깊은 복사의 차이는?",
+      "answer": "**얕은 복사 (Shallow):**\n- 1단계만 복사\n- 중첩 객체는 참조\n\n**깊은 복사 (Deep):**\n- 재귀적 복사\n- 완전히 독립\n\n**방법:**\n- Shallow: Object.assign, spread\n- Deep: JSON.parse(JSON.stringify), lodash",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Copy"
+      ]
+    },
+    {
+      "question": "Null, Undefined, NaN의 차이는?",
+      "answer": "**Null:**\n- 의도적 빈 값\n- typeof null === \"object\"\n\n**Undefined:**\n- 선언만, 할당 안됨\n- typeof undefined === \"undefined\"\n\n**NaN:**\n- Not a Number\n- typeof NaN === \"number\"\n- NaN !== NaN (true)",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "== 와 === 의 차이는?",
+      "answer": "**== (동등):**\n- 타입 강제 변환 후 비교\n- \"1\" == 1 (true)\n\n**=== (일치):**\n- 타입까지 엄격 비교\n- \"1\" === 1 (false)\n\n**권장:** === 사용",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "호이스팅(Hoisting)이란?",
+      "answer": "**개념:** 선언이 스코프 최상단으로 끌어올려짐\n\n**var:**\n- 선언 + 초기화 (undefined)\n- 함수 스코프\n\n**let/const:**\n- 선언만 (TDZ)\n- 블록 스코프\n\n**함수 선언문:** 전체 호이스팅",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "TDZ(Temporal Dead Zone)란?",
+      "answer": "**개념:** let/const 선언 전 접근 불가 구간\n\n**발생:**\n- 호이스팅 되지만 초기화 안됨\n- ReferenceError\n\n**vs var:** var는 undefined\n\n**목적:** 더 안전한 코드",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "var, let, const의 차이는?",
+      "answer": "**var:**\n- 함수 스코프\n- 재선언 가능\n- 호이스팅 (undefined)\n\n**let:**\n- 블록 스코프\n- 재할당 가능\n- TDZ\n\n**const:**\n- 블록 스코프\n- 재할당 불가 (불변 아님)\n- TDZ",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "스코프의 종류 3가지는?",
+      "answer": "1. **전역 스코프** - 어디서나 접근\n2. **함수 스코프** - 함수 내부만\n3. **블록 스코프** - {} 내부만 (let/const)\n\n**스코프 체인:** 내부 → 외부 탐색\n**렉시컬 스코프:** 정의된 위치 기준",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Scope"
+      ]
+    },
+    {
+      "question": "this 바인딩 규칙 4가지는?",
+      "answer": "1. **기본** - 전역 객체 (strict: undefined)\n2. **암시적** - 메서드 호출 (.앞 객체)\n3. **명시적** - call/apply/bind\n4. **new** - 새 객체\n\n**화살표 함수:** 렉시컬 this (상위 스코프)\n\n**우선순위:** new > 명시 > 암시 > 기본",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "화살표 함수의 특징 4가지는?",
+      "answer": "1. **this** - 렉시컬 바인딩 (상위)\n2. **arguments** - 없음 (rest 사용)\n3. **constructor** - new 불가\n4. **간결한 문법**\n\n**용도:** 콜백, 메서드 아닌 함수\n**주의:** 메서드로 사용 X",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "프로토타입의 개념은?",
+      "answer": "**개념:** 객체가 다른 객체를 참조하는 링크\n\n**프로토타입 체인:**\n- 객체 → 프로토타입 → ... → Object.prototype → null\n\n**상속 구현:**\n- 클래스 없이 상속\n\n**접근:** __proto__, Object.getPrototypeOf()",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "프로토타입 체인의 동작 원리는?",
+      "answer": "**탐색:**\n1. 객체 자체 속성 확인\n2. 없으면 프로토타입 확인\n3. 재귀적으로 체인 따라 탐색\n4. null까지 없으면 undefined\n\n**성능:** O(depth)\n\n**hasOwnProperty():** 자체 속성만",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "클래스와 프로토타입의 관계는?",
+      "answer": "**ES6 Class:**\n- Syntactic Sugar\n- 내부는 프로토타입\n\n**차이:**\n- class는 호이스팅 안됨 (TDZ)\n- strict mode 강제\n- new 필수\n\n**본질:** 프로토타입 기반",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "이벤트 루프의 동작 원리는?",
+      "answer": "**구성:**\n1. **Call Stack** - 실행 중인 함수\n2. **Web APIs** - 비동기 처리\n3. **Task Queue** - 콜백 대기\n4. **Event Loop** - Stack 비면 Queue에서 가져옴\n\n**싱글 스레드 + 비동기**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "매크로태스크와 마이크로태스크의 차이는?",
+      "answer": "**마이크로태스크:**\n- Promise, MutationObserver\n- 우선순위 높음\n- 매크로 전에 모두 실행\n\n**매크로태스크:**\n- setTimeout, setInterval, I/O\n- 한 개씩 실행\n\n**순서:** 마이크로 → 렌더링 → 매크로",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "Promise의 상태 3가지는?",
+      "answer": "1. **Pending** - 대기\n2. **Fulfilled** - 성공 (resolve)\n3. **Rejected** - 실패 (reject)\n\n**settled:** Fulfilled or Rejected\n\n**메서드:** then, catch, finally\n\n**체이닝 가능**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "async/await의 특징은?",
+      "answer": "**특징:**\n- Promise의 문법적 설탕\n- 동기 코드처럼 작성\n- try-catch로 에러 처리\n\n**async:** Promise 반환\n**await:** Promise 완료 대기\n\n**주의:** await는 async 내부에서만",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "콜백 지옥과 해결책은?",
+      "answer": "**콜백 지옥:**\n- 중첩 콜백\n- 가독성 저하\n- 에러 처리 어려움\n\n**해결:**\n1. Promise 체이닝\n2. async/await\n3. 함수 분리\n\n**패턴:** 콜백 → Promise → async/await",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "제너레이터(Generator)의 특징은?",
+      "answer": "**특징:**\n- function*\n- yield로 일시 중지/재개\n- Iterator 반환\n\n**활용:**\n- 지연 평가\n- 무한 수열\n- 비동기 제어\n\n**메서드:** next(), throw(), return()",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "이터레이터(Iterator)와 이터러블(Iterable)의 차이는?",
+      "answer": "**Iterator:**\n- next() 메서드 가진 객체\n- {value, done} 반환\n\n**Iterable:**\n- [Symbol.iterator]() 메서드\n- Iterator 반환\n\n**예:** Array, String, Map, Set\n\n**for...of는 Iterable만**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "Spread와 Rest의 차이는?",
+      "answer": "**Spread (...):**\n- 펼치기\n- 배열/객체 확장\n- [...arr], {...obj}\n\n**Rest (...):**\n- 모으기\n- 함수 매개변수\n- function(...args)\n\n**위치로 구분**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "구조 분해 할당(Destructuring)의 활용은?",
+      "answer": "**배열:**\n```js\nconst [a, b] = [1, 2];\n```\n\n**객체:**\n```js\nconst {x, y} = {x: 1, y: 2};\n```\n\n**활용:**\n- 기본값\n- 나머지 (...rest)\n- 중첩\n- 함수 매개변수",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "옵셔널 체이닝(?.)의 용도는?",
+      "answer": "**용도:** null/undefined 안전 접근\n\n**예:**\n```js\nobj?.prop?.method?.()\n```\n\n**단락 평가:** null/undefined면 즉시 undefined\n\n**vs && :** 간결함\n\n**ES2020**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "Nullish Coalescing(??)의 특징은?",
+      "answer": "**개념:** null/undefined만 대체\n\n**예:**\n```js\nvalue ?? 'default'\n```\n\n**vs || :** 0, '', false도 대체\n\n**활용:** 기본값 설정\n\n**ES2020**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "Map과 Object의 차이는?",
+      "answer": "**Map:**\n- 순서 보장\n- 모든 타입 키\n- size 프로퍼티\n- 순회 용이\n\n**Object:**\n- 순서 보장 안됨 (ES6+)\n- 문자열/Symbol 키\n- 프로토타입 체인\n\n**선택:** 빈번한 추가/삭제는 Map",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "Set의 특징과 메서드는?",
+      "answer": "**특징:**\n- 중복 없는 값\n- 순서 보장\n- 모든 타입\n\n**메서드:**\n- add, delete, has\n- clear, size\n- forEach, for...of\n\n**활용:** 중복 제거, 합집합/교집합",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "WeakMap과 Map의 차이는?",
+      "answer": "**WeakMap:**\n- 객체 키만\n- 약한 참조 (GC 가능)\n- 순회 불가\n\n**Map:**\n- 모든 타입 키\n- 강한 참조\n- 순회 가능\n\n**용도:** 메모리 누수 방지, private 데이터",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "Symbol의 특징과 용도는?",
+      "answer": "**특징:**\n- 유일한 값\n- 불변\n- 프로퍼티 키로 사용\n\n**용도:**\n- 충돌 없는 키\n- Well-known Symbol (iterator)\n- private 프로퍼티\n\n**Symbol.for():** 전역 심볼",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "Proxy의 개념과 활용은?",
+      "answer": "**개념:** 객체 동작 가로채기\n\n**트랩:**\n- get, set, has\n- apply, construct\n- deleteProperty\n\n**활용:**\n- 유효성 검사\n- 로깅\n- 가상 프로퍼티\n\n**Vue 3:** Reactivity",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "Reflect API의 용도는?",
+      "answer": "**용도:** 메타 프로그래밍 표준 API\n\n**특징:**\n- Proxy 트랩과 1:1 대응\n- 반환값으로 성공/실패\n- 함수형 접근\n\n**vs 연산자:** 더 명확\n\n**예:** Reflect.get(), Reflect.set()",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "모듈 시스템의 종류 3가지는?",
+      "answer": "1. **CommonJS** - require/module.exports (Node.js)\n2. **AMD** - define/require (브라우저)\n3. **ES6 Module** - import/export (표준)\n\n**ESM vs CommonJS:**\n- 정적 vs 동적\n- 컴파일 vs 런타임",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Module"
+      ]
+    },
+    {
+      "question": "import와 require의 차이는?",
+      "answer": "**import (ESM):**\n- 정적 분석\n- 컴파일 시점\n- Tree Shaking\n- 비동기\n\n**require (CommonJS):**\n- 동적 로딩\n- 런타임\n- 동기\n\n**Node.js:** 둘 다 지원 (ESM은 .mjs)",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Module"
+      ]
+    },
+    {
+      "question": "네임스페이스 패턴이란?",
+      "answer": "**개념:** 전역 변수 충돌 방지\n\n**패턴:**\n\n\n**대안:** 모듈 시스템\n\n**IIFE와 함께 사용**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Pattern"
+      ]
+    },
+    {
+      "question": "IIFE의 용도는?",
+      "answer": "**개념:** Immediately Invoked Function Expression\n\n**패턴:**\n\n\n**용도:**\n- 스코프 격리\n- 변수 은닉\n- 초기화\n\n**모듈 패턴**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Pattern"
+      ]
+    },
+    {
+      "question": "모듈 패턴의 구조는?",
+      "answer": "**패턴:** IIFE + 클로저\n\n\n\n**장점:** 캡슐화\n**단점:** 메모리",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Pattern"
+      ]
+    },
+    {
+      "question": "debounce와 throttle의 차이는?",
+      "answer": "**Debounce:**\n- 마지막 호출 후 n초 뒤 실행\n- 검색 자동완성\n\n**Throttle:**\n- n초마다 최대 1번\n- 스크롤 이벤트\n\n**목적:** 성능 최적화",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Optimization"
+      ]
+    },
+    {
+      "question": "가비지 컬렉션의 알고리즘은?",
+      "answer": "**Mark-and-Sweep:**\n1. 루트부터 도달 가능 표시\n2. 미표시 객체 제거\n\n**Reference Counting:**\n- 참조 개수\n- 순환 참조 문제\n\n**V8:** Generational GC",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "GC"
+      ]
+    },
+    {
+      "question": "메모리 누수의 원인 4가지는?",
+      "answer": "1. **전역 변수** - 해제 안됨\n2. **타이머** - clearTimeout 안함\n3. **이벤트 리스너** - removeEventListener 안함\n4. **클로저** - 불필요한 참조\n\n**탐지:** Chrome DevTools",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Memory"
+      ]
+    },
+    {
+      "question": "JIT 컴파일러의 동작은?",
+      "answer": "**개념:** Just-In-Time, 런타임 컴파일\n\n**단계:**\n1. 인터프리터 실행\n2. 핫스팟 감지\n3. 최적화 컴파일\n4. 네이티브 코드 실행\n\n**예:** V8, JVM\n\n**장점:** 빠름 + 유연",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JIT"
+      ]
+    },
+    {
+      "question": "V8 엔진의 특징은?",
+      "answer": "**특징:**\n- JIT 컴파일\n- Hidden Class\n- Inline Caching\n\n**컴파일러:**\n- Ignition (인터프리터)\n- TurboFan (최적화)\n\n**사용:** Chrome, Node.js",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "V8"
+      ]
+    },
+    {
+      "question": "Hidden Class란?",
+      "answer": "**개념:** V8의 최적화 기법\n\n**동작:**\n- 같은 구조 객체는 같은 클래스\n- 프로퍼티 추가시 전환\n\n**최적화:**\n- 생성자에서 모든 프로퍼티 선언\n- 순서 일관성\n\n**성능 향상**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "V8"
+      ]
+    },
+    {
+      "question": "Inline Caching이란?",
+      "answer": "**개념:** 프로퍼티 접근 최적화\n\n**동작:**\n- 같은 위치 반복 접근 캐싱\n- Hidden Class 기반\n\n**조건:**\n- 동일한 구조\n- 반복 호출\n\n**Monomorphic > Polymorphic",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "V8"
+      ]
+    },
+    {
+      "question": "Strict Mode의 변경점 5가지는?",
+      "answer": "1. **암시적 전역** - 에러\n2. **this** - undefined (전역)\n3. **중복 매개변수** - 에러\n4. **with** - 금지\n5. **delete** - 변수 삭제 불가\n\n**활성화:** \"use strict\"",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "JavaScript"
+      ]
+    },
+    {
+      "question": "TypeScript의 장점 4가지는?",
+      "answer": "1. **타입 안전성** - 컴파일 시 오류 검출\n2. **IDE 지원** - 자동완성, 리팩토링\n3. **가독성** - 명확한 인터페이스\n4. **대규모 프로젝트** - 유지보수성\n\n**단점:** 러닝 커브, 빌드 과정",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "TypeScript 기본 타입 8가지는?",
+      "answer": "1. **boolean, number, string**\n2. **array** - number[]\n3. **tuple** - [string, number]\n4. **enum**\n5. **any** - 모든 타입\n6. **void** - 반환값 없음\n7. **null, undefined**\n8. **never** - 도달 불가",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "Interface와 Type Alias의 차이는?",
+      "answer": "**Interface:**\n- 객체 구조 정의\n- 확장 가능 (extends)\n- 선언 병합\n\n**Type:**\n- 모든 타입 (Union, Tuple 등)\n- 재선언 불가\n- & (교차 타입)\n\n**선호:** Interface (객체)",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "Generic의 개념과 활용은?",
+      "answer": "**개념:** 타입을 매개변수화\n\n\n\n**활용:**\n- 재사용 가능한 컴포넌트\n- 타입 안전성 유지\n\n**제약:** extends",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "Union과 Intersection 타입의 차이는?",
+      "answer": "**Union (|):**\n- 둘 중 하나\n- string | number\n\n**Intersection (&):**\n- 모두 만족\n- Type1 & Type2\n\n**타입 가드:** typeof, instanceof로 좁히기",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "Utility Types 5가지는?",
+      "answer": "1. **Partial<T>** - 모든 프로퍼티 선택적\n2. **Required<T>** - 모든 프로퍼티 필수\n3. **Readonly<T>** - 읽기 전용\n4. **Pick<T, K>** - 일부 선택\n5. **Omit<T, K>** - 일부 제외\n\n**Record, Exclude, Extract도 유용**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "Type Guard란?",
+      "answer": "**개념:** 타입 좁히기 (narrowing)\n\n**방법:**\n1. **typeof** - 원시 타입\n2. **instanceof** - 클래스\n3. **in** - 프로퍼티\n4. **사용자 정의** - is\n\n**목적:** 타입 안전성",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "any와 unknown의 차이는?",
+      "answer": "**any:**\n- 모든 타입\n- 타입 체크 우회\n- 위험\n\n**unknown:**\n- 모든 타입 할당 가능\n- 사용 전 타입 확인 필수\n- 안전\n\n**권장:** unknown",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "never 타입의 용도는?",
+      "answer": "**용도:**\n1. **도달 불가** - 항상 예외\n2. **빈 타입** - 불가능\n3. **철저한 검사** - exhaustive check\n\n**예:**\n- throw 함수\n- 무한 루프\n- switch default",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "Decorator의 개념은?",
+      "answer": "**개념:** 클래스/메서드에 메타데이터 추가\n\n**종류:**\n- @ClassDecorator\n- @MethodDecorator\n- @PropertyDecorator\n- @ParameterDecorator\n\n**활용:** Angular, NestJS\n\n**실험적 기능**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "as const의 용도는?",
+      "answer": "**용도:** literal type으로 추론\n\n\n\n**효과:**\n- readonly\n- 정확한 타입\n- enum 대안",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "Non-null Assertion(\\!)이란?",
+      "answer": "**개념:** null/undefined 아님을 단언\n\n\n\n**주의:**\n- 런타임 에러 가능\n- 확실할 때만\n\n**대안:** 옵셔널 체이닝",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "TypeScript"
+      ]
+    },
+    {
+      "question": "Python의 특징 5가지는?",
+      "answer": "1. **동적 타입** - 런타임 결정\n2. **인터프리터** - 바이트코드 컴파일\n3. **다중 패러다임** - 객체지향, 함수형\n4. **풍부한 라이브러리** - 표준, 서드파티\n5. **가독성** - 간결한 문법",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Python GIL(Global Interpreter Lock)이란?",
+      "answer": "**개념:** 한 번에 하나의 스레드만 실행\n\n**영향:**\n- CPU-bound 작업 느림\n- I/O-bound는 괜찮음\n\n**대안:**\n- multiprocessing\n- asyncio\n- C 확장",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Python의 메모리 관리는?",
+      "answer": "**방식:**\n- Reference Counting (주)\n- Generational GC (보조)\n\n**순환 참조:**\n- GC로 해결\n\n**최적화:**\n- __slots__\n- 객체 풀",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "list, tuple, set의 차이는?",
+      "answer": "**list:**\n- 가변, 순서, 중복 O\n- []\n\n**tuple:**\n- 불변, 순서, 중복 O\n- ()\n- 빠름, 안전\n\n**set:**\n- 가변, 순서 X, 중복 X\n- {}\n- 빠른 검색",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "List Comprehension의 장점은?",
+      "answer": "**문법:**\n\n\n**장점:**\n- 간결\n- 빠름 (최적화)\n- 가독성\n\n**변형:** dict, set comprehension",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Generator의 장점과 문법은?",
+      "answer": "**문법:**\n\n\n**장점:**\n- 메모리 효율 (lazy)\n- 무한 시퀀스\n\n**vs list:** 한 번만 순회",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Decorator의 구현 방식은?",
+      "answer": "**패턴:**\n\n\n**활용:**\n- 로깅, 타이밍\n- 인증, 캐싱\n\n**functools.wraps 사용**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "*args와 **kwargs의 차이는?",
+      "answer": "***args:**\n- 가변 위치 인자\n- tuple\n\n****kwargs:**\n- 가변 키워드 인자\n- dict\n\n**순서:** 일반 → *args → 키워드 → **kwargs",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Context Manager의 용도는?",
+      "answer": "**용도:** 리소스 자동 관리\n\n**문법:**\n\n\n**구현:** __enter__, __exit__\n\n**contextlib.contextmanager**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "lambda의 제약사항은?",
+      "answer": "**제약:**\n- 단일 표현식만\n- 문장 불가 (if, for)\n- 가독성 저하\n\n**문법:**\n\n\n**용도:** 간단한 함수, 정렬 키",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "map, filter, reduce의 차이는?",
+      "answer": "**map:** 변환\n\n\n**filter:** 필터링\n\n\n**reduce:** 누적\n",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "__init__과 __new__의 차이는?",
+      "answer": "**__new__:**\n- 인스턴스 생성\n- 정적 메서드처럼\n- 반환 필수\n\n**__init__:**\n- 인스턴스 초기화\n- self 받음\n- 반환 없음\n\n**순서:** new → init",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "classmethod와 staticmethod의 차이는?",
+      "answer": "**@classmethod:**\n- cls 첫 인자\n- 클래스 변수 접근\n- 팩토리 메서드\n\n**@staticmethod:**\n- 인자 제약 없음\n- 유틸리티 함수\n- 클래스 네임스페이스\n\n**일반 메서드:** self",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "property의 용도는?",
+      "answer": "**용도:** getter/setter를 속성처럼\n\n\n\n**장점:** 캡슐화, 검증",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "__str__과 __repr__의 차이는?",
+      "answer": "**__str__:**\n- 사용자용\n- str(), print()\n- 읽기 쉬움\n\n**__repr__:**\n- 개발자용\n- repr(), 인터프리터\n- 재생성 가능 표현\n\n**권장:** 둘 다 구현",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "다중 상속의 MRO(Method Resolution Order)란?",
+      "answer": "**개념:** 메서드 탐색 순서\n\n**C3 Linearization:**\n- 깊이 우선, 왼쪽부터\n- 일관성 유지\n\n**확인:** Class.__mro__\n\n**다이아몬드 문제 해결**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Duck Typing이란?",
+      "answer": "**개념:** 타입보다 동작 중시\n\n**\"오리처럼 보이고 울면 오리다\"**\n\n**특징:**\n- 인터페이스 암시적\n- 유연함\n- 런타임 에러 가능\n\n**프로토콜:** Python 3.8+",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Type Hints의 장점은?",
+      "answer": "**장점:**\n1. 가독성 향상\n2. IDE 지원\n3. 정적 분석 (mypy)\n\n**문법:**\n```python\ndef func(x: int) -> str:\n```\n\n**런타임 영향 없음**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Asyncio의 개념과 키워드는?",
+      "answer": "**개념:** 비동기 I/O 프레임워크\n\n**키워드:**\n- async def - 코루틴\n- await - 대기\n- asyncio.run()\n\n**용도:** 동시 I/O\n\n**vs threading:** 싱글 스레드",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Python"
+      ]
+    },
+    {
+      "question": "Java의 특징 5가지는?",
+      "answer": "1. **객체지향**\n2. **플랫폼 독립** - WORA\n3. **강타입**\n4. **GC** - 자동 메모리 관리\n5. **멀티스레딩** - 내장 지원",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "JVM, JRE, JDK의 차이는?",
+      "answer": "**JVM:**\n- Java Virtual Machine\n- 바이트코드 실행\n\n**JRE:**\n- JVM + 라이브러리\n- 실행 환경\n\n**JDK:**\n- JRE + 개발 도구\n- javac, jar 등\n\n**포함관계:** JDK ⊃ JRE ⊃ JVM",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Java 컴파일 과정은?",
+      "answer": "1. **.java** - 소스 코드\n2. **javac** - 컴파일러\n3. **.class** - 바이트코드\n4. **JVM** - 인터프리터/JIT\n5. **실행**\n\n**Write Once, Run Anywhere**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "String의 불변성과 장점은?",
+      "answer": "**불변성:** String은 immutable\n\n**장점:**\n1. 스레드 안전\n2. 해시 캐싱\n3. 보안\n4. String Pool\n\n**단점:** 잦은 변경시 비효율\n\n**대안:** StringBuilder, StringBuffer",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "String Pool의 개념은?",
+      "answer": "**개념:** 문자열 리터럴 재사용\n\n**동작:**\n- 힙에 풀 생성\n- 같은 문자열 공유\n\n**intern():** 강제 풀 추가\n\n**메모리 절약**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "StringBuilder와 StringBuffer의 차이는?",
+      "answer": "**StringBuilder:**\n- 비동기\n- 빠름\n- 단일 스레드\n\n**StringBuffer:**\n- 동기화 (synchronized)\n- 느림\n- 멀티 스레드 안전\n\n**권장:** StringBuilder",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Wrapper Class의 용도는?",
+      "answer": "**용도:** 기본형을 객체로\n\n**종류:** Integer, Long, Double 등\n\n**필요성:**\n- 제네릭\n- 컬렉션\n- Null 표현\n\n**박싱/언박싱:** 자동 변환",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Autoboxing과 Unboxing이란?",
+      "answer": "**Autoboxing:** 기본형 → Wrapper\n```java\nInteger i = 10; // int → Integer\n```\n\n**Unboxing:** Wrapper → 기본형\n```java\nint n = i; // Integer → int\n```\n\n**주의:** NPE 가능",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "== 와 equals()의 차이는?",
+      "answer": "**==:**\n- 참조 비교 (주소)\n- 기본형은 값 비교\n\n**equals():**\n- 내용 비교\n- Object 메서드\n- 오버라이드 필요\n\n**String:** equals() 사용",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "hashCode()와 equals()의 관계는?",
+      "answer": "**규약:**\n- equals() true → hashCode() 동일\n- hashCode() 동일 → equals() true 아닐 수도\n\n**함께 오버라이드 필수**\n\n**용도:** HashMap, HashSet",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Comparable과 Comparator의 차이는?",
+      "answer": "**Comparable:**\n- 자연 순서\n- compareTo()\n- 클래스 내부\n\n**Comparator:**\n- 별도 정렬 기준\n- compare()\n- 외부 클래스\n\n**용도:** Collections.sort()",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "컬렉션 프레임워크 구조는?",
+      "answer": "**List:** ArrayList, LinkedList\n**Set:** HashSet, TreeSet\n**Map:** HashMap, TreeMap\n**Queue:** LinkedList, PriorityQueue\n\n**인터페이스 기반**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "ArrayList와 LinkedList의 차이는?",
+      "answer": "**ArrayList:**\n- 배열 기반\n- 접근 O(1)\n- 삽입/삭제 O(n)\n\n**LinkedList:**\n- 노드 기반\n- 접근 O(n)\n- 삽입/삭제 O(1)\n\n**선택:** 접근 vs 수정",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "HashMap과 TreeMap의 차이는?",
+      "answer": "**HashMap:**\n- 해시 테이블\n- O(1) 평균\n- 순서 없음\n\n**TreeMap:**\n- Red-Black Tree\n- O(log n)\n- 정렬됨\n\n**LinkedHashMap:** 삽입 순서",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "HashSet의 중복 제거 원리는?",
+      "answer": "**내부:** HashMap 사용\n\n**동작:**\n1. hashCode() 계산\n2. 버킷 찾기\n3. equals() 비교\n\n**중복:** hashCode + equals 모두 같으면\n\n**오버라이드 필수**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "synchronized의 용도와 방법은?",
+      "answer": "**용도:** 동기화, 상호 배제\n\n**방법:**\n1. **메서드** - synchronized method\n2. **블록** - synchronized(obj)\n3. **static** - 클래스 락\n\n**단점:** 성능\n\n**대안:** Lock, Atomic",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "volatile의 역할은?",
+      "answer": "**역할:** 가시성 보장\n\n**효과:**\n- 메인 메모리 읽기/쓰기\n- 캐시 우회\n- 재배치 방지\n\n**한계:** 원자성 보장 안됨\n\n**용도:** flag 변수",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Java Memory Model의 영역은?",
+      "answer": "**Method Area:**\n- 클래스 메타데이터\n- static 변수\n\n**Heap:**\n- 객체, 배열\n- GC 대상\n\n**Stack:**\n- 지역 변수, 메서드\n- 스레드별\n\n**PC Register, Native Method Stack**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "GC의 종류 4가지는?",
+      "answer": "1. **Serial GC** - 싱글 스레드\n2. **Parallel GC** - 멀티 스레드\n3. **CMS** - Concurrent Mark Sweep\n4. **G1 GC** - Region 기반, 기본값\n\n**선택:** -XX:+Use...GC",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Young Generation과 Old Generation의 차이는?",
+      "answer": "**Young (Eden + Survivor):**\n- 새 객체\n- Minor GC\n- 빠름\n\n**Old:**\n- 오래된 객체\n- Major/Full GC\n- 느림\n\n**승격:** Young → Old",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Exception과 Error의 차이는?",
+      "answer": "**Exception:**\n- 복구 가능\n- Checked/Unchecked\n- try-catch\n\n**Error:**\n- 복구 불가\n- OutOfMemoryError 등\n- 처리 안함\n\n**Throwable이 최상위**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Checked와 Unchecked Exception의 차이는?",
+      "answer": "**Checked:**\n- 컴파일 시 체크\n- 명시적 처리 필수\n- IOException 등\n\n**Unchecked:**\n- 런타임 체크\n- 처리 선택적\n- RuntimeException\n- NullPointerException 등",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "try-with-resources의 장점은?",
+      "answer": "**장점:** 자동 리소스 관리\n\n**조건:** AutoCloseable 구현\n\n**문법:**\n```java\ntry (Resource r = new Resource()) {\n  // 자동 close()\n}\n```\n\n**vs finally:** 간결, 안전",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Lambda의 문법과 조건은?",
+      "answer": "**문법:**\n```java\n(parameters) -> expression\n```\n\n**조건:** Functional Interface\n- 단일 추상 메서드\n- @FunctionalInterface\n\n**예:** Runnable, Comparator\n\n**Java 8+**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Stream API의 특징은?",
+      "answer": "**특징:**\n1. **선언적** - What\n2. **지연 연산** - Lazy\n3. **병렬화** - parallelStream()\n4. **불변** - 원본 유지\n\n**단계:** 생성 → 중간 → 최종",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Optional의 용도와 메서드는?",
+      "answer": "**용도:** null 안전 처리\n\n**메서드:**\n- of, ofNullable, empty\n- isPresent, ifPresent\n- orElse, orElseGet, orElseThrow\n- map, flatMap\n\n**안티패턴:** get() 직접 호출",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "final 키워드의 용도 3가지는?",
+      "answer": "1. **변수** - 재할당 불가 (상수)\n2. **메서드** - 오버라이드 불가\n3. **클래스** - 상속 불가\n\n**Effectively Final:** 실질적 불변\n\n**불변 ≠ immutable**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "static의 특징과 용도는?",
+      "answer": "**특징:**\n- 클래스 소속\n- 인스턴스 없이 접근\n- 메모리에 1개만\n\n**용도:**\n- 유틸리티 메서드\n- 상수\n- 싱글톤\n\n**주의:** 테스트 어려움",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Reflection의 용도와 주의사항은?",
+      "answer": "**용도:**\n- 런타임 타입 정보\n- private 접근\n- 프레임워크 (Spring)\n\n**주의:**\n1. 성능 저하\n2. 캡슐화 위반\n3. 컴파일 체크 안됨\n\n**신중히 사용**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "Annotation의 종류와 용도는?",
+      "answer": "**종류:**\n- @Override, @Deprecated\n- @SuppressWarnings\n- 커스텀 (메타 어노테이션)\n\n**용도:**\n- 컴파일러 지시\n- 런타임 처리 (Reflection)\n- 문서화\n\n**Retention Policy**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "Java"
+      ]
+    },
+    {
+      "question": "C++의 특징 5가지는?",
+      "answer": "1. **다중 패러다임** - 객체지향, 절차형\n2. **저수준 제어** - 포인터, 메모리\n3. **성능** - 빠름\n4. **표준 라이브러리** - STL\n5. **하위 호환** - C",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "C++"
+      ]
+    },
+    {
+      "question": "포인터와 참조의 차이는?",
+      "answer": "**포인터:**\n- 주소 저장\n- null 가능\n- 재할당 가능\n- 산술 연산\n\n**참조:**\n- 별칭\n- null 불가\n- 재할당 불가\n- 안전\n\n**용도:** 참조 선호",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "C++"
+      ]
+    },
+    {
+      "question": "new와 malloc의 차이는?",
+      "answer": "**new:**\n- 연산자\n- 타입 안전\n- 생성자 호출\n- delete\n\n**malloc:**\n- 함수\n- void* 반환\n- 캐스팅 필요\n- free\n\n**C++에서는 new 사용**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "C++"
+      ]
+    },
+    {
+      "question": "RAII(Resource Acquisition Is Initialization)란?",
+      "answer": "**개념:** 리소스를 객체 생명주기와 묶음\n\n**특징:**\n- 생성자에서 획득\n- 소멸자에서 해제\n- 예외 안전\n\n**예:** unique_ptr, lock_guard\n\n**C++의 핵심 패턴**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "C++"
+      ]
+    },
+    {
+      "question": "스마트 포인터의 종류 3가지는?",
+      "answer": "1. **unique_ptr** - 독점 소유\n2. **shared_ptr** - 공유 소유 (reference counting)\n3. **weak_ptr** - 순환 참조 방지\n\n**auto_ptr:** deprecated\n\n**RAII 구현**",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "C++"
+      ]
+    },
+    {
+      "question": "lvalue와 rvalue의 차이는?",
+      "answer": "**lvalue:**\n- 메모리 위치\n- 이름 있음\n- &로 주소 가능\n\n**rvalue:**\n- 임시 값\n- 이름 없음\n- 우변만\n\n**Move Semantics:** rvalue 참조(&&)",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "C++"
+      ]
+    },
+    {
+      "question": "생성자의 종류 4가지는?",
+      "answer": "1. **기본 생성자**\n2. **복사 생성자** - T(const T&)\n3. **이동 생성자** - T(T&&)\n4. **변환 생성자**\n\n**Rule of Five:** 소멸자 + 4개",
+      "type": "essay",
+      "tags": [
+        "PL",
+        "C++"
+      ]
+    }
+  ]
+}
