@@ -71,8 +71,10 @@ AI 기반 답변 평가 기능을 갖춘 스마트 플래시카드 학습 애플
 - **TypeScript 5.8.3** - 타입 안정성
 - **Vite 7.0.0** - 빌드 도구 (HMR 지원)
 - **React Router DOM 7.6.3** - 라우팅
+- **Zustand 5.0.8** - 경량 상태 관리 라이브러리
 - **Tailwind CSS 3.4.17** - 유틸리티 기반 스타일링
-- **React Markdown** - 마크다운 렌더링 (코드 문법 강조 지원)
+- **React Markdown** - 마크다운 렌더링
+- **rehype-highlight** - 코드 블록 문법 강조
 
 ### Desktop
 - **Electron 33.2.0** - 크로스 플랫폼 데스크톱 앱 프레임워크
@@ -87,6 +89,7 @@ AI 기반 답변 평가 기능을 갖춘 스마트 플래시카드 학습 애플
 
 ### Development Tools
 - **ESLint 9.29.0** - 코드 품질 검사
+- **esbuild 0.27.0** - 빠른 JavaScript 번들러 (Electron 빌드용)
 - **PostCSS & Autoprefixer** - CSS 처리
 
 ## 시작하기
@@ -271,6 +274,9 @@ ai-flashcard/
 
 ## 데이터 Import/Export
 
+**💡 AI나 다른 소스에서 문제집을 JSON으로 만들고 싶으신가요?**
+👉 [JSON 데이터 생성 가이드](docs/JSON_DATA_GUIDE.md)를 참조하세요!
+
 ### Export (데이터 내보내기)
 
 #### 카드셋 내보내기
@@ -412,6 +418,9 @@ vercel
 - Linux: `.deb`, `.AppImage`
 
 ## 문서
+
+### 사용자 가이드
+- [JSON 데이터 생성 가이드](docs/JSON_DATA_GUIDE.md) - AI/문제집을 JSON으로 변환하는 방법
 
 ### 개발 가이드
 - [개발 가이드](docs/DEVELOPMENT_GUIDE.md) - 프로젝트 구조, 개발 순서, 패턴 가이드
