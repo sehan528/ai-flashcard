@@ -24,6 +24,12 @@ const Settings = ({ onRefresh }: SettingsProps) => {
     const studyHistoryFileInputRef = useRef<HTMLInputElement>(null);
     const [showStudyHistoryDeleteConfirm, setShowStudyHistoryDeleteConfirm] = useState(false);
 
+    // Electron 환경 감지
+    const isElectron = typeof window !== 'undefined' &&
+        (window.navigator.userAgent.includes('Electron') ||
+         // @ts-ignore
+         (window.process && window.process.versions && window.process.versions.electron));
+
     // 통계 정보 로드
     useEffect(() => {
         loadStatistics();
@@ -350,21 +356,23 @@ const Settings = ({ onRefresh }: SettingsProps) => {
                     </p>
                 </div>
 
-                {/* 데이터셋 불러오기 버튼 */}
-                <div>
-                    <button
-                        onClick={handleCreateTestData}
-                        className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        예제 데이터 생성하기
-                    </button>
-                    <p className="text-xs text-gray-500 mt-2">
-                        예제 카드셋 데이터들을 생성합니다.
-                    </p>
-                </div>
+                {/* 데이터셋 불러오기 버튼 (Electron 환경에서는 숨김) */}
+                {!isElectron && (
+                    <div>
+                        <button
+                            onClick={handleCreateTestData}
+                            className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            예제 데이터 생성하기
+                        </button>
+                        <p className="text-xs text-gray-500 mt-2">
+                            예제 카드셋 데이터들을 생성합니다.
+                        </p>
+                    </div>
+                )}
             </div>
 
             {/* 유저 데이터 관리 (학습 통계) */}
