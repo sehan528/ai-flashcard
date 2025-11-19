@@ -1,0 +1,332 @@
+{
+  "name": "스프링 (간략버전)",
+  "description": "Spring Framework 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "JVM의 주요 기능 5가지는 무엇인가요?",
+      "answer": "1. 플랫폼 독립성 제공 (Write Once, Run Anywhere)\n2. 자동 메모리 관리 (가비지 컬렉션)\n3. 바이트코드를 기계어로 변환 (인터프리터 + JIT 컴파일)\n4. 보안 기능 제공 (바이트코드 검증, 보안 관리자)\n5. 런타임 환경 제공 (클래스 로더, 실행 엔진, 메모리 영역 관리)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM",
+        "GC"
+      ]
+    },
+    {
+      "question": "JVM에서 실행 가능한 대표적인 언어 5가지와 가능한 이유는?",
+      "answer": "**대표 언어:**\n1. Kotlin (안드로이드 공식 언어, 간결한 문법)\n2. Scala (객체지향+함수형, Apache Spark)\n3. Groovy (동적 타이핑, Gradle)\n4. Clojure (Lisp 계열, 함수형)\n5. JRuby/Jython (Ruby/Python의 JVM 구현)\n\n**가능한 이유:** 모두 자바 바이트코드로 컴파일되기 때문",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM",
+        "GC"
+      ]
+    },
+    {
+      "question": "GraalVM Native Image의 장점 3가지와 제약사항 3가지는?",
+      "answer": "**장점:**\n1. 빠른 시작 시간 (밀리초 단위)\n2. 낮은 메모리 사용량 (JVM 불필요)\n3. 독립 실행 파일 배포 가능\n\n**제약사항:**\n1. 리플렉션/동적 프록시는 빌드 시 명시 필요\n2. 긴 빌드 시간\n3. 일부 라이브러리 미지원 가능성",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM",
+        "메모리"
+      ]
+    },
+    {
+      "question": "VM 사용의 장점 4가지와 단점 3가지는?",
+      "answer": "**장점:**\n1. 플랫폼 독립성 (OS 무관)\n2. 자동 메모리 관리 (개발 편의성)\n3. 보안성 향상 (샌드박스)\n4. 안정성 및 성숙도 높음\n\n**단점:**\n1. 성능 오버헤드 (네이티브 대비 느림)\n2. 시작 시간 지연\n3. 메모리 사용량 증가",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM"
+      ]
+    },
+    {
+      "question": "JVM과 내부 프로그램의 관계는 부모-자식 프로세스인가요?",
+      "answer": "**아니요**\n\n- JVM 자체가 하나의 프로세스\n- 자바 프로그램은 JVM 프로세스 내부의 **스레드**로 실행\n- 부모-자식 프로세스 관계가 아님\n- JVM이 종료되면 모든 자바 프로그램도 종료됨",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM"
+      ]
+    },
+    {
+      "question": "final 키워드의 주요 이점 3가지는?",
+      "answer": "1. **불변성 보장** - 한 번 초기화 후 변경 불가, 스레드 안전성\n2. **의도 명확화** - 코드 가독성 향상, 실수 방지\n3. **최적화 가능** - 컴파일러가 상수로 처리, 메서드 인라인화",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "final"
+      ]
+    },
+    {
+      "question": "컴파일 시 final 키워드가 다르게 취급되는 방식 3가지는?",
+      "answer": "1. **컴파일 타임 상수** - final 변수값이 상수로 인라인 처리됨\n2. **메서드 최적화** - final 메서드는 오버라이드 불가로 인라인화 가능\n3. **검증 강화** - 컴파일러가 final 변수 재할당 방지",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "final"
+      ]
+    },
+    {
+      "question": "인터페이스와 추상 클래스의 주요 차이점 5가지는?",
+      "answer": "1. **상속** - 클래스: 단일 상속 / 인터페이스: 다중 구현\n2. **구현** - 클래스: 구체적 메서드 가능 / 인터페이스: 추상 메서드 중심\n3. **변수** - 클래스: 인스턴스 변수 가능 / 인터페이스: public static final만\n4. **생성자** - 클래스: 있음 / 인터페이스: 없음\n5. **용도** - 클래스: IS-A 관계 / 인터페이스: CAN-DO 관계",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "OOP"
+      ]
+    },
+    {
+      "question": "클래스는 단일 상속만 가능하지만 인터페이스는 다중 구현이 가능한 이유는?",
+      "answer": "**다이아몬드 문제 회피:**\n- 클래스 다중 상속 시: 같은 메서드를 가진 두 부모 클래스 상속 시 충돌\n- 인터페이스는 구현체 없는 추상 메서드만 → 구현은 자식 클래스가 결정\n- 상태(필드) 충돌이 없음",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "OOP"
+      ]
+    },
+    {
+      "question": "리플렉션의 주요 기능 4가지와 사용 시 주의사항은?",
+      "answer": "**주요 기능:**\n1. 런타임에 클래스 정보 조회 (메서드, 필드, 생성자)\n2. private 멤버 접근 가능\n3. 동적 객체 생성 및 메서드 호출\n4. 어노테이션 정보 읽기\n\n**주의사항:** 성능 저하, 보안 문제, 컴파일 타임 검증 불가",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "리플렉션"
+      ]
+    },
+    {
+      "question": "String, StringBuilder, StringBuffer의 차이점 3가지는?",
+      "answer": "1. **불변성** - String: 불변 / StringBuilder/Buffer: 가변\n2. **스레드 안전성** - String/StringBuffer: 안전 / StringBuilder: 불안전\n3. **성능** - String: 느림(새 객체 생성) / StringBuilder: 빠름 / StringBuffer: 동기화로 약간 느림",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "String"
+      ]
+    },
+    {
+      "question": "JVM 메모리 구조의 5가지 영역과 역할은?",
+      "answer": "1. **Heap** - 객체 인스턴스 저장, GC 대상\n2. **Stack** - 메서드 호출 시 로컬 변수/매개변수 저장\n3. **Method Area** - 클래스 메타데이터, static 변수\n4. **PC Register** - 현재 실행 중인 명령어 주소\n5. **Native Method Stack** - 네이티브 메서드 호출 시 사용",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM",
+        "메모리"
+      ]
+    },
+    {
+      "question": "Garbage Collection의 주요 알고리즘 3가지는?",
+      "answer": "1. **Serial GC** - 싱글 스레드, 작은 애플리케이션용\n2. **Parallel GC** - 멀티 스레드, 처리량 우선\n3. **G1 GC** - 큰 힙 메모리, 짧은 pause time 목표\n\n(추가: CMS GC, ZGC, Shenandoah GC)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "GC"
+      ]
+    },
+    {
+      "question": "Java 8의 주요 기능 5가지는?",
+      "answer": "1. **Lambda 표현식** - 함수형 프로그래밍\n2. **Stream API** - 컬렉션 처리 간소화\n3. **Optional** - null 안전성\n4. **인터페이스 default 메서드** - 구현체 제공 가능\n5. **새로운 Date/Time API** - LocalDate, LocalDateTime",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "Java8"
+      ]
+    },
+    {
+      "question": "Stream API의 중간 연산 3가지와 최종 연산 3가지는?",
+      "answer": "**중간 연산 (Intermediate):**\n1. filter() - 조건 필터링\n2. map() - 변환\n3. sorted() - 정렬\n\n**최종 연산 (Terminal):**\n1. collect() - 결과 수집\n2. forEach() - 각 요소 처리\n3. reduce() - 값 축약",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "Stream"
+      ]
+    },
+    {
+      "question": "equals()와 ==의 차이점은?",
+      "answer": "- **==**: 참조 비교 (같은 객체인지)\n- **equals()**: 값 비교 (내용이 같은지)\n- String은 equals()로 내용 비교 필수",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "hashCode()와 equals()의 관계는?",
+      "answer": "- equals()가 true면 hashCode()도 같아야 함\n- hashCode()가 같아도 equals()는 다를 수 있음\n- HashMap/HashSet 사용 시 두 메서드 모두 오버라이드 필요",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "try-with-resources의 장점 2가지는?",
+      "answer": "1. **자동 자원 해제** - AutoCloseable 구현 객체 자동 close()\n2. **코드 간결화** - finally 블록 불필요",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "제네릭의 주요 이점 3가지는?",
+      "answer": "1. **타입 안전성** - 컴파일 타임에 타입 체크\n2. **캐스팅 불필요** - 명시적 형변환 제거\n3. **코드 재사용성** - 다양한 타입에 동일 코드 사용",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "제네릭"
+      ]
+    },
+    {
+      "question": "와일드카드 <?>, <? extends T>, <? super T>의 차이는?",
+      "answer": "1. **<?>**: 모든 타입 가능 (읽기 전용)\n2. **<? extends T>**: T의 하위 타입 (읽기용)\n3. **<? super T>**: T의 상위 타입 (쓰기용)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "제네릭"
+      ]
+    },
+    {
+      "question": "함수형 인터페이스란 무엇이며 대표적인 3가지는?",
+      "answer": "**정의:** 추상 메서드가 1개인 인터페이스 (@FunctionalInterface)\n\n**대표 인터페이스:**\n1. **Predicate<T>** - boolean test(T t)\n2. **Function<T,R>** - R apply(T t)\n3. **Consumer<T>** - void accept(T t)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "Lambda"
+      ]
+    },
+    {
+      "question": "Method Reference의 4가지 유형은?",
+      "answer": "1. **정적 메서드** - ClassName::staticMethod\n2. **인스턴스 메서드** - instance::instanceMethod\n3. **특정 타입의 임의 객체** - ClassName::instanceMethod\n4. **생성자** - ClassName::new",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "Lambda"
+      ]
+    },
+    {
+      "question": "CompletableFuture의 주요 메서드 4가지는?",
+      "answer": "1. **supplyAsync()** - 비동기 작업 시작\n2. **thenApply()** - 결과 변환\n3. **thenCompose()** - 다음 비동기 작업 체인\n4. **exceptionally()** - 예외 처리",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "비동기"
+      ]
+    },
+    {
+      "question": "동기화 방법 4가지는?",
+      "answer": "1. **synchronized 키워드** - 메서드/블록 동기화\n2. **volatile** - 변수 가시성 보장\n3. **Lock 인터페이스** - ReentrantLock 등\n4. **Atomic 클래스** - AtomicInteger 등",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "동시성"
+      ]
+    },
+    {
+      "question": "데드락 발생 조건 4가지는?",
+      "answer": "1. **상호 배제** - 한 번에 하나의 스레드만 자원 사용\n2. **점유와 대기** - 자원 보유하며 다른 자원 대기\n3. **비선점** - 강제로 자원 빼앗을 수 없음\n4. **순환 대기** - 스레드들이 순환 형태로 자원 대기",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "동시성"
+      ]
+    },
+    {
+      "question": "IoC (Inversion of Control)란 무엇인가요?",
+      "answer": "**제어의 역전**\n- 객체 생성/관리를 개발자가 아닌 프레임워크가 담당\n- 낮은 결합도, 높은 유연성\n- Spring Container가 Bean 생명주기 관리",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "IoC",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "DI (Dependency Injection)의 3가지 방법은?",
+      "answer": "1. **생성자 주입** - 권장 방식, 불변성 보장\n2. **Setter 주입** - 선택적 의존성\n3. **필드 주입** - @Autowired, 테스트 어려움 (비권장)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "DI",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "Spring Bean의 Scope 5가지는?",
+      "answer": "1. **singleton** - 기본값, 컨테이너당 1개\n2. **prototype** - 요청마다 새 인스턴스\n3. **request** - HTTP 요청당 1개\n4. **session** - HTTP 세션당 1개\n5. **application** - ServletContext당 1개",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Bean",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "Bean 생명주기 콜백 메서드 3가지는?",
+      "answer": "1. **@PostConstruct** - 초기화 후\n2. **@PreDestroy** - 소멸 전\n3. **InitializingBean/DisposableBean** - 인터페이스 구현 방식",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Bean",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "@Component, @Service, @Repository의 차이는?",
+      "answer": "- **@Component**: 범용 컴포넌트\n- **@Service**: 비즈니스 로직 레이어\n- **@Repository**: 데이터 접근 레이어, 예외 변환 기능",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Annotation",
+        "백엔드"
+      ]
+    }
+  ]
+}

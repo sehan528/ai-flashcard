@@ -1,0 +1,97 @@
+{
+  "name": "네트워크 (간략버전)",
+  "description": "Network 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "OSI 7계층의 각 계층과 역할은?",
+      "answer": "1. **물리** - 비트 전송\n2. **데이터링크** - 프레임 전송, MAC 주소\n3. **네트워크** - 라우팅, IP 주소\n4. **전송** - 종단간 통신, TCP/UDP\n5. **세션** - 세션 관리\n6. **표현** - 데이터 변환, 암호화\n7. **응용** - 사용자 인터페이스",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "OSI"
+      ]
+    },
+    {
+      "question": "TCP와 UDP의 주요 차이점 5가지는?",
+      "answer": "1. **연결** - TCP: 연결형 / UDP: 비연결형\n2. **신뢰성** - TCP: 보장 / UDP: 미보장\n3. **순서** - TCP: 보장 / UDP: 미보장\n4. **속도** - TCP: 느림 / UDP: 빠름\n5. **용도** - TCP: HTTP, FTP / UDP: DNS, 스트리밍",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP",
+        "UDP"
+      ]
+    },
+    {
+      "question": "TCP 3-way handshake 과정은?",
+      "answer": "1. **SYN** - 클라이언트 → 서버\n2. **SYN+ACK** - 서버 → 클라이언트\n3. **ACK** - 클라이언트 → 서버\n\n연결 수립 완료",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP"
+      ]
+    },
+    {
+      "question": "HTTP와 HTTPS의 차이점 3가지는?",
+      "answer": "1. **보안** - HTTP: 평문 / HTTPS: 암호화 (SSL/TLS)\n2. **포트** - HTTP: 80 / HTTPS: 443\n3. **인증서** - HTTPS는 SSL 인증서 필요",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "HTTP"
+      ]
+    },
+    {
+      "question": "HTTP 메서드의 의미와 멱등성은?",
+      "answer": "**멱등성 O:**\n- GET (조회)\n- PUT (전체 수정)\n- DELETE (삭제)\n\n**멱등성 X:**\n- POST (생성)\n- PATCH (부분 수정)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "HTTP"
+      ]
+    },
+    {
+      "question": "HTTP 상태 코드의 분류는?",
+      "answer": "- **1xx**: 정보 (처리 중)\n- **2xx**: 성공 (200 OK, 201 Created)\n- **3xx**: 리다이렉션 (301, 302)\n- **4xx**: 클라이언트 오류 (400, 404)\n- **5xx**: 서버 오류 (500, 503)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "HTTP"
+      ]
+    },
+    {
+      "question": "쿠키와 세션의 차이점은?",
+      "answer": "**쿠키:**\n- 클라이언트 저장\n- 보안 취약\n- 용량 제한 (4KB)\n\n**세션:**\n- 서버 저장\n- 상대적으로 안전\n- 서버 메모리 사용",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Cookie"
+      ]
+    },
+    {
+      "question": "CORS의 개념과 해결 방법은?",
+      "answer": "**개념:** 다른 origin의 리소스 요청 제한\n\n**해결:**\n- 서버에서 Access-Control-Allow-Origin 헤더 설정\n- Proxy 서버 사용\n- JSONP (레거시)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "CORS"
+      ]
+    },
+    {
+      "question": "DNS의 동작 과정은?",
+      "answer": "1. 브라우저 캐시 확인\n2. OS 캐시 확인\n3. 로컬 DNS 서버 조회\n4. 루트 DNS → TLD DNS → 권한 DNS 순차 조회\n5. IP 주소 반환",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "DNS"
+      ]
+    },
+    {
+      "question": "GET과 POST의 차이점 5가지는?",
+      "answer": "1. **용도** - GET: 조회 / POST: 생성/수정\n2. **데이터 위치** - GET: URL / POST: Body\n3. **캐싱** - GET: 가능 / POST: 불가\n4. **길이 제한** - GET: 있음 / POST: 없음\n5. **멱등성** - GET: O / POST: X",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "HTTP"
+      ]
+    }
+  ]
+}

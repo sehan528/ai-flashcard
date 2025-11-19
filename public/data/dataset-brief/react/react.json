@@ -1,0 +1,141 @@
+{
+  "name": "리액트 (간략버전)",
+  "description": "React 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "React의 핵심 특징 4가지는?",
+      "answer": "1. **Virtual DOM** - 빠른 렌더링\n2. **컴포넌트 기반** - 재사용 가능한 UI\n3. **단방향 데이터 흐름** - 예측 가능한 상태 관리\n4. **선언적 프로그래밍** - 명령형 대비 간결",
+      "type": "essay",
+      "tags": [
+        "React"
+      ]
+    },
+    {
+      "question": "Virtual DOM의 동작 원리 3단계는?",
+      "answer": "1. **변경 감지** - 상태 변화 시 새 Virtual DOM 생성\n2. **Diffing** - 이전 VDOM과 비교\n3. **Reconciliation** - 변경된 부분만 실제 DOM 업데이트",
+      "type": "essay",
+      "tags": [
+        "React",
+        "VirtualDOM"
+      ]
+    },
+    {
+      "question": "useState의 특징과 주의사항은?",
+      "answer": "**특징:**\n- 함수 컴포넌트에서 상태 관리\n- 상태 변경 시 리렌더링\n\n**주의사항:**\n- 비동기 업데이트 (배칭)\n- 이전 state 기반 업데이트는 함수형으로\n- 객체/배열은 불변성 유지 필요",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Hooks"
+      ]
+    },
+    {
+      "question": "useEffect의 dependency array 3가지 케이스는?",
+      "answer": "1. **없음** - 매 렌더링마다 실행\n2. **빈 배열 []** - mount 시 1회만\n3. **[dep1, dep2]** - 의존성 변경 시에만",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Hooks"
+      ]
+    },
+    {
+      "question": "useCallback과 useMemo의 차이는?",
+      "answer": "- **useCallback**: 함수를 메모이제이션\n- **useMemo**: 값을 메모이제이션\n\n둘 다 의존성 배열 기반으로 재생성 여부 결정",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Hooks",
+        "최적화"
+      ]
+    },
+    {
+      "question": "React.memo의 동작 원리와 사용 시기는?",
+      "answer": "**동작:** props가 변경되지 않으면 리렌더링 스킵 (얕은 비교)\n\n**사용 시기:**\n- 무거운 컴포넌트\n- props 변경이 적은 경우\n- Pure 컴포넌트",
+      "type": "essay",
+      "tags": [
+        "React",
+        "최적화"
+      ]
+    },
+    {
+      "question": "useContext의 장점과 단점은?",
+      "answer": "**장점:**\n- Props drilling 해결\n- 전역 상태 공유\n\n**단점:**\n- Context 변경 시 모든 구독 컴포넌트 리렌더링\n- 과도한 사용 시 성능 저하",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Context"
+      ]
+    },
+    {
+      "question": "useReducer를 사용해야 하는 경우 3가지는?",
+      "answer": "1. 복잡한 상태 로직\n2. 다음 state가 이전 state에 의존\n3. 여러 하위 값을 포함하는 객체",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Hooks"
+      ]
+    },
+    {
+      "question": "key prop의 역할과 주의사항은?",
+      "answer": "**역할:** React가 어떤 항목이 변경/추가/삭제되었는지 식별\n\n**주의사항:**\n- 고유해야 함\n- 안정적이어야 함 (index 사용 지양)\n- 형제 사이에서만 고유하면 됨",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Key"
+      ]
+    },
+    {
+      "question": "제어 컴포넌트와 비제어 컴포넌트의 차이는?",
+      "answer": "**제어 컴포넌트:**\n- React state로 값 관리\n- onChange로 동기화\n\n**비제어 컴포넌트:**\n- DOM이 직접 값 관리\n- ref로 접근",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Form"
+      ]
+    },
+    {
+      "question": "useRef의 2가지 주요 사용 용도는?",
+      "answer": "1. **DOM 접근** - 직접 DOM 조작 필요 시\n2. **값 저장** - 리렌더링 없이 값 유지 (이전 값 저장 등)",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Hooks"
+      ]
+    },
+    {
+      "question": "Portal의 사용 사례 3가지는?",
+      "answer": "1. **Modal** - 부모 DOM 외부 렌더링\n2. **Tooltip/Popup** - z-index 문제 해결\n3. **Overlay** - 전체 화면 위에 렌더링",
+      "type": "essay",
+      "tags": [
+        "React",
+        "Portal"
+      ]
+    },
+    {
+      "question": "Error Boundary의 제약사항 3가지는?",
+      "answer": "1. 이벤트 핸들러 에러는 잡지 못함\n2. 비동기 코드 에러는 잡지 못함\n3. 자기 자신의 에러는 잡지 못함",
+      "type": "essay",
+      "tags": [
+        "React",
+        "ErrorBoundary"
+      ]
+    },
+    {
+      "question": "React 18의 주요 변경사항 3가지는?",
+      "answer": "1. **Automatic Batching** - 모든 업데이트 자동 배칭\n2. **Transitions** - 긴급/비긴급 업데이트 구분\n3. **Suspense 개선** - SSR 지원 강화",
+      "type": "essay",
+      "tags": [
+        "React",
+        "React18"
+      ]
+    },
+    {
+      "question": "useTransition과 useDeferredValue의 차이는?",
+      "answer": "**useTransition:**\n- 상태 업데이트를 지연\n- isPending 제공\n\n**useDeferredValue:**\n- 값 자체를 지연\n- prop 지연에 적합",
+      "type": "essay",
+      "tags": [
+        "React",
+        "React18"
+      ]
+    }
+  ]
+}

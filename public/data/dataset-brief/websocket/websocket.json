@@ -1,0 +1,48 @@
+{
+  "name": "WebSocket (간략버전)",
+  "description": "WebSocket 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "WebSocket의 특징 4가지는?",
+      "answer": "1. **양방향 통신** - 서버도 클라이언트에 전송 가능\n2. **실시간** - 낮은 지연시간\n3. **지속적 연결** - 연결 유지\n4. **낮은 오버헤드** - HTTP 대비 적은 헤더",
+      "type": "essay",
+      "tags": [
+        "WebSocket"
+      ]
+    },
+    {
+      "question": "WebSocket과 HTTP의 차이점 4가지는?",
+      "answer": "1. **연결** - WS: 지속적 / HTTP: 요청-응답\n2. **방향** - WS: 양방향 / HTTP: 단방향\n3. **오버헤드** - WS: 낮음 / HTTP: 높음\n4. **사용 사례** - WS: 실시간 / HTTP: 일반 웹",
+      "type": "essay",
+      "tags": [
+        "WebSocket",
+        "HTTP"
+      ]
+    },
+    {
+      "question": "WebSocket 연결 수립 과정은?",
+      "answer": "1. HTTP Upgrade 요청\n2. 서버가 101 Switching Protocols 응답\n3. WebSocket 연결 수립\n4. 양방향 통신 시작",
+      "type": "essay",
+      "tags": [
+        "WebSocket"
+      ]
+    },
+    {
+      "question": "WebSocket의 사용 사례 5가지는?",
+      "answer": "1. 채팅 애플리케이션\n2. 실시간 게임\n3. 주식 시세\n4. 협업 도구 (실시간 편집)\n5. 알림 시스템",
+      "type": "essay",
+      "tags": [
+        "WebSocket"
+      ]
+    },
+    {
+      "question": "Heartbeat의 역할과 구현은?",
+      "answer": "**역할:** 연결 유지 확인, 끊어진 연결 감지\n\n**구현:**\n- 클라이언트가 주기적으로 ping\n- 서버가 pong으로 응답\n- 응답 없으면 재연결",
+      "type": "essay",
+      "tags": [
+        "WebSocket",
+        "Heartbeat"
+      ]
+    }
+  ]
+}

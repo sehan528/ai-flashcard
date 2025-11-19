@@ -1,0 +1,49 @@
+{
+  "name": "Redis (간략버전)",
+  "description": "Redis 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "Redis의 주요 특징 4가지는?",
+      "answer": "1. **In-Memory** - 빠른 속도\n2. **Key-Value** - 간단한 구조\n3. **다양한 자료구조** - String, List, Set, Hash, Sorted Set\n4. **영속성** - RDB, AOF",
+      "type": "essay",
+      "tags": [
+        "Redis"
+      ]
+    },
+    {
+      "question": "Redis 자료구조 5가지와 용도는?",
+      "answer": "1. **String** - 캐싱, 카운터\n2. **List** - 큐, 스택\n3. **Set** - 중복 제거, 교집합\n4. **Hash** - 객체 저장\n5. **Sorted Set** - 랭킹, 리더보드",
+      "type": "essay",
+      "tags": [
+        "Redis"
+      ]
+    },
+    {
+      "question": "Redis 영속성 방식 2가지는?",
+      "answer": "1. **RDB** - 스냅샷, 특정 시점 저장\n2. **AOF** - 명령어 로그, 모든 쓰기 기록\n\n혼용 가능",
+      "type": "essay",
+      "tags": [
+        "Redis",
+        "Persistence"
+      ]
+    },
+    {
+      "question": "Cache-Aside와 Write-Through의 차이는?",
+      "answer": "**Cache-Aside:**\n- 애플리케이션이 캐시 관리\n- Read 시 캐시 확인 → DB 조회 → 캐시 저장\n\n**Write-Through:**\n- 캐시에 쓰면 자동으로 DB에도 저장\n- 항상 동기화",
+      "type": "essay",
+      "tags": [
+        "Redis",
+        "Cache"
+      ]
+    },
+    {
+      "question": "Redis Cluster의 특징 3가지는?",
+      "answer": "1. **샤딩** - 데이터 분산 저장\n2. **고가용성** - 복제와 failover\n3. **확장성** - 노드 추가로 확장",
+      "type": "essay",
+      "tags": [
+        "Redis",
+        "Cluster"
+      ]
+    }
+  ]
+}

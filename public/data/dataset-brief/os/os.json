@@ -1,0 +1,50 @@
+{
+  "name": "운영체제 (간략버전)",
+  "description": "OS 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "프로세스와 스레드의 차이는?",
+      "answer": "**프로세스:**\n- 독립적 메모리 공간\n- 생성/전환 비용 높음\n\n**스레드:**\n- 프로세스 내 메모리 공유\n- 생성/전환 비용 낮음\n- 동기화 필요",
+      "type": "essay",
+      "tags": [
+        "OS"
+      ]
+    },
+    {
+      "question": "데드락 발생 조건 4가지는?",
+      "answer": "1. **상호 배제** - 자원 독점\n2. **점유와 대기** - 자원 보유하며 대기\n3. **비선점** - 강제 회수 불가\n4. **순환 대기** - 순환 형태 대기",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Deadlock"
+      ]
+    },
+    {
+      "question": "스케줄링 알고리즘 5가지는?",
+      "answer": "1. **FCFS** - 선입선출\n2. **SJF** - 최단 작업 우선\n3. **Priority** - 우선순위\n4. **Round Robin** - 시간 할당량\n5. **Multilevel Queue** - 다단계 큐",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Scheduling"
+      ]
+    },
+    {
+      "question": "페이지 교체 알고리즘 3가지는?",
+      "answer": "1. **FIFO** - 가장 오래된 페이지 교체\n2. **LRU** - 가장 오래 사용 안 한 페이지\n3. **LFU** - 가장 적게 사용된 페이지",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Paging"
+      ]
+    },
+    {
+      "question": "메모리 관리 기법 3가지는?",
+      "answer": "1. **Paging** - 고정 크기 페이지\n2. **Segmentation** - 가변 크기 세그먼트\n3. **Virtual Memory** - 가상 메모리",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    }
+  ]
+}
