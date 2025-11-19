@@ -136,16 +136,40 @@ export const useStudySession = (): StudySessionState & StudySessionActions => {
         });
     };
 
-    // 카드 순서 다시 섞기
+    // 카드 순서 다시 섞기 (현재 카드 포함해서 남은 카드들 섞음)
     const shuffleCards = () => {
         if (sessionState.cardSet) {
-            const newOrder = generateCardOrder(sessionState.totalCards, true);
+            const currentIndex = sessionState.currentCardIndex;
+
+            console.log('=== Shuffle Debug ===');
+            console.log('Current Index:', currentIndex);
+            console.log('Current cardOrder:', sessionState.cardOrder);
+
+            // 이미 본 카드들 (현재 카드 제외)
+            const viewedCards = sessionState.cardOrder.slice(0, currentIndex);
+            console.log('Viewed Cards (excluding current):', viewedCards);
+
+            // 현재 카드부터 끝까지 (현재 카드 포함)
+            const cardsToShuffle = sessionState.cardOrder.slice(currentIndex);
+            console.log('Cards to shuffle (including current):', cardsToShuffle);
+
+            // 현재 카드 포함해서 남은 카드들 섞기
+            const shuffledCards = shuffleArray(cardsToShuffle);
+            console.log('Shuffled cards:', shuffledCards);
+
+            // 이미 본 카드 + 섞인 카드들
+            const newOrder = [...viewedCards, ...shuffledCards];
+            console.log('New Order:', newOrder);
+            console.log('===================');
+
             setSessionState(prev => ({
                 ...prev,
                 cardOrder: newOrder,
-                currentCardIndex: 0, // 처음부터 다시 시작
+                // currentCardIndex는 유지 (현재 위치에서 계속, 하지만 카드는 바뀜)
                 isRandomMode: true,
             }));
+        } else {
+            console.log('Cannot shuffle: No cardSet available');
         }
     };
 

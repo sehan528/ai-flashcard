@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { FlashCard } from '../../dtos/FlashCard';
 import AnswerTypeSelector, { type AnswerType } from './AnswerTypeSelector';
 import MultipleChoiceEditor from './MultipleChoiceEditor';
@@ -15,6 +15,10 @@ interface CardFormProps {
 }
 
 const CardForm = ({ onSubmit, onCancel, initialData }: CardFormProps) => {
+    // textarea refs
+    const questionRef = useRef<HTMLTextAreaElement>(null);
+    const essayAnswerRef = useRef<HTMLTextAreaElement>(null);
+
     // 폼 상태 관리
     const [formData, setFormData] = useState({
         question: initialData?.question || '',
@@ -34,6 +38,30 @@ const CardForm = ({ onSubmit, onCancel, initialData }: CardFormProps) => {
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
+
+    // textarea 자동 높이 조절
+    const adjustTextareaHeight = (element: HTMLTextAreaElement | null) => {
+        if (element) {
+            element.style.height = 'auto';
+            element.style.height = Math.max(element.scrollHeight, 60) + 'px';
+        }
+    };
+
+    // 초기 로드 시 높이 조절
+    useEffect(() => {
+        adjustTextareaHeight(questionRef.current);
+        adjustTextareaHeight(essayAnswerRef.current);
+    }, []);
+
+    // question 변경 시 높이 조절
+    useEffect(() => {
+        adjustTextareaHeight(questionRef.current);
+    }, [formData.question]);
+
+    // essayAnswer 변경 시 높이 조절
+    useEffect(() => {
+        adjustTextareaHeight(essayAnswerRef.current);
+    }, [formData.essayAnswer]);
 
     // 입력 값 변경 핸들러
     const handleInputChange = (field: string, value: string) => {
@@ -150,13 +178,14 @@ const CardForm = ({ onSubmit, onCancel, initialData }: CardFormProps) => {
                         질문 *
                     </label>
                     <textarea
+                        ref={questionRef}
                         value={formData.question}
                         onChange={(e) => handleInputChange('question', e.target.value)}
                         placeholder="학습하고 싶은 질문을 입력하세요..."
-                        rows={3}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical ${
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none overflow-hidden ${
                             errors.question ? 'border-red-500' : 'border-gray-300'
                         }`}
+                        style={{ minHeight: '60px' }}
                     />
                     {errors.question && (
                         <p className="mt-1 text-sm text-red-600">{errors.question}</p>
@@ -181,13 +210,14 @@ const CardForm = ({ onSubmit, onCancel, initialData }: CardFormProps) => {
                             정답 *
                         </label>
                         <textarea
+                            ref={essayAnswerRef}
                             value={formData.essayAnswer}
                             onChange={(e) => handleInputChange('essayAnswer', e.target.value)}
                             placeholder="정확한 답변을 입력하세요..."
-                            rows={4}
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical ${
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none overflow-hidden ${
                                 errors.essayAnswer ? 'border-red-500' : 'border-gray-300'
                             }`}
+                            style={{ minHeight: '100px' }}
                         />
                         {errors.essayAnswer && (
                             <p className="mt-1 text-sm text-red-600">{errors.essayAnswer}</p>

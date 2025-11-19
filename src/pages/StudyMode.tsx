@@ -3,6 +3,7 @@ import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 import { useStudySession } from '../domains/flashcard/hooks/useStudySession';
 import EssayStudyCard from '../domains/flashcard/components/Study/EssayStudyCard';
 import MultipleStudyCard from '../domains/flashcard/components/Study/MultipleStudyCard';
+import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 
 interface StudyModeProps {
     cardSet: CardSet;
@@ -29,9 +30,15 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
     // 현재 카드의 정답 확인 여부 (서술형 카드용)
     const [isAnswerViewed, setIsAnswerViewed] = React.useState(false);
 
+    // 셔플 알림 표시 상태
+    const [showShuffleNotification, setShowShuffleNotification] = React.useState(false);
+
     // 세션 시작 (컴포넌트 마운트 시)
     React.useEffect(() => {
         startSession(cardSet, isRandom);
+
+        // 학습 세션 시작 기록
+        FlashcardStorage.recordStudySession(cardSet.id);
 
         // 컴포넌트 언마운트 시 세션 종료
         return () => {
@@ -60,6 +67,12 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
             alert('정답을 확인한 후 다음 카드로 넘어갈 수 있습니다.');
             return;
         }
+
+        // 현재 카드 학습 기록 저장
+        if (currentCard) {
+            FlashcardStorage.addStudyRecord(currentCard.id, cardSet.id, cardSet.name);
+        }
+
         goToNextCard();
     };
 
@@ -104,6 +117,20 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
         }
     };
 
+    // 셔플 핸들러 (시각적 피드백 포함)
+    const handleShuffle = () => {
+        console.log('Shuffle button clicked');
+        shuffleCards();
+
+        // 알림 표시
+        setShowShuffleNotification(true);
+
+        // 2초 후 알림 숨기기
+        setTimeout(() => {
+            setShowShuffleNotification(false);
+        }, 2000);
+    };
+
     // 로딩 상태
     if (!currentCard) {
         return (
@@ -118,6 +145,16 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            {/* 셔플 알림 (중앙 오버레이) */}
+            {showShuffleNotification && (
+                <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+                    <div className="bg-orange-600 text-white px-8 py-4 rounded-lg shadow-2xl flex items-center gap-3 animate-fade-in">
+                        <span className="text-2xl">🔀</span>
+                        <span className="font-semibold text-lg">남은 카드를 섞었습니다!</span>
+                    </div>
+                </div>
+            )}
+
             {/* 헤더 */}
             <header className="bg-white shadow-sm border-b">
                 <div className="container mx-auto px-4 py-4 max-w-4xl">
@@ -255,7 +292,7 @@ const StudyMode = ({ cardSet, isRandom, onExit }: StudyModeProps) => {
                         <div className="flex items-center gap-4">
                             {/* 카드 순서 셔플 */}
                             <button
-                                onClick={shuffleCards}
+                                onClick={handleShuffle}
                                 className="flex items-center gap-2 px-3 py-2 text-sm text-orange-600 border border-orange-300 rounded-md hover:bg-orange-50 transition-colors"
                                 title="카드 순서를 다시 섞습니다"
                             >

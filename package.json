@@ -1,11 +1,20 @@
 {
   "name": "ai-flashcard",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "AI-powered flashcard application for studying",
+  "author": "Your Name",
+  "main": "dist-electron/main.js",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:electron": "npm run build:no-prebuild && electron-builder",
+    "build:win": "npm run build:no-prebuild && electron-builder --win",
+    "build:mac": "npm run build:no-prebuild && electron-builder --mac",
+    "build:linux": "npm run build:no-prebuild && electron-builder --linux",
+    "build:no-prebuild": "vite build",
+    "electron:dev": "vite",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test:dataset": "node scripts/test-dataset-import.js",
@@ -28,6 +37,8 @@
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.5.2",
     "autoprefixer": "^10.4.21",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
@@ -36,6 +47,8 @@
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.34.1",
-    "vite": "^7.0.0"
+    "vite": "^7.0.0",
+    "vite-plugin-electron": "^0.28.8",
+    "vite-plugin-electron-renderer": "^0.14.5"
   }
 }

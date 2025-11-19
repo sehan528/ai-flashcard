@@ -18,6 +18,7 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
     const [editMode, setEditMode] = useState<EditMode>('list');
     const [editingCard, setEditingCard] = useState<FlashCard | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [isCardSetSelectorExpanded, setIsCardSetSelectorExpanded] = useState(false);
 
     // 카드셋 목록 로드
     useEffect(() => {
@@ -96,6 +97,9 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
             const filteredSets = cardSets.filter(set => set.id !== cardSetId);
 
             FlashcardStorage.saveCardSets(filteredSets);
+
+            // 해당 카드셋의 학습 기록도 함께 삭제
+            FlashcardStorage.removeStudyRecordsByCardSetId(cardSetId);
 
             // 현재 선택된 카드셋이 삭제된 경우
             if (selectedCardSetId === cardSetId) {
@@ -190,6 +194,10 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
             });
 
             FlashcardStorage.saveCardSets(updatedSets);
+
+            // 해당 카드의 학습 기록도 함께 삭제
+            FlashcardStorage.removeStudyRecordsByCardId(cardId);
+
             loadCardSets();
             showSuccessMessage('카드가 삭제되었습니다!');
             onCardChanged?.();
@@ -215,11 +223,56 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 flex-1 overflow-hidden">
-                {/* 왼쪽: 카드셋 선택 영역 */}
-                <div className="xl:col-span-1 overflow-hidden">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full flex flex-col max-h-[calc(100vh-200px)]">
-                        <div className="flex-1 overflow-y-auto">
+            {/* 모바일용 카드셋 선택 영역 (Collapsible) - 리스트 모드에서만 표시 */}
+            {editMode === 'list' && (
+                <div className="xl:hidden mb-4 flex-shrink-0">
+                    {/* 접혀있을 때 헤더 */}
+                    <button
+                        onClick={() => setIsCardSetSelectorExpanded(!isCardSetSelectorExpanded)}
+                        className="w-full bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                    >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                            <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <span className="text-xl">📂</span>
+                            </div>
+                            <div className="flex-1 min-w-0 text-left">
+                                <div className="text-xs text-gray-500 mb-0.5">현재 카드셋</div>
+                                {selectedCardSet ? (
+                                    <>
+                                        <div className="font-medium text-gray-800 truncate">
+                                            {selectedCardSet.name}
+                                        </div>
+                                        <div className="text-xs text-gray-600">
+                                            {selectedCardSet.cards.length}개 카드
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="font-medium text-gray-500">
+                                        카드셋을 선택해주세요
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <svg
+                            className={`w-5 h-5 text-gray-400 transform transition-transform ${
+                                isCardSetSelectorExpanded ? 'rotate-180' : ''
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 9l-7 7-7-7"
+                            />
+                        </svg>
+                    </button>
+
+                    {/* 펼쳐졌을 때 카드셋 선택기 */}
+                    {isCardSetSelectorExpanded && (
+                        <div className="mt-2 bg-white rounded-xl shadow-sm border border-gray-200 p-4 max-h-[60vh] overflow-y-auto">
                             <CardSetSelector
                                 cardSets={cardSets}
                                 selectedCardSetId={selectedCardSetId}
@@ -227,32 +280,56 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                                     setSelectedCardSetId(cardSetId);
                                     setEditMode('list'); // 카드셋 변경 시 목록 모드로
                                     setEditingCard(null);
+                                    setIsCardSetSelectorExpanded(false); // 선택 후 자동으로 접기
                                 }}
-                                onCreateNewSet={handleCreateNewCardSet}
+                                onCreateNewSet={(name, description) => {
+                                    handleCreateNewCardSet(name, description);
+                                    setIsCardSetSelectorExpanded(false); // 생성 후 자동으로 접기
+                                }}
                                 onEditCardSet={handleEditCardSet}
                                 onDeleteCardSet={handleDeleteCardSet}
                             />
+                        </div>
+                    )}
+                </div>
+            )}
 
-                            {/* 선택된 카드셋 정보 */}
-                            {selectedCardSet && (
-                                <div className="mt-4 p-3 bg-blue-50 rounded-lg flex-shrink-0">
-                                    <h4 className="font-medium text-blue-900 mb-1">
-                                        현재 편집 중
-                                    </h4>
-                                    <div className="text-sm text-blue-700">
-                                        <div>{selectedCardSet.name}</div>
-                                        <div className="opacity-75">
-                                            {selectedCardSet.cards.length}개 카드
-                                        </div>
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 flex-1 overflow-hidden">
+                {/* 왼쪽: 카드셋 선택 영역 - 데스크톱 전용 */}
+                <div className="hidden xl:block xl:col-span-1 overflow-y-auto scrollbar-hide">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-0">
+                        <CardSetSelector
+                            cardSets={cardSets}
+                            selectedCardSetId={selectedCardSetId}
+                            onSelectCardSet={(cardSetId) => {
+                                setSelectedCardSetId(cardSetId);
+                                setEditMode('list'); // 카드셋 변경 시 목록 모드로
+                                setEditingCard(null);
+                            }}
+                            onCreateNewSet={handleCreateNewCardSet}
+                            onEditCardSet={handleEditCardSet}
+                            onDeleteCardSet={handleDeleteCardSet}
+                        />
+
+                        {/* 선택된 카드셋 정보 */}
+                        {selectedCardSet && (
+                            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                                <h4 className="font-medium text-blue-900 mb-1">
+                                    현재 편집 중
+                                </h4>
+                                <div className="text-sm text-blue-700">
+                                    <div>{selectedCardSet.name}</div>
+                                    <div className="opacity-75">
+                                        {selectedCardSet.cards.length}개 카드
                                     </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 {/* 오른쪽: 카드 관리 영역 */}
-                <div className="xl:col-span-2 overflow-hidden flex flex-col">
+                <div className="xl:col-span-2 overflow-hidden flex flex-col w-full">
                     {!selectedCardSetId ? (
                         /* 카드셋 미선택 상태 */
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
@@ -276,21 +353,47 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                         </div>
                     ) : (
                         /* 카드 추가/편집 모드 */
-                        <div className="space-y-4 flex-1 overflow-y-auto">
-                            {/* 뒤로가기 버튼 */}
+                        <div className="flex-1 overflow-y-auto flex flex-col">
+                            {/* 모바일용 헤더 with 뒤로가기 */}
+                            <div className="xl:hidden mb-3 flex-shrink-0">
+                                <button
+                                    onClick={handleBackToList}
+                                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium transition-colors mb-3"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    <span>카드 목록으로</span>
+                                </button>
+
+                                {/* 현재 편집 중인 카드셋 표시 */}
+                                {selectedCardSet && (
+                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg">📂</span>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="text-xs text-blue-600 mb-0.5">편집 중인 카드셋</div>
+                                                <div className="font-medium text-blue-900 truncate">{selectedCardSet.name}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 데스크톱용 뒤로가기 버튼 */}
                             <button
                                 onClick={handleBackToList}
-                                className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+                                className="hidden xl:flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors mb-4"
                             >
                                 ← 카드 목록으로 돌아가기
                             </button>
 
-                            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                                <div className="p-6 border-b border-gray-200">
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex-1 flex flex-col">
+                                <div className="p-4 xl:p-6 border-b border-gray-200 flex-shrink-0">
                                     <h3 className="text-lg font-semibold text-gray-800">
                                         {editMode === 'add' ? '새 플래시카드 추가' : '플래시카드 편집'}
                                     </h3>
-                                    <p className="text-gray-600 mt-1">
+                                    <p className="text-sm xl:text-base text-gray-600 mt-1">
                                         {editMode === 'add'
                                             ? `"${selectedCardSet?.name}"에 새 카드를 추가합니다`
                                             : '기존 카드를 수정합니다'
@@ -298,7 +401,7 @@ const CardEdit = ({ initialCardSetId, onCardChanged }: CardEditProps) => {
                                     </p>
                                 </div>
 
-                                <div className="p-6">
+                                <div className="p-4 xl:p-6 flex-1 overflow-y-auto">
                                     <CardForm
                                         onSubmit={handleCardSubmit}
                                         onCancel={handleBackToList}

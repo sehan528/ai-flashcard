@@ -1,7 +1,8 @@
-import type {CardSet, FlashCard} from '../dtos/FlashCard';
+import type {CardSet, FlashCard, StudyHistory, StudyRecord, DailyStats} from '../dtos/FlashCard';
 
 const STORAGE_KEY = 'ai-flashcard-sets';
 const INIT_FLAG_KEY = 'ai-flashcard-initialized';
+const STUDY_HISTORY_KEY = 'ai-flashcard-study-history';
 
 export class FlashcardStorage {
 
@@ -122,7 +123,8 @@ export class FlashcardStorage {
             let categories: string[] = [];
 
             try {
-                const indexResponse = await fetch('/data/dataset/index.json');
+                // Electron 환경에서도 작동하도록 상대 경로 사용
+                const indexResponse = await fetch('./data/dataset/index.json');
                 if (indexResponse.ok) {
                     const indexData = await indexResponse.json();
                     testDataFiles = indexData.datasets.map((ds: any) => ds.path);
@@ -252,11 +254,46 @@ export class FlashcardStorage {
         });
     }
 
+    // 데이터 타입 감지 (카드셋 vs 학습 기록)
+    static detectDataType(data: any): 'cardset' | 'studyhistory' | 'unknown' {
+        if (typeof data !== 'object' || data === null) {
+            return 'unknown';
+        }
+
+        // 학습 기록 타입 체크 (records와 dailyStats가 있는 경우)
+        if (data.records !== undefined || data.dailyStats !== undefined) {
+            return 'studyhistory';
+        }
+
+        // 카드셋 배열인 경우
+        if (Array.isArray(data)) {
+            if (data.length > 0 && data[0].cards !== undefined) {
+                return 'cardset';
+            }
+            return 'unknown';
+        }
+
+        // 단일 카드셋인 경우 (id, name, cards 필드가 있는 경우)
+        if (data.id !== undefined && data.name !== undefined && data.cards !== undefined) {
+            return 'cardset';
+        }
+
+        return 'unknown';
+    }
+
     // Import: 단일 카드셋 유효성 검증
     static validateCardSet(set: any): { valid: boolean; error?: string } {
         // 기본 타입 체크
         if (typeof set !== 'object' || set === null) {
             return { valid: false, error: '올바른 플래시카드 형식이 아닙니다.' };
+        }
+
+        // 학습 기록 데이터가 아닌지 먼저 확인
+        if (set.records !== undefined || set.dailyStats !== undefined) {
+            return {
+                valid: false,
+                error: '이 파일은 학습 기록 데이터입니다.\n\'유저 데이터 관리\' 섹션에서 가져오기를 사용하세요.'
+            };
         }
 
         // 필수 필드 존재 여부 및 타입 체크
@@ -452,10 +489,11 @@ export class FlashcardStorage {
         };
     }
 
-    // 모든 데이터 삭제
+    // 모든 데이터 삭제 (카드셋 + 학습 기록)
     static clearAllData(): void {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(INIT_FLAG_KEY); // 초기화 플래그도 함께 삭제
+        localStorage.removeItem(STUDY_HISTORY_KEY); // 학습 기록도 함께 삭제
     }
 
     // 데이터 통계 정보
@@ -475,5 +513,484 @@ export class FlashcardStorage {
             totalCards,
             totalStudyCount
         };
+    }
+
+    // ============ 학습 기록 관련 메서드 ============
+
+    // 학습 기록 가져오기
+    static getStudyHistory(): StudyHistory {
+        try {
+            const data = localStorage.getItem(STUDY_HISTORY_KEY);
+            if (!data) {
+                return { records: [], dailyStats: {} };
+            }
+
+            const parsed = JSON.parse(data);
+            // Date 객체 복원
+            return {
+                records: parsed.records.map((record: any) => ({
+                    ...record,
+                    timestamp: new Date(record.timestamp)
+                })),
+                dailyStats: parsed.dailyStats
+            };
+        } catch (error) {
+            console.error('학습 기록 로드 실패:', error);
+            return { records: [], dailyStats: {} };
+        }
+    }
+
+    // 학습 기록 저장하기
+    static saveStudyHistory(history: StudyHistory): void {
+        try {
+            localStorage.setItem(STUDY_HISTORY_KEY, JSON.stringify(history));
+        } catch (error) {
+            console.error('학습 기록 저장 실패:', error);
+        }
+    }
+
+    // 날짜 문자열 생성 (YYYY-MM-DD)
+    static getDateString(date: Date = new Date()): string {
+        return date.toISOString().split('T')[0];
+    }
+
+    // 학습 기록 추가 (카드 1개 학습 시 호출)
+    static addStudyRecord(cardId: string, cardSetId: string, cardSetName: string): void {
+        const history = this.getStudyHistory();
+        const now = new Date();
+        const dateStr = this.getDateString(now);
+
+        // 새 학습 기록 생성
+        const newRecord: StudyRecord = {
+            id: this.generateId(),
+            cardId,
+            cardSetId,
+            cardSetName,
+            timestamp: now,
+            date: dateStr
+        };
+
+        // 기록 추가
+        history.records.push(newRecord);
+
+        // 일별 통계 업데이트
+        if (!history.dailyStats[dateStr]) {
+            history.dailyStats[dateStr] = {
+                date: dateStr,
+                cardsStudied: 0,
+                sessionsCount: 0,
+                cardSetIds: []
+            };
+        }
+
+        const dailyStat = history.dailyStats[dateStr];
+        dailyStat.cardsStudied += 1;
+
+        // 카드셋 ID 추가 (중복 제거)
+        if (!dailyStat.cardSetIds.includes(cardSetId)) {
+            dailyStat.cardSetIds.push(cardSetId);
+        }
+
+        this.saveStudyHistory(history);
+
+        // 카드의 studyCount도 증가
+        this.incrementCardStudyCount(cardSetId, cardId);
+    }
+
+    // 학습 세션 시작 시 호출 (세션 카운트 증가)
+    static recordStudySession(cardSetId: string): void {
+        const history = this.getStudyHistory();
+        const dateStr = this.getDateString();
+
+        if (!history.dailyStats[dateStr]) {
+            history.dailyStats[dateStr] = {
+                date: dateStr,
+                cardsStudied: 0,
+                sessionsCount: 0,
+                cardSetIds: []
+            };
+        }
+
+        history.dailyStats[dateStr].sessionsCount += 1;
+        this.saveStudyHistory(history);
+    }
+
+    // 카드의 studyCount 증가
+    static incrementCardStudyCount(cardSetId: string, cardId: string): void {
+        const cardSets = this.getCardSets();
+        const cardSetIndex = cardSets.findIndex(set => set.id === cardSetId);
+
+        if (cardSetIndex === -1) return;
+
+        const cardIndex = cardSets[cardSetIndex].cards.findIndex(card => card.id === cardId);
+        if (cardIndex === -1) return;
+
+        cardSets[cardSetIndex].cards[cardIndex].studyCount += 1;
+        this.saveCardSets(cardSets);
+    }
+
+    // 기간별 학습 통계 조회
+    static getStudyStatsByDateRange(startDate: Date, endDate: Date): DailyStats[] {
+        const history = this.getStudyHistory();
+        const startStr = this.getDateString(startDate);
+        const endStr = this.getDateString(endDate);
+
+        const stats: DailyStats[] = [];
+        const current = new Date(startDate);
+
+        while (current <= endDate) {
+            const dateStr = this.getDateString(current);
+            if (dateStr >= startStr && dateStr <= endStr) {
+                stats.push(history.dailyStats[dateStr] || {
+                    date: dateStr,
+                    cardsStudied: 0,
+                    sessionsCount: 0,
+                    cardSetIds: []
+                });
+            }
+            current.setDate(current.getDate() + 1);
+        }
+
+        return stats;
+    }
+
+    // 최근 N일 학습 통계
+    static getRecentStudyStats(days: number): DailyStats[] {
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - days + 1);
+
+        return this.getStudyStatsByDateRange(startDate, endDate);
+    }
+
+    // 연속 학습일 계산 (Streak)
+    static getStudyStreak(): number {
+        const history = this.getStudyHistory();
+        const today = this.getDateString();
+        let streak = 0;
+        let currentDate = new Date();
+
+        // 오늘부터 역순으로 체크
+        while (true) {
+            const dateStr = this.getDateString(currentDate);
+            const stat = history.dailyStats[dateStr];
+
+            if (stat && stat.cardsStudied > 0) {
+                streak++;
+                currentDate.setDate(currentDate.getDate() - 1);
+            } else {
+                // 오늘이 첫날인데 학습 기록이 없으면 0
+                // 그 외의 경우 연속 끊김
+                break;
+            }
+        }
+
+        return streak;
+    }
+
+    // 카드셋별 학습 통계
+    static getCardSetStudyStats(cardSetId: string): {
+        totalStudied: number;
+        averageStudyCount: number;
+        lastStudied: Date | null;
+    } {
+        const history = this.getStudyHistory();
+        const cardSetRecords = history.records.filter(r => r.cardSetId === cardSetId);
+
+        const totalStudied = cardSetRecords.length;
+        const lastStudied = cardSetRecords.length > 0
+            ? new Date(Math.max(...cardSetRecords.map(r => r.timestamp.getTime())))
+            : null;
+
+        const cardSet = this.getCardSets().find(set => set.id === cardSetId);
+        const averageStudyCount = cardSet && cardSet.cards.length > 0
+            ? cardSet.cards.reduce((sum, card) => sum + card.studyCount, 0) / cardSet.cards.length
+            : 0;
+
+        return {
+            totalStudied,
+            averageStudyCount,
+            lastStudied
+        };
+    }
+
+    // 학습 기록 전체 삭제
+    static clearStudyHistory(): void {
+        localStorage.removeItem(STUDY_HISTORY_KEY);
+    }
+
+    // 특정 카드셋의 학습 기록 삭제 (카드셋 삭제 시 호출)
+    static removeStudyRecordsByCardSetId(cardSetId: string): void {
+        const history = this.getStudyHistory();
+
+        // 해당 카드셋의 기록 제거
+        const filteredRecords = history.records.filter(record => record.cardSetId !== cardSetId);
+
+        // dailyStats 재계산
+        const newDailyStats: { [date: string]: DailyStats } = {};
+
+        filteredRecords.forEach(record => {
+            if (!newDailyStats[record.date]) {
+                newDailyStats[record.date] = {
+                    date: record.date,
+                    cardsStudied: 0,
+                    sessionsCount: history.dailyStats[record.date]?.sessionsCount || 0,
+                    cardSetIds: []
+                };
+            }
+
+            newDailyStats[record.date].cardsStudied += 1;
+
+            if (!newDailyStats[record.date].cardSetIds.includes(record.cardSetId)) {
+                newDailyStats[record.date].cardSetIds.push(record.cardSetId);
+            }
+        });
+
+        this.saveStudyHistory({
+            records: filteredRecords,
+            dailyStats: newDailyStats
+        });
+    }
+
+    // 특정 카드의 학습 기록 삭제 (카드 삭제 시 호출)
+    static removeStudyRecordsByCardId(cardId: string): void {
+        const history = this.getStudyHistory();
+
+        // 해당 카드의 기록 제거
+        const filteredRecords = history.records.filter(record => record.cardId !== cardId);
+
+        // dailyStats 재계산
+        const newDailyStats: { [date: string]: DailyStats } = {};
+
+        filteredRecords.forEach(record => {
+            if (!newDailyStats[record.date]) {
+                newDailyStats[record.date] = {
+                    date: record.date,
+                    cardsStudied: 0,
+                    sessionsCount: history.dailyStats[record.date]?.sessionsCount || 0,
+                    cardSetIds: []
+                };
+            }
+
+            newDailyStats[record.date].cardsStudied += 1;
+
+            if (!newDailyStats[record.date].cardSetIds.includes(record.cardSetId)) {
+                newDailyStats[record.date].cardSetIds.push(record.cardSetId);
+            }
+        });
+
+        this.saveStudyHistory({
+            records: filteredRecords,
+            dailyStats: newDailyStats
+        });
+    }
+
+    // 존재하지 않는 카드셋/카드의 학습 기록 정리 (데이터 무결성 유지)
+    static cleanupStudyHistory(): void {
+        const history = this.getStudyHistory();
+        const cardSets = this.getCardSets();
+
+        // 존재하는 카드셋 ID와 카드 ID 맵 생성
+        const validCardSetIds = new Set(cardSets.map(set => set.id));
+        const validCardIds = new Set<string>();
+
+        cardSets.forEach(cardSet => {
+            cardSet.cards.forEach(card => {
+                validCardIds.add(card.id);
+            });
+        });
+
+        // 유효한 기록만 필터링
+        const filteredRecords = history.records.filter(record =>
+            validCardSetIds.has(record.cardSetId) && validCardIds.has(record.cardId)
+        );
+
+        // 기록이 변경되었으면 dailyStats 재계산
+        if (filteredRecords.length !== history.records.length) {
+            const newDailyStats: { [date: string]: DailyStats } = {};
+
+            filteredRecords.forEach(record => {
+                if (!newDailyStats[record.date]) {
+                    newDailyStats[record.date] = {
+                        date: record.date,
+                        cardsStudied: 0,
+                        sessionsCount: history.dailyStats[record.date]?.sessionsCount || 0,
+                        cardSetIds: []
+                    };
+                }
+
+                newDailyStats[record.date].cardsStudied += 1;
+
+                if (!newDailyStats[record.date].cardSetIds.includes(record.cardSetId)) {
+                    newDailyStats[record.date].cardSetIds.push(record.cardSetId);
+                }
+            });
+
+            this.saveStudyHistory({
+                records: filteredRecords,
+                dailyStats: newDailyStats
+            });
+
+            console.log(`학습 기록 정리 완료: ${history.records.length - filteredRecords.length}개 기록 제거`);
+        }
+    }
+
+    // ============ 유저 데이터 (학습 기록) Export/Import ============
+
+    // 학습 기록 JSON 문자열로 내보내기
+    static exportStudyHistoryToJSON(): string {
+        const history = this.getStudyHistory();
+        return JSON.stringify(history, null, 2);
+    }
+
+    // 학습 기록 JSON 파일로 다운로드
+    static downloadStudyHistory(): void {
+        const jsonString = this.exportStudyHistoryToJSON();
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        link.download = `study-history-export-${timestamp}.json`;
+        link.href = url;
+        link.click();
+
+        URL.revokeObjectURL(url);
+    }
+
+    // 학습 기록 유효성 검증
+    static validateStudyHistory(data: any): { valid: boolean; error?: string } {
+        if (typeof data !== 'object' || data === null) {
+            return { valid: false, error: '올바른 학습 기록 형식이 아닙니다.' };
+        }
+
+        // 카드셋 데이터가 아닌지 먼저 확인 (cards 필드가 있거나 배열인 경우)
+        if (Array.isArray(data) || (data.cards !== undefined && Array.isArray(data.cards))) {
+            return {
+                valid: false,
+                error: '이 파일은 카드셋 데이터입니다.\n\'학습 데이터 관리\' 섹션에서 가져오기를 사용하세요.'
+            };
+        }
+
+        if (!Array.isArray(data.records)) {
+            return { valid: false, error: '학습 기록에 필수 필드(records)가 누락되었습니다.' };
+        }
+
+        if (typeof data.dailyStats !== 'object' || data.dailyStats === null) {
+            return { valid: false, error: '학습 기록에 필수 필드(dailyStats)가 누락되었습니다.' };
+        }
+
+        // records 배열 검증
+        for (const record of data.records) {
+            if (typeof record !== 'object' || record === null) {
+                return { valid: false, error: '기록 데이터가 올바르지 않습니다.' };
+            }
+
+            if (!record.id || !record.cardId || !record.cardSetId || !record.timestamp || !record.date) {
+                return { valid: false, error: '기록에 필수 필드가 누락되었습니다.' };
+            }
+        }
+
+        return { valid: true };
+    }
+
+    // JSON 문자열에서 학습 기록 가져오기
+    static importStudyHistoryFromJSON(jsonString: string, mergeMode: 'merge' | 'replace' = 'merge'): {
+        success: boolean;
+        error?: string;
+        importedRecords?: number;
+    } {
+        try {
+            const data = JSON.parse(jsonString);
+
+            // 유효성 검증
+            const validation = this.validateStudyHistory(data);
+            if (!validation.valid) {
+                return { success: false, error: validation.error };
+            }
+
+            // Date 객체 복원
+            const importedHistory: StudyHistory = {
+                records: data.records.map((record: any) => ({
+                    ...record,
+                    timestamp: new Date(record.timestamp)
+                })),
+                dailyStats: data.dailyStats
+            };
+
+            if (mergeMode === 'replace') {
+                // 기존 데이터 덮어쓰기
+                this.saveStudyHistory(importedHistory);
+            } else {
+                // 기존 데이터와 병합 (중복 ID 제거)
+                const existingHistory = this.getStudyHistory();
+                const existingRecordIds = new Set(existingHistory.records.map(r => r.id));
+
+                const newRecords = importedHistory.records.filter(r => !existingRecordIds.has(r.id));
+                const mergedRecords = [...existingHistory.records, ...newRecords];
+
+                // dailyStats 병합
+                const mergedDailyStats = { ...existingHistory.dailyStats };
+                Object.keys(importedHistory.dailyStats).forEach(date => {
+                    if (!mergedDailyStats[date]) {
+                        mergedDailyStats[date] = importedHistory.dailyStats[date];
+                    } else {
+                        // 기존 날짜 데이터가 있으면 합산
+                        mergedDailyStats[date].cardsStudied += importedHistory.dailyStats[date].cardsStudied;
+                        mergedDailyStats[date].sessionsCount += importedHistory.dailyStats[date].sessionsCount;
+
+                        // cardSetIds 병합 (중복 제거)
+                        const uniqueCardSetIds = new Set([
+                            ...mergedDailyStats[date].cardSetIds,
+                            ...importedHistory.dailyStats[date].cardSetIds
+                        ]);
+                        mergedDailyStats[date].cardSetIds = Array.from(uniqueCardSetIds);
+                    }
+                });
+
+                this.saveStudyHistory({
+                    records: mergedRecords,
+                    dailyStats: mergedDailyStats
+                });
+            }
+
+            return {
+                success: true,
+                importedRecords: mergeMode === 'replace' ? importedHistory.records.length : importedHistory.records.filter(r => !this.getStudyHistory().records.some(er => er.id === r.id)).length
+            };
+        } catch (error) {
+            console.error('학습 기록 Import 실패:', error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'JSON 파싱에 실패했습니다.'
+            };
+        }
+    }
+
+    // 파일에서 학습 기록 가져오기
+    static async importStudyHistoryFromFile(file: File): Promise<{
+        success: boolean;
+        error?: string;
+        importedRecords?: number;
+    }> {
+        try {
+            // JSON 파일인지 확인
+            if (!file.name.toLowerCase().endsWith('.json')) {
+                return { success: false, error: 'JSON 파일이 아닙니다.' };
+            }
+
+            const content = await file.text();
+
+            // JSON 파싱 가능 여부 먼저 확인
+            try {
+                JSON.parse(content);
+            } catch (parseError) {
+                return { success: false, error: '올바른 JSON 형식이 아닙니다.' };
+            }
+
+            return this.importStudyHistoryFromJSON(content, 'merge');
+        } catch (error) {
+            return { success: false, error: '파일 읽기에 실패했습니다.' };
+        }
     }
 }

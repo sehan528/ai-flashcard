@@ -28,6 +28,14 @@ const EssayStudyCard = ({ card, onAnswerViewed }: EssayStudyCardProps) => {
         remainingUsage,
     } = useAIEvaluation();
 
+    // 카드가 변경되면 상태 초기화
+    React.useEffect(() => {
+        setUserAnswer('');
+        setShowAnswer(false);
+        setShowFeedbackModal(false);
+        resetAI();
+    }, [card.id]);
+
     const handleAIEvaluate = async () => {
         if (!userAnswer.trim()) {
             alert('답변을 입력해주세요.');

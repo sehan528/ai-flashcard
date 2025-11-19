@@ -3,19 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { FlashcardStorage } from '../domains/flashcard/utils/storage';
 import type { CardSet } from '../domains/flashcard/dtos/FlashCard';
 
-const Settings = () => {
+interface SettingsProps {
+    onRefresh?: () => void;
+}
+
+const Settings = ({ onRefresh }: SettingsProps) => {
     const navigate = useNavigate();
     const [statistics, setStatistics] = useState({
         totalCardSets: 0,
         totalCards: 0,
         totalStudyCount: 0
     });
-    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+    const [isMessageExiting, setIsMessageExiting] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [showExportModal, setShowExportModal] = useState(false);
     const [selectedCardSets, setSelectedCardSets] = useState<Set<string>>(new Set());
     const [cardSets, setCardSets] = useState<CardSet[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const studyHistoryFileInputRef = useRef<HTMLInputElement>(null);
+    const [showStudyHistoryDeleteConfirm, setShowStudyHistoryDeleteConfirm] = useState(false);
 
     // 통계 정보 로드
     useEffect(() => {
@@ -24,7 +31,7 @@ const Settings = () => {
 
     // 모달 열릴 때 배경 스크롤 방지
     useEffect(() => {
-        if (showExportModal || showDeleteConfirm) {
+        if (showExportModal || showDeleteConfirm || showStudyHistoryDeleteConfirm) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
@@ -34,7 +41,7 @@ const Settings = () => {
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [showExportModal, showDeleteConfirm]);
+    }, [showExportModal, showDeleteConfirm, showStudyHistoryDeleteConfirm]);
 
     const loadStatistics = () => {
         const stats = FlashcardStorage.getStatistics();
@@ -43,9 +50,19 @@ const Settings = () => {
         setCardSets(allCardSets);
     };
 
-    const showMessage = (type: 'success' | 'error', text: string) => {
+    const showMessage = (type: 'success' | 'error' | 'info', text: string, duration: number = 3000) => {
         setMessage({ type, text });
-        setTimeout(() => setMessage(null), 3000);
+        setIsMessageExiting(false);
+
+        // duration 후에 fade-out 애니메이션 시작
+        setTimeout(() => {
+            setIsMessageExiting(true);
+            // fade-out 애니메이션 완료 후 메시지 제거 (300ms)
+            setTimeout(() => {
+                setMessage(null);
+                setIsMessageExiting(false);
+            }, 300);
+        }, duration);
     };
 
     // Export 모달 열기
@@ -107,6 +124,7 @@ const Settings = () => {
             if (result.success) {
                 showMessage('success', `${result.totalImported}개의 카드셋을 가져왔습니다!`);
                 loadStatistics();
+                onRefresh?.(); // 전역 상태 갱신
             } else {
                 // 에러가 있는 경우 더 자세한 메시지
                 if (result.errors.length > 0) {
@@ -128,6 +146,7 @@ const Settings = () => {
                 if (result.totalImported > 0) {
                     showMessage('success', `${result.totalImported}개의 카드셋은 성공적으로 가져왔습니다.`);
                     loadStatistics();
+                    onRefresh?.(); // 전역 상태 갱신
                 }
             }
         } catch (error) {
@@ -144,6 +163,7 @@ const Settings = () => {
     const handleClearData = () => {
         FlashcardStorage.clearAllData();
         loadStatistics();
+        onRefresh?.(); // 전역 상태 갱신
         setShowDeleteConfirm(false);
         showMessage('success', '모든 데이터가 삭제되었습니다.');
     };
@@ -153,6 +173,7 @@ const Settings = () => {
         try {
             const result = await FlashcardStorage.createInterviewTestData();
             loadStatistics();
+            onRefresh?.(); // 전역 상태 갱신
 
             if (result.success) {
                 if (result.importedCount === 0) {
@@ -176,6 +197,52 @@ const Settings = () => {
         }
     };
 
+    // ============ 유저 데이터 (학습 기록) 관리 ============
+
+    // 학습 기록 내보내기
+    const handleExportStudyHistory = () => {
+        try {
+            FlashcardStorage.downloadStudyHistory();
+            showMessage('success', '학습 기록을 내보냈습니다!');
+        } catch (error) {
+            showMessage('error', '학습 기록 내보내기에 실패했습니다.');
+        }
+    };
+
+    // 학습 기록 가져오기
+    const handleImportStudyHistory = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        try {
+            const result = await FlashcardStorage.importStudyHistoryFromFile(file);
+
+            if (result.success) {
+                showMessage('success', `${result.importedRecords || 0}개의 학습 기록을 가져왔습니다!`);
+                loadStatistics();
+                onRefresh?.(); // 전역 상태 갱신
+            } else {
+                showMessage('error', result.error || '학습 기록 가져오기에 실패했습니다.');
+            }
+        } catch (error) {
+            showMessage('error', '파일 읽기에 실패했습니다.');
+        }
+
+        // 파일 입력 초기화
+        if (studyHistoryFileInputRef.current) {
+            studyHistoryFileInputRef.current.value = '';
+        }
+    };
+
+    // 학습 기록 삭제
+    const handleClearStudyHistory = () => {
+        FlashcardStorage.clearStudyHistory();
+        loadStatistics();
+        onRefresh?.(); // 전역 상태 갱신
+        setShowStudyHistoryDeleteConfirm(false);
+        showMessage('success', '모든 학습 기록이 삭제되었습니다.');
+    };
+
     return (
         <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
@@ -187,14 +254,22 @@ const Settings = () => {
                 </p>
             </div>
 
-            {/* 메시지 알림 */}
+            {/* 메시지 알림 (화면 중앙 toast) */}
             {message && (
-                <div className={`mb-4 p-4 rounded-lg whitespace-pre-line ${
-                    message.type === 'success'
-                        ? 'bg-green-50 text-green-800 border border-green-200'
-                        : 'bg-red-50 text-red-800 border border-red-200'
-                }`}>
-                    {message.text}
+                <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+                    <div className={`max-w-md mx-4 p-6 rounded-xl shadow-2xl whitespace-pre-line pointer-events-auto ${
+                        isMessageExiting ? 'animate-fade-out' : 'animate-fade-in'
+                    } ${
+                        message.type === 'success'
+                            ? 'bg-green-50 text-green-800 border-2 border-green-300'
+                            : message.type === 'error'
+                            ? 'bg-red-50 text-red-800 border-2 border-red-300'
+                            : 'bg-blue-50 text-blue-800 border-2 border-blue-300'
+                    }`}>
+                        <div className="text-center">
+                            {message.text}
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -225,11 +300,14 @@ const Settings = () => {
                 </div>
             </div>
 
-            {/* 데이터 관리 */}
+            {/* 학습 데이터 관리 (카드셋) */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    데이터 관리
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    학습 데이터 관리
                 </h3>
+                <p className="text-sm text-gray-500 mb-4">
+                    카드셋 데이터를 내보내고 가져올 수 있습니다.
+                </p>
 
                 {/* Export 버튼 */}
                 <div className="mb-4">
@@ -240,7 +318,7 @@ const Settings = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        데이터 내보내기 (Export)
+                        카드셋 내보내기
                     </button>
                     <p className="text-xs text-gray-500 mt-2">
                         선택한 카드셋을 각각 JSON 파일로 저장합니다.
@@ -265,7 +343,7 @@ const Settings = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
-                        데이터 가져오기 (Import)
+                        카드셋 가져오기
                     </label>
                     <p className="text-xs text-gray-500 mt-2">
                         JSON 파일(들)에서 카드셋을 가져옵니다. 여러 파일 선택 가능합니다.
@@ -273,7 +351,7 @@ const Settings = () => {
                 </div>
 
                 {/* 데이터셋 불러오기 버튼 */}
-                <div className="mb-4">
+                <div>
                     <button
                         onClick={handleCreateTestData}
                         className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
@@ -287,11 +365,80 @@ const Settings = () => {
                         예제 카드셋 데이터들을 생성합니다.
                     </p>
                 </div>
+            </div>
 
-                {/* 구분선 */}
-                <div className="border-t border-gray-200 my-6"></div>
+            {/* 유저 데이터 관리 (학습 통계) */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    유저 데이터 관리
+                </h3>
+                <p className="text-sm text-gray-500 mb-4">
+                    학습 통계 및 기록을 내보내고 가져올 수 있습니다.
+                </p>
 
-                {/* 전체 삭제 버튼 */}
+                {/* 학습 기록 내보내기 */}
+                <div className="mb-4">
+                    <button
+                        onClick={handleExportStudyHistory}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        학습 기록 내보내기
+                    </button>
+                    <p className="text-xs text-gray-500 mt-2">
+                        학습 통계 및 기록을 JSON 파일로 저장합니다.
+                    </p>
+                </div>
+
+                {/* 학습 기록 가져오기 */}
+                <div className="mb-4">
+                    <input
+                        ref={studyHistoryFileInputRef}
+                        type="file"
+                        accept=".json"
+                        onChange={handleImportStudyHistory}
+                        className="hidden"
+                        id="import-study-history-file"
+                    />
+                    <label
+                        htmlFor="import-study-history-file"
+                        className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        학습 기록 가져오기
+                    </label>
+                    <p className="text-xs text-gray-500 mt-2">
+                        JSON 파일에서 학습 기록을 가져옵니다.
+                    </p>
+                </div>
+
+                {/* 학습 기록 삭제 버튼 */}
+                <div>
+                    <button
+                        onClick={() => setShowStudyHistoryDeleteConfirm(true)}
+                        className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        학습 기록 삭제
+                    </button>
+                    <p className="text-xs text-orange-500 mt-2">
+                        ⚠️ 주의: 모든 학습 통계가 영구적으로 삭제됩니다.
+                    </p>
+                </div>
+            </div>
+
+            {/* 전체 데이터 삭제 (위험 섹션) */}
+            <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6 mb-6">
+                <h3 className="text-lg font-semibold text-red-700 mb-4">
+
+                </h3>
+
                 <div>
                     <button
                         onClick={() => setShowDeleteConfirm(true)}
@@ -302,8 +449,8 @@ const Settings = () => {
                         </svg>
                         모든 데이터 삭제
                     </button>
-                    <p className="text-xs text-red-500 mt-2">
-                        ⚠️ 주의: 모든 카드셋이 영구적으로 삭제됩니다.
+                    <p className="text-xs text-red-600 mt-2 font-semibold">
+                        ⚠️ 모든 카드셋과 학습 기록이 영구적으로 삭제됩니다.
                     </p>
                 </div>
             </div>
@@ -392,12 +539,12 @@ const Settings = () => {
                 </div>
             )}
 
-            {/* 삭제 확인 모달 */}
+            {/* 전체 데이터 삭제 확인 모달 */}
             {showDeleteConfirm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl p-6 max-w-md mx-4">
                         <h3 className="text-xl font-bold text-gray-800 mb-4">
-                            정말 삭제하시겠습니까?
+                            정말 모두 삭제하시겠습니까?
                         </h3>
                         <p className="text-gray-600 mb-6">
                             모든 카드셋과 학습 기록이 영구적으로 삭제됩니다.
@@ -413,6 +560,35 @@ const Settings = () => {
                             <button
                                 onClick={handleClearData}
                                 className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                            >
+                                삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 학습 기록 삭제 확인 모달 */}
+            {showStudyHistoryDeleteConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl p-6 max-w-md mx-4">
+                        <h3 className="text-xl font-bold text-gray-800 mb-4">
+                            학습 기록을 삭제하시겠습니까?
+                        </h3>
+                        <p className="text-gray-600 mb-6">
+                            모든 학습 통계와 기록이 영구적으로 삭제됩니다.
+                            카드셋은 유지되며, 이 작업은 되돌릴 수 없습니다.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowStudyHistoryDeleteConfirm(false)}
+                                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
+                            >
+                                취소
+                            </button>
+                            <button
+                                onClick={handleClearStudyHistory}
+                                className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                             >
                                 삭제
                             </button>
