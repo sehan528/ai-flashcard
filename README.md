@@ -413,6 +413,7 @@ vercel
 
 ## 문서
 
+- [개발 가이드](docs/DEVELOPMENT_GUIDE.md) - 프로젝트 구조, 개발 순서, 패턴 가이드
 - [Electron 설정 가이드](docs/ELECTRON_SETUP.md) - Electron 앱 빌드 방법
 - [Electron 트러블슈팅](docs/ELECTRON_TROUBLESHOOTING.md) - 알려진 문제와 해결 방법
 - [UI/UX 디자인 가이드](docs/UI_UX_DESIGN.md) - 디자인 결정사항과 구현 방법
