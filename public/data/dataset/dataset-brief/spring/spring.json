@@ -1,0 +1,825 @@
+{
+  "name": "스프링 (간략버전)",
+  "description": "Spring Framework 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "JVM의 주요 기능 5가지는 무엇인가요?",
+      "answer": "1. 플랫폼 독립성 제공 (Write Once, Run Anywhere)\n2. 자동 메모리 관리 (가비지 컬렉션)\n3. 바이트코드를 기계어로 변환 (인터프리터 + JIT 컴파일)\n4. 보안 기능 제공 (바이트코드 검증, 보안 관리자)\n5. 런타임 환경 제공 (클래스 로더, 실행 엔진, 메모리 영역 관리)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM",
+        "GC"
+      ]
+    },
+    {
+      "question": "JVM에서 실행 가능한 대표적인 언어 5가지와 가능한 이유는?",
+      "answer": "**대표 언어:**\n1. Kotlin (안드로이드 공식 언어, 간결한 문법)\n2. Scala (객체지향+함수형, Apache Spark)\n3. Groovy (동적 타이핑, Gradle)\n4. Clojure (Lisp 계열, 함수형)\n5. JRuby/Jython (Ruby/Python의 JVM 구현)\n\n**가능한 이유:** 모두 자바 바이트코드로 컴파일되기 때문",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM",
+        "GC"
+      ]
+    },
+    {
+      "question": "GraalVM Native Image의 장점 3가지와 제약사항 3가지는?",
+      "answer": "**장점:**\n1. 빠른 시작 시간 (밀리초 단위)\n2. 낮은 메모리 사용량 (JVM 불필요)\n3. 독립 실행 파일 배포 가능\n\n**제약사항:**\n1. 리플렉션/동적 프록시는 빌드 시 명시 필요\n2. 긴 빌드 시간\n3. 일부 라이브러리 미지원 가능성",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM",
+        "메모리"
+      ]
+    },
+    {
+      "question": "VM 사용의 장점 4가지와 단점 3가지는?",
+      "answer": "**장점:**\n1. 플랫폼 독립성 (OS 무관)\n2. 자동 메모리 관리 (개발 편의성)\n3. 보안성 향상 (샌드박스)\n4. 안정성 및 성숙도 높음\n\n**단점:**\n1. 성능 오버헤드 (네이티브 대비 느림)\n2. 시작 시간 지연\n3. 메모리 사용량 증가",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM"
+      ]
+    },
+    {
+      "question": "JVM과 내부 프로그램의 관계는 부모-자식 프로세스인가요?",
+      "answer": "**아니요**\n\n- JVM 자체가 하나의 프로세스\n- 자바 프로그램은 JVM 프로세스 내부의 **스레드**로 실행\n- 부모-자식 프로세스 관계가 아님\n- JVM이 종료되면 모든 자바 프로그램도 종료됨",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM"
+      ]
+    },
+    {
+      "question": "final 키워드의 주요 이점 3가지는?",
+      "answer": "1. **불변성 보장** - 한 번 초기화 후 변경 불가, 스레드 안전성\n2. **의도 명확화** - 코드 가독성 향상, 실수 방지\n3. **최적화 가능** - 컴파일러가 상수로 처리, 메서드 인라인화",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "final"
+      ]
+    },
+    {
+      "question": "컴파일 시 final 키워드가 다르게 취급되는 방식 3가지는?",
+      "answer": "1. **컴파일 타임 상수** - final 변수값이 상수로 인라인 처리됨\n2. **메서드 최적화** - final 메서드는 오버라이드 불가로 인라인화 가능\n3. **검증 강화** - 컴파일러가 final 변수 재할당 방지",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "final"
+      ]
+    },
+    {
+      "question": "인터페이스와 추상 클래스의 주요 차이점 5가지는?",
+      "answer": "1. **상속** - 클래스: 단일 상속 / 인터페이스: 다중 구현\n2. **구현** - 클래스: 구체적 메서드 가능 / 인터페이스: 추상 메서드 중심\n3. **변수** - 클래스: 인스턴스 변수 가능 / 인터페이스: public static final만\n4. **생성자** - 클래스: 있음 / 인터페이스: 없음\n5. **용도** - 클래스: IS-A 관계 / 인터페이스: CAN-DO 관계",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "OOP"
+      ]
+    },
+    {
+      "question": "클래스는 단일 상속만 가능하지만 인터페이스는 다중 구현이 가능한 이유는?",
+      "answer": "**다이아몬드 문제 회피:**\n- 클래스 다중 상속 시: 같은 메서드를 가진 두 부모 클래스 상속 시 충돌\n- 인터페이스는 구현체 없는 추상 메서드만 → 구현은 자식 클래스가 결정\n- 상태(필드) 충돌이 없음",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "OOP"
+      ]
+    },
+    {
+      "question": "리플렉션의 주요 기능 4가지와 사용 시 주의사항은?",
+      "answer": "**주요 기능:**\n1. 런타임에 클래스 정보 조회 (메서드, 필드, 생성자)\n2. private 멤버 접근 가능\n3. 동적 객체 생성 및 메서드 호출\n4. 어노테이션 정보 읽기\n\n**주의사항:** 성능 저하, 보안 문제, 컴파일 타임 검증 불가",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "리플렉션"
+      ]
+    },
+    {
+      "question": "String, StringBuilder, StringBuffer의 차이점 3가지는?",
+      "answer": "1. **불변성** - String: 불변 / StringBuilder/Buffer: 가변\n2. **스레드 안전성** - String/StringBuffer: 안전 / StringBuilder: 불안전\n3. **성능** - String: 느림(새 객체 생성) / StringBuilder: 빠름 / StringBuffer: 동기화로 약간 느림",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "String"
+      ]
+    },
+    {
+      "question": "JVM 메모리 구조의 5가지 영역과 역할은?",
+      "answer": "1. **Heap** - 객체 인스턴스 저장, GC 대상\n2. **Stack** - 메서드 호출 시 로컬 변수/매개변수 저장\n3. **Method Area** - 클래스 메타데이터, static 변수\n4. **PC Register** - 현재 실행 중인 명령어 주소\n5. **Native Method Stack** - 네이티브 메서드 호출 시 사용",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "JVM",
+        "메모리"
+      ]
+    },
+    {
+      "question": "Garbage Collection의 주요 알고리즘 3가지는?",
+      "answer": "1. **Serial GC** - 싱글 스레드, 작은 애플리케이션용\n2. **Parallel GC** - 멀티 스레드, 처리량 우선\n3. **G1 GC** - 큰 힙 메모리, 짧은 pause time 목표\n\n(추가: CMS GC, ZGC, Shenandoah GC)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "GC"
+      ]
+    },
+    {
+      "question": "Java 8의 주요 기능 5가지는?",
+      "answer": "1. **Lambda 표현식** - 함수형 프로그래밍\n2. **Stream API** - 컬렉션 처리 간소화\n3. **Optional** - null 안전성\n4. **인터페이스 default 메서드** - 구현체 제공 가능\n5. **새로운 Date/Time API** - LocalDate, LocalDateTime",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "Java8"
+      ]
+    },
+    {
+      "question": "Stream API의 중간 연산 3가지와 최종 연산 3가지는?",
+      "answer": "**중간 연산 (Intermediate):**\n1. filter() - 조건 필터링\n2. map() - 변환\n3. sorted() - 정렬\n\n**최종 연산 (Terminal):**\n1. collect() - 결과 수집\n2. forEach() - 각 요소 처리\n3. reduce() - 값 축약",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "Stream"
+      ]
+    },
+    {
+      "question": "equals()와 ==의 차이점은?",
+      "answer": "- **==**: 참조 비교 (같은 객체인지)\n- **equals()**: 값 비교 (내용이 같은지)\n- String은 equals()로 내용 비교 필수",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "hashCode()와 equals()의 관계는?",
+      "answer": "- equals()가 true면 hashCode()도 같아야 함\n- hashCode()가 같아도 equals()는 다를 수 있음\n- HashMap/HashSet 사용 시 두 메서드 모두 오버라이드 필요",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "try-with-resources의 장점 2가지는?",
+      "answer": "1. **자동 자원 해제** - AutoCloseable 구현 객체 자동 close()\n2. **코드 간결화** - finally 블록 불필요",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "제네릭의 주요 이점 3가지는?",
+      "answer": "1. **타입 안전성** - 컴파일 타임에 타입 체크\n2. **캐스팅 불필요** - 명시적 형변환 제거\n3. **코드 재사용성** - 다양한 타입에 동일 코드 사용",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "제네릭"
+      ]
+    },
+    {
+      "question": "와일드카드 <?>, <? extends T>, <? super T>의 차이는?",
+      "answer": "1. **<?>**: 모든 타입 가능 (읽기 전용)\n2. **<? extends T>**: T의 하위 타입 (읽기용)\n3. **<? super T>**: T의 상위 타입 (쓰기용)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "제네릭"
+      ]
+    },
+    {
+      "question": "함수형 인터페이스란 무엇이며 대표적인 3가지는?",
+      "answer": "**정의:** 추상 메서드가 1개인 인터페이스 (@FunctionalInterface)\n\n**대표 인터페이스:**\n1. **Predicate<T>** - boolean test(T t)\n2. **Function<T,R>** - R apply(T t)\n3. **Consumer<T>** - void accept(T t)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "Lambda"
+      ]
+    },
+    {
+      "question": "Method Reference의 4가지 유형은?",
+      "answer": "1. **정적 메서드** - ClassName::staticMethod\n2. **인스턴스 메서드** - instance::instanceMethod\n3. **특정 타입의 임의 객체** - ClassName::instanceMethod\n4. **생성자** - ClassName::new",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "Lambda"
+      ]
+    },
+    {
+      "question": "CompletableFuture의 주요 메서드 4가지는?",
+      "answer": "1. **supplyAsync()** - 비동기 작업 시작\n2. **thenApply()** - 결과 변환\n3. **thenCompose()** - 다음 비동기 작업 체인\n4. **exceptionally()** - 예외 처리",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "비동기"
+      ]
+    },
+    {
+      "question": "동기화 방법 4가지는?",
+      "answer": "1. **synchronized 키워드** - 메서드/블록 동기화\n2. **volatile** - 변수 가시성 보장\n3. **Lock 인터페이스** - ReentrantLock 등\n4. **Atomic 클래스** - AtomicInteger 등",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "동시성"
+      ]
+    },
+    {
+      "question": "데드락 발생 조건 4가지는?",
+      "answer": "1. **상호 배제** - 한 번에 하나의 스레드만 자원 사용\n2. **점유와 대기** - 자원 보유하며 다른 자원 대기\n3. **비선점** - 강제로 자원 빼앗을 수 없음\n4. **순환 대기** - 스레드들이 순환 형태로 자원 대기",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Java",
+        "백엔드",
+        "동시성"
+      ]
+    },
+    {
+      "question": "IoC (Inversion of Control)란 무엇인가요?",
+      "answer": "**제어의 역전**\n- 객체 생성/관리를 개발자가 아닌 프레임워크가 담당\n- 낮은 결합도, 높은 유연성\n- Spring Container가 Bean 생명주기 관리",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "IoC",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "DI (Dependency Injection)의 3가지 방법은?",
+      "answer": "1. **생성자 주입** - 권장 방식, 불변성 보장\n2. **Setter 주입** - 선택적 의존성\n3. **필드 주입** - @Autowired, 테스트 어려움 (비권장)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "DI",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "Spring Bean의 Scope 5가지는?",
+      "answer": "1. **singleton** - 기본값, 컨테이너당 1개\n2. **prototype** - 요청마다 새 인스턴스\n3. **request** - HTTP 요청당 1개\n4. **session** - HTTP 세션당 1개\n5. **application** - ServletContext당 1개",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Bean",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "Bean 생명주기 콜백 메서드 3가지는?",
+      "answer": "1. **@PostConstruct** - 초기화 후\n2. **@PreDestroy** - 소멸 전\n3. **InitializingBean/DisposableBean** - 인터페이스 구현 방식",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Bean",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "@Component, @Service, @Repository의 차이는?",
+      "answer": "- **@Component**: 범용 컴포넌트\n- **@Service**: 비즈니스 로직 레이어\n- **@Repository**: 데이터 접근 레이어, 예외 변환 기능",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Annotation",
+        "백엔드"
+      ]
+    },
+    {
+      "question": "AOP의 주요 개념 5가지는?",
+      "answer": "1. **Aspect** - 횡단 관심사 모듈\n2. **Join Point** - 적용 가능 지점\n3. **Advice** - 실제 수행 코드 (Before, After, Around)\n4. **Pointcut** - Join Point 선택 표현식\n5. **Weaving** - Aspect 적용 과정",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "AOP"
+      ]
+    },
+    {
+      "question": "Advice 타입 5가지는?",
+      "answer": "1. **@Before** - 메서드 실행 전\n2. **@After** - 메서드 실행 후 (예외 무관)\n3. **@AfterReturning** - 정상 반환 후\n4. **@AfterThrowing** - 예외 발생 시\n5. **@Around** - 전후 모두 (가장 강력)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "AOP"
+      ]
+    },
+    {
+      "question": "@Transactional의 주요 속성 5가지는?",
+      "answer": "1. **propagation** - 전파 방식 (REQUIRED, REQUIRES_NEW 등)\n2. **isolation** - 격리 수준\n3. **readOnly** - 읽기 전용 최적화\n4. **timeout** - 타임아웃\n5. **rollbackFor** - 롤백 예외 지정",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Transaction"
+      ]
+    },
+    {
+      "question": "트랜잭션 전파 속성 주요 3가지는?",
+      "answer": "1. **REQUIRED** - 기본값, 기존 트랜잭션 사용 or 새로 생성\n2. **REQUIRES_NEW** - 항상 새 트랜잭션 생성\n3. **NESTED** - 중첩 트랜잭션 (Savepoint)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Transaction"
+      ]
+    },
+    {
+      "question": "Spring MVC의 주요 구성 요소 5가지는?",
+      "answer": "1. **DispatcherServlet** - Front Controller\n2. **Handler Mapping** - URL → Controller 매핑\n3. **Handler Adapter** - Controller 실행\n4. **ViewResolver** - View 이름 → 실제 View\n5. **View** - 응답 렌더링",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "Spring MVC 요청 처리 흐름 7단계는?",
+      "answer": "1. 클라이언트 요청\n2. DispatcherServlet이 요청 받음\n3. Handler Mapping이 Controller 찾기\n4. Handler Adapter가 Controller 실행\n5. Controller가 ModelAndView 반환\n6. ViewResolver가 View 결정\n7. View가 응답 렌더링",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "@Controller와 @RestController의 차이는?",
+      "answer": "**@Controller:**\n- View 반환 (HTML)\n- @ResponseBody 추가 필요\n\n**@RestController:**\n- @Controller + @ResponseBody\n- JSON/XML 자동 변환\n- RESTful API용",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "@RequestMapping의 주요 속성 5가지는?",
+      "answer": "1. **value/path** - URL 패턴\n2. **method** - HTTP 메서드 (GET, POST 등)\n3. **params** - 요청 파라미터 조건\n4. **headers** - 헤더 조건\n5. **consumes/produces** - Content-Type/Accept",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "@PathVariable과 @RequestParam의 차이는?",
+      "answer": "**@PathVariable:**\n- URL 경로에서 추출\n- /users/{id}\n\n**@RequestParam:**\n- 쿼리 스트링에서 추출\n- /users?id=1\n- 선택적 파라미터 가능 (required=false)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "@ControllerAdvice의 주요 기능 3가지는?",
+      "answer": "1. **전역 예외 처리** - @ExceptionHandler\n2. **전역 데이터 바인딩** - @InitBinder\n3. **전역 모델 속성** - @ModelAttribute",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "Spring Security의 주요 필터 5가지는?",
+      "answer": "1. **SecurityContextPersistenceFilter** - SecurityContext 저장/복원\n2. **UsernamePasswordAuthenticationFilter** - 로그인 처리\n3. **ExceptionTranslationFilter** - 인증/인가 예외 처리\n4. **FilterSecurityInterceptor** - 권한 검사\n5. **CorsFilter** - CORS 처리",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Security"
+      ]
+    },
+    {
+      "question": "인증(Authentication)과 인가(Authorization)의 차이는?",
+      "answer": "**인증 (Authentication):**\n- \"누구인가?\" 확인\n- 로그인\n\n**인가 (Authorization):**\n- \"무엇을 할 수 있는가?\" 확인\n- 권한 검사",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Security"
+      ]
+    },
+    {
+      "question": "JWT 토큰의 구조 3가지는?",
+      "answer": "1. **Header** - 토큰 타입, 알고리즘\n2. **Payload** - 사용자 정보, 클레임\n3. **Signature** - 검증 서명\n\n형식: xxxxx.yyyyy.zzzzz",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Security",
+        "JWT"
+      ]
+    },
+    {
+      "question": "REST API 설계 원칙 5가지는?",
+      "answer": "1. **자원 기반** - URI는 명사 사용\n2. **HTTP 메서드** - GET, POST, PUT, DELETE\n3. **무상태성** - Stateless\n4. **계층화** - Layered System\n5. **표준 응답 코드** - 2xx, 4xx, 5xx",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "REST"
+      ]
+    },
+    {
+      "question": "HTTP 메서드별 용도는?",
+      "answer": "1. **GET** - 조회 (안전, 멱등)\n2. **POST** - 생성 (비멱등)\n3. **PUT** - 전체 수정 (멱등)\n4. **PATCH** - 부분 수정\n5. **DELETE** - 삭제 (멱등)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "REST"
+      ]
+    },
+    {
+      "question": "Spring Boot의 주요 특징 5가지는?",
+      "answer": "1. **자동 구성** - Auto Configuration\n2. **내장 서버** - Tomcat, Jetty\n3. **Starter 의존성** - 간편한 설정\n4. **Actuator** - 모니터링\n5. **외부 설정** - application.properties/yml",
+      "type": "essay",
+      "tags": [
+        "Spring Boot"
+      ]
+    },
+    {
+      "question": "Spring Boot Actuator의 주요 엔드포인트 5가지는?",
+      "answer": "1. **/health** - 헬스 체크\n2. **/metrics** - 메트릭 정보\n3. **/env** - 환경 변수\n4. **/info** - 애플리케이션 정보\n5. **/loggers** - 로그 레벨 조회/변경",
+      "type": "essay",
+      "tags": [
+        "Spring Boot",
+        "Actuator"
+      ]
+    },
+    {
+      "question": "Profile의 주요 용도 3가지는?",
+      "answer": "1. **환경별 설정** - dev, test, prod\n2. **환경별 Bean** - @Profile 어노테이션\n3. **설정 파일 분리** - application-{profile}.yml",
+      "type": "essay",
+      "tags": [
+        "Spring Boot",
+        "Profile"
+      ]
+    },
+    {
+      "question": "Spring Cloud의 주요 컴포넌트 5가지는?",
+      "answer": "1. **Eureka** - 서비스 디스커버리\n2. **Ribbon** - 로드 밸런싱 (deprecated, 대신 Spring Cloud LoadBalancer)\n3. **Feign** - HTTP Client\n4. **Hystrix** - Circuit Breaker (deprecated, 대신 Resilience4j)\n5. **Config Server** - 중앙 설정 관리",
+      "type": "essay",
+      "tags": [
+        "Spring Cloud"
+      ]
+    },
+    {
+      "question": "마이크로서비스 패턴 5가지는?",
+      "answer": "1. **API Gateway** - 단일 진입점\n2. **Service Discovery** - 동적 서비스 찾기\n3. **Circuit Breaker** - 장애 격리\n4. **Config Server** - 중앙 설정\n5. **Distributed Tracing** - 분산 추적",
+      "type": "essay",
+      "tags": [
+        "Spring Cloud",
+        "MSA"
+      ]
+    },
+    {
+      "question": "Kafka의 주요 구성 요소 4가지는?",
+      "answer": "1. **Producer** - 메시지 발행\n2. **Consumer** - 메시지 소비\n3. **Broker** - 메시지 저장 서버\n4. **Topic** - 메시지 카테고리",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Kafka"
+      ]
+    },
+    {
+      "question": "RabbitMQ의 주요 개념 4가지는?",
+      "answer": "1. **Exchange** - 메시지 라우팅\n2. **Queue** - 메시지 저장\n3. **Binding** - Exchange와 Queue 연결\n4. **Routing Key** - 라우팅 규칙",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "RabbitMQ"
+      ]
+    },
+    {
+      "question": "캐싱 전략 4가지는?",
+      "answer": "1. **Cache-Aside** - 애플리케이션이 직접 관리\n2. **Read-Through** - 캐시가 DB 로딩\n3. **Write-Through** - 캐시와 DB 동시 쓰기\n4. **Write-Behind** - 캐시 먼저, DB 나중",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Cache"
+      ]
+    },
+    {
+      "question": "@Cacheable, @CachePut, @CacheEvict의 차이는?",
+      "answer": "**@Cacheable:**\n- 캐시에서 조회, 없으면 실행 후 저장\n\n**@CachePut:**\n- 항상 실행 후 캐시 갱신\n\n**@CacheEvict:**\n- 캐시 삭제",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Cache"
+      ]
+    },
+    {
+      "question": "프로파일별 설정 활성화 방법 3가지는?",
+      "answer": "1. **application.yml** - spring.profiles.active\n2. **환경 변수** - SPRING_PROFILES_ACTIVE\n3. **JVM 옵션** - -Dspring.profiles.active=dev",
+      "type": "essay",
+      "tags": [
+        "Spring Boot"
+      ]
+    },
+    {
+      "question": "Spring WebFlux의 특징 4가지는?",
+      "answer": "1. **비동기 논블로킹** - Reactive Streams\n2. **함수형 엔드포인트** - RouterFunction\n3. **백프레셔** - 데이터 흐름 제어\n4. **적은 스레드로 높은 처리량**",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "WebFlux"
+      ]
+    },
+    {
+      "question": "Mono와 Flux의 차이는?",
+      "answer": "**Mono:**\n- 0~1개 요소\n- 단일 결과\n\n**Flux:**\n- 0~N개 요소\n- 스트림",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "WebFlux"
+      ]
+    },
+    {
+      "question": "@Async 사용 시 주의사항 3가지는?",
+      "answer": "1. **@EnableAsync** 필요\n2. **Public 메서드**만 가능\n3. **같은 클래스 내 호출 불가** (프록시 문제)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Async"
+      ]
+    },
+    {
+      "question": "Logback의 로그 레벨 5가지는?",
+      "answer": "1. **TRACE** - 가장 상세\n2. **DEBUG** - 디버그 정보\n3. **INFO** - 일반 정보\n4. **WARN** - 경고\n5. **ERROR** - 에러",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Logging"
+      ]
+    },
+    {
+      "question": "HttpMessageConverter의 역할은?",
+      "answer": "**역할:**\n- HTTP 요청/응답 바디를 객체로 변환\n\n**주요 구현체:**\n- MappingJackson2HttpMessageConverter (JSON)\n- StringHttpMessageConverter (Text)\n- FormHttpMessageConverter (Form)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "RestTemplate과 WebClient의 차이는?",
+      "answer": "**RestTemplate:**\n- 동기 블로킹\n- 스레드 블로킹\n\n**WebClient:**\n- 비동기 논블로킹\n- Reactive Streams\n- Spring 5.0+ 권장",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "HTTP Client"
+      ]
+    },
+    {
+      "question": "@Scheduled의 주요 속성 3가지는?",
+      "answer": "1. **fixedRate** - 고정 간격 (이전 시작 기준)\n2. **fixedDelay** - 고정 지연 (이전 종료 기준)\n3. **cron** - Cron 표현식",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Scheduling"
+      ]
+    },
+    {
+      "question": "Spring Boot Starter의 대표적인 5가지는?",
+      "answer": "1. **spring-boot-starter-web** - Spring MVC\n2. **spring-boot-starter-data-jpa** - JPA\n3. **spring-boot-starter-security** - Security\n4. **spring-boot-starter-test** - Test\n5. **spring-boot-starter-actuator** - Actuator",
+      "type": "essay",
+      "tags": [
+        "Spring Boot",
+        "Starter"
+      ]
+    },
+    {
+      "question": "Java Config vs XML Config의 장점은?",
+      "answer": "**Java Config 장점:**\n1. 타입 안전성\n2. 리팩토링 지원\n3. IDE 자동완성\n4. 조건부 로직 가능\n\n**XML Config:**\n- 코드와 설정 분리 (현대에선 비권장)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Configuration"
+      ]
+    },
+    {
+      "question": "최신 Spring 버전의 주요 개선사항 3가지는?",
+      "answer": "1. **Java 17 베이스** - 최신 Java 기능 활용\n2. **GraalVM Native Image** - 빠른 시작, 적은 메모리\n3. **HTTP Interface Client** - 선언적 HTTP 클라이언트",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Latest"
+      ]
+    },
+    {
+      "question": "컴포넌트 스캔의 범위 설정 방법 3가지는?",
+      "answer": "1. **basePackages** - 패키지 지정\n2. **basePackageClasses** - 클래스 기준\n3. **@ComponentScan** - 어노테이션 직접 사용",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Component Scan"
+      ]
+    },
+    {
+      "question": "Lazy Initialization의 장단점은?",
+      "answer": "**장점:**\n- 빠른 애플리케이션 시작\n- 메모리 절약\n\n**단점:**\n- 첫 요청 시 지연\n- 설정 오류 늦게 발견",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Bean"
+      ]
+    },
+    {
+      "question": "순환 참조 해결 방법 3가지는?",
+      "answer": "1. **@Lazy** - 지연 로딩\n2. **Setter 주입** - 생성자 주입 대신\n3. **리팩토링** - 설계 개선 (권장)",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Circular Dependency"
+      ]
+    },
+    {
+      "question": "테스트 관련 어노테이션 5가지는?",
+      "answer": "1. **@SpringBootTest** - 통합 테스트\n2. **@WebMvcTest** - Controller 테스트\n3. **@DataJpaTest** - JPA 테스트\n4. **@MockBean** - Mock 객체\n5. **@TestConfiguration** - 테스트 설정",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Test"
+      ]
+    },
+    {
+      "question": "이벤트 발행/구독 패턴 구현 방법은?",
+      "answer": "**발행:**\n- ApplicationEventPublisher.publishEvent()\n\n**구독:**\n- @EventListener 또는\n- ApplicationListener 구현\n\n**비동기:** @Async + @EnableAsync",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Event"
+      ]
+    },
+    {
+      "question": "커스텀 어노테이션 생성 단계 3가지는?",
+      "answer": "1. **@interface 정의** - 메타 어노테이션 추가\n2. **@Target, @Retention** 설정\n3. **AnnotationProcessor 또는 AOP로 처리**",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Annotation"
+      ]
+    },
+    {
+      "question": "Bean Scope별 사용 사례는?",
+      "answer": "**singleton:** 대부분의 Bean (기본)\n**prototype:** 매번 새 인스턴스 필요\n**request:** HTTP 요청마다 (웹)\n**session:** 세션별 (로그인 정보)\n**application:** 앱 전체 공유",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Bean Scope"
+      ]
+    },
+    {
+      "question": "JPA N+1 문제 해결 방법 3가지는?",
+      "answer": "1. **Fetch Join** - JPQL에서 join fetch\n2. **@EntityGraph** - 어노테이션으로 지정\n3. **Batch Size** - hibernate.default_batch_fetch_size",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "JPA"
+      ]
+    },
+    {
+      "question": "영속성 컨텍스트의 특징 4가지는?",
+      "answer": "1. **1차 캐시** - 엔티티 저장\n2. **동일성 보장** - 같은 ID는 같은 객체\n3. **쓰기 지연** - Flush 시점까지 대기\n4. **변경 감지** - Dirty Checking",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "JPA"
+      ]
+    },
+    {
+      "question": "JPQL vs QueryDSL의 차이는?",
+      "answer": "**JPQL:**\n- 문자열 기반\n- 컴파일 타임 체크 불가\n\n**QueryDSL:**\n- 타입 안전\n- 컴파일 타임 체크\n- IDE 자동완성",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "JPA"
+      ]
+    },
+    {
+      "question": "@Transactional 동작 원리는?",
+      "answer": "1. **프록시 생성** - AOP로 트랜잭션 코드 삽입\n2. **트랜잭션 시작** - 메서드 실행 전\n3. **비즈니스 로직 실행**\n4. **커밋/롤백** - 정상 종료 시 커밋, 예외 시 롤백",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Transaction"
+      ]
+    },
+    {
+      "question": "낙관적 락과 비관적 락의 차이는?",
+      "answer": "**낙관적 락:**\n- @Version 사용\n- 충돌 없다고 가정\n- 커밋 시 검증\n\n**비관적 락:**\n- SELECT FOR UPDATE\n- 충돌 예상\n- 조회 시 락",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "JPA",
+        "Lock"
+      ]
+    },
+    {
+      "question": "Spring Batch의 주요 개념 4가지는?",
+      "answer": "1. **Job** - 배치 작업 단위\n2. **Step** - Job 내 처리 단계\n3. **ItemReader** - 데이터 읽기\n4. **ItemWriter** - 데이터 쓰기",
+      "type": "essay",
+      "tags": [
+        "Spring Batch"
+      ]
+    },
+    {
+      "question": "Resilience4j의 주요 모듈 4가지는?",
+      "answer": "1. **CircuitBreaker** - 장애 격리\n2. **RateLimiter** - 요청 제한\n3. **Retry** - 재시도\n4. **Bulkhead** - 격리",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Resilience4j"
+      ]
+    },
+    {
+      "question": "API 버저닝 방법 3가지는?",
+      "answer": "1. **URI 버저닝** - /api/v1/users\n2. **헤더 버저닝** - Accept: application/vnd.myapp.v1+json\n3. **파라미터 버저닝** - /api/users?version=1",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "API"
+      ]
+    },
+    {
+      "question": "DTO, VO, Entity의 차이는?",
+      "answer": "**DTO (Data Transfer Object):**\n- 계층 간 데이터 전달\n- Getter/Setter\n\n**VO (Value Object):**\n- 값 자체를 표현\n- 불변 객체\n\n**Entity:**\n- DB 테이블 매핑\n- @Entity",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Design Pattern"
+      ]
+    },
+    {
+      "question": "Filter vs Interceptor vs AOP의 차이는?",
+      "answer": "**Filter:**\n- Servlet 레벨\n- 모든 요청\n\n**Interceptor:**\n- Spring MVC 레벨\n- Controller 전후\n\n**AOP:**\n- 메서드 레벨\n- 비즈니스 로직",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "CORS 해결 방법 3가지는?",
+      "answer": "1. **@CrossOrigin** - 어노테이션\n2. **WebMvcConfigurer** - 전역 설정\n3. **CorsFilter** - Filter 구현",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "CORS"
+      ]
+    },
+    {
+      "question": "ArgumentResolver의 역할은?",
+      "answer": "**역할:**\n- Controller 메서드 파라미터 바인딩\n\n**사용 예:**\n- @AuthenticationPrincipal\n- 커스텀 어노테이션으로 사용자 정보 주입",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "MVC"
+      ]
+    },
+    {
+      "question": "Spring의 주요 디자인 패턴 5가지는?",
+      "answer": "1. **Singleton** - Bean 기본 scope\n2. **Factory** - BeanFactory\n3. **Proxy** - AOP, @Transactional\n4. **Template Method** - JdbcTemplate\n5. **Front Controller** - DispatcherServlet",
+      "type": "essay",
+      "tags": [
+        "Spring",
+        "Design Pattern"
+      ]
+    }
+  ]
+}

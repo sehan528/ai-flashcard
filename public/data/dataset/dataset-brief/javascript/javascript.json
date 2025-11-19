@@ -1,0 +1,546 @@
+{
+  "name": "자바스크립트 (간략버전)",
+  "description": "JavaScript 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "var, let, const의 차이점 3가지는?",
+      "answer": "1. **스코프** - var: 함수 스코프 / let,const: 블록 스코프\n2. **재선언** - var: 가능 / let,const: 불가능\n3. **재할당** - var,let: 가능 / const: 불가능",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "변수"
+      ]
+    },
+    {
+      "question": "호이스팅이란 무엇이며 var와 let의 차이는?",
+      "answer": "**호이스팅:** 선언이 스코프 최상단으로 끌어올려지는 현상\n\n- **var**: 호이스팅 O, undefined로 초기화\n- **let/const**: 호이스팅 O, TDZ(Temporal Dead Zone)로 접근 불가",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "호이스팅"
+      ]
+    },
+    {
+      "question": "클로저의 개념과 활용 사례 3가지는?",
+      "answer": "**개념:** 함수가 선언될 때의 렉시컬 환경을 기억하는 함수\n\n**활용:**\n1. 데이터 은닉 (private 변수)\n2. 부분 적용 함수\n3. 콜백 함수에서 외부 변수 참조",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "클로저"
+      ]
+    },
+    {
+      "question": "this의 4가지 바인딩 규칙은?",
+      "answer": "1. **기본 바인딩** - 전역 객체 (strict: undefined)\n2. **암시적 바인딩** - 호출한 객체\n3. **명시적 바인딩** - call/apply/bind\n4. **new 바인딩** - 새로 생성된 객체",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "this"
+      ]
+    },
+    {
+      "question": "화살표 함수와 일반 함수의 차이점 4가지는?",
+      "answer": "1. **this** - 화살표: 렉시컬 this / 일반: 동적 this\n2. **arguments** - 화살표: 없음 / 일반: 있음\n3. **생성자** - 화살표: 불가 / 일반: 가능 (new 사용)\n4. **prototype** - 화살표: 없음 / 일반: 있음",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "화살표함수"
+      ]
+    },
+    {
+      "question": "프로토타입 체인의 동작 원리는?",
+      "answer": "- 객체의 프로퍼티 접근 시 없으면 [[Prototype]]을 따라 상위 검색\n- Object.prototype까지 올라가며 탐색\n- 없으면 undefined 반환",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "프로토타입"
+      ]
+    },
+    {
+      "question": "클래스 상속과 프로토타입 상속의 차이는?",
+      "answer": "- **클래스 상속**: ES6 class 문법, 명확한 구조\n- **프로토타입 상속**: __proto__ 체인, 유연하지만 복잡\n- 클래스도 내부적으로 프로토타입 기반",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "상속"
+      ]
+    },
+    {
+      "question": "Promise의 3가지 상태는?",
+      "answer": "1. **Pending** - 대기 (초기 상태)\n2. **Fulfilled** - 이행 (성공)\n3. **Rejected** - 거부 (실패)",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Promise"
+      ]
+    },
+    {
+      "question": "async/await의 장점 3가지는?",
+      "answer": "1. **가독성** - 동기 코드처럼 작성\n2. **에러 처리** - try-catch 사용 가능\n3. **디버깅** - 스택 트레이스 명확",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "async"
+      ]
+    },
+    {
+      "question": "이벤트 루프의 동작 순서는?",
+      "answer": "1. **Call Stack** 실행\n2. **Microtask Queue** (Promise)\n3. **Macrotask Queue** (setTimeout)\n4. **렌더링**\n5. 반복",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "이벤트루프"
+      ]
+    },
+    {
+      "question": "얕은 복사와 깊은 복사의 차이와 방법은?",
+      "answer": "**얕은 복사:**\n- 1단계만 복사, 중첩 객체는 참조 공유\n- 방법: {...obj}, Object.assign()\n\n**깊은 복사:**\n- 모든 중첩 객체까지 복사\n- 방법: JSON.parse(JSON.stringify()), structuredClone()",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "복사"
+      ]
+    },
+    {
+      "question": "map, filter, reduce의 차이는?",
+      "answer": "1. **map** - 각 요소 변환, 같은 길이 배열 반환\n2. **filter** - 조건 만족 요소만, 짧아질 수 있음\n3. **reduce** - 누적 계산, 단일 값 반환",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "배열"
+      ]
+    },
+    {
+      "question": "Set과 Map의 특징과 차이는?",
+      "answer": "**Set:**\n- 중복 없는 값 컬렉션\n- has(), add(), delete()\n\n**Map:**\n- key-value 쌍, 모든 타입 key 가능\n- get(), set(), delete()\n\n**vs Object:** 순서 보장, 크기 추적 쉬움",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "자료구조"
+      ]
+    },
+    {
+      "question": "디바운싱과 스로틀링의 차이는?",
+      "answer": "**디바운싱:**\n- 마지막 이벤트만 처리\n- 연속 이벤트 중단 후 일정 시간 경과 시 실행\n\n**스로틀링:**\n- 일정 시간 간격으로 처리\n- 연속 이벤트 중 주기적으로 실행",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "최적화"
+      ]
+    },
+    {
+      "question": "메모이제이션이란 무엇이며 언제 사용하나요?",
+      "answer": "**개념:** 함수 결과를 캐싱하여 재계산 방지\n\n**사용 시기:**\n- 순수 함수 (같은 입력 → 같은 출력)\n- 계산 비용이 큰 함수\n- 반복 호출이 많은 경우",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "최적화"
+      ]
+    },
+    {
+      "question": "불변성을 유지해야 하는 이유 3가지는?",
+      "answer": "1. **예측 가능성** - 데이터 변경 추적 용이\n2. **디버깅** - 상태 변화 명확\n3. **React 최적화** - 참조 비교로 변경 감지",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "불변성"
+      ]
+    },
+    {
+      "question": "Proxy 객체의 주요 트랩 5가지는?",
+      "answer": "1. **get** - 속성 읽기\n2. **set** - 속성 쓰기\n3. **has** - in 연산자\n4. **deleteProperty** - delete 연산자\n5. **apply** - 함수 호출",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Proxy"
+      ]
+    },
+    {
+      "question": "Generator 함수의 특징 3가지는?",
+      "answer": "1. **일시 정지** - yield로 실행 중단/재개\n2. **양방향 통신** - next()로 값 전달\n3. **이터러블** - for...of 사용 가능",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Generator"
+      ]
+    },
+    {
+      "question": "WeakMap과 Map의 차이점 3가지는?",
+      "answer": "1. **키 타입** - WeakMap: 객체만 / Map: 모든 타입\n2. **GC** - WeakMap: 약한 참조로 GC 가능 / Map: 강한 참조\n3. **열거** - WeakMap: 불가 / Map: 가능",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "자료구조"
+      ]
+    },
+    {
+      "question": "원시 타입과 참조 타입의 차이는?",
+      "answer": "**원시 타입:**\n- 값 저장, 불변\n- string, number, boolean, null, undefined, symbol, bigint\n\n**참조 타입:**\n- 주소 저장, 가변\n- object, array, function",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "타입"
+      ]
+    },
+    {
+      "question": "이벤트 캡처링과 버블링의 차이는?",
+      "answer": "**캡처링:**\n- 부모 → 자식 방향\n- addEventListener 3번째 인자 true\n\n**버블링:**\n- 자식 → 부모 방향 (기본)\n- event.stopPropagation()으로 중단",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Event"
+      ]
+    },
+    {
+      "question": "이벤트 위임(Event Delegation)이란?",
+      "answer": "**개념:** 부모 요소에서 자식 이벤트 처리\n\n**장점:**\n- 메모리 효율적\n- 동적 요소 처리\n\nevent.target으로 실제 클릭 요소 확인",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Event"
+      ]
+    },
+    {
+      "question": "==와 ===의 차이는?",
+      "answer": "**== (동등):**\n- 타입 변환 후 비교\n- 5 == '5' → true\n\n**=== (일치):**\n- 타입까지 비교\n- 5 === '5' → false\n\n=== 사용 권장",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Operator"
+      ]
+    },
+    {
+      "question": "null vs undefined의 차이는?",
+      "answer": "**undefined:**\n- 선언했지만 할당 안 함\n- 기본값\n\n**null:**\n- 명시적으로 빈 값\n- 의도적인 부재\n\ntypeof null === 'object' (버그)",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Type"
+      ]
+    },
+    {
+      "question": "truthy와 falsy 값은?",
+      "answer": "**Falsy (6개):**\n- false, 0, '', null, undefined, NaN\n\n**Truthy:**\n- 나머지 모두\n- {}, [], '0', 'false' 등",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Type"
+      ]
+    },
+    {
+      "question": "단축 평가(Short-circuit Evaluation)란?",
+      "answer": "**&& (AND):**\n- 첫 falsy 반환\n- user && user.name\n\n**|| (OR):**\n- 첫 truthy 반환\n- value || 'default'\n\n**?? (Nullish):**\n- null/undefined만 대체",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Operator"
+      ]
+    },
+    {
+      "question": "구조 분해 할당의 장점 3가지는?",
+      "answer": "1. **간결한 코드** - 한 줄로 여러 변수 할당\n2. **기본값 설정** - = 사용\n3. **변수명 변경** - : 사용",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "ES6"
+      ]
+    },
+    {
+      "question": "Rest Parameter와 Spread의 차이는?",
+      "answer": "**Rest (...):**\n- 함수 매개변수\n- 여러 인수를 배열로\n- function(...args)\n\n**Spread (...):**\n- 배열/객체 펼치기\n- [...arr], {...obj}",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "ES6"
+      ]
+    },
+    {
+      "question": "Object.assign vs Spread의 차이는?",
+      "answer": "**Object.assign:**\n- ES5, 메서드\n- Object.assign({}, obj)\n\n**Spread:**\n- ES6, 문법\n- {...obj}\n- 더 간결, 가독성 좋음",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Object"
+      ]
+    },
+    {
+      "question": "Object.freeze vs Object.seal의 차이는?",
+      "answer": "**freeze:**\n- 추가/삭제/수정 불가\n- 완전 불변\n\n**seal:**\n- 추가/삭제 불가\n- 수정은 가능",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Object"
+      ]
+    },
+    {
+      "question": "hasOwnProperty vs in 연산자의 차이는?",
+      "answer": "**hasOwnProperty:**\n- 자신의 프로퍼티만\n- 상속 제외\n\n**in:**\n- 자신 + 상속 프로퍼티\n- 프로토타입 체인 포함",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Object"
+      ]
+    },
+    {
+      "question": "for...in vs for...of의 차이는?",
+      "answer": "**for...in:**\n- 객체 키 순회\n- 열거 가능한 프로퍼티\n\n**for...of:**\n- 이터러블 값 순회\n- 배열, 문자열, Map, Set 등",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Loop"
+      ]
+    },
+    {
+      "question": "Array.from의 주요 사용 사례 3가지는?",
+      "answer": "1. **유사 배열 변환** - Array.from(nodeList)\n2. **문자열 → 배열** - Array.from('hello')\n3. **매핑과 함께** - Array.from([1,2,3], x => x*2)",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Array"
+      ]
+    },
+    {
+      "question": "every vs some의 차이는?",
+      "answer": "**every:**\n- 모두 만족 → true\n- AND 연산\n- 하나라도 false면 중단\n\n**some:**\n- 하나라도 만족 → true\n- OR 연산\n- 하나라도 true면 중단",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Array"
+      ]
+    },
+    {
+      "question": "find vs filter의 차이는?",
+      "answer": "**find:**\n- 첫 번째 요소 반환\n- 단일 값\n- 없으면 undefined\n\n**filter:**\n- 모든 요소 배열 반환\n- 여러 값\n- 빈 배열 가능",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Array"
+      ]
+    },
+    {
+      "question": "includes vs indexOf의 차이는?",
+      "answer": "**includes:**\n- boolean 반환\n- NaN 찾기 가능\n- 가독성 좋음\n\n**indexOf:**\n- 인덱스 반환 (-1이면 없음)\n- NaN 못 찾음",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Array"
+      ]
+    },
+    {
+      "question": "slice vs splice의 차이는?",
+      "answer": "**slice:**\n- 원본 불변\n- 복사본 반환\n- slice(start, end)\n\n**splice:**\n- 원본 변경\n- 삭제/추가/교체\n- splice(start, count, items)",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Array"
+      ]
+    },
+    {
+      "question": "concat vs push의 차이는?",
+      "answer": "**concat:**\n- 원본 불변\n- 새 배열 반환\n\n**push:**\n- 원본 변경\n- 길이 반환\n- 성능 더 좋음",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Array"
+      ]
+    },
+    {
+      "question": "join vs toString의 차이는?",
+      "answer": "**join:**\n- 구분자 지정 가능\n- join(','), join('')\n\n**toString:**\n- 쉼표 구분 고정\n- [1,2,3].toString() → '1,2,3'",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Array"
+      ]
+    },
+    {
+      "question": "정규표현식 주요 메서드 4가지는?",
+      "answer": "1. **test()** - boolean 반환\n2. **exec()** - 매칭 정보 반환\n3. **match()** - 문자열 메서드, 배열 반환\n4. **replace()** - 치환",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "RegExp"
+      ]
+    },
+    {
+      "question": "정규표현식 플래그 5가지는?",
+      "answer": "1. **g** - global, 전체 매칭\n2. **i** - ignore case, 대소문자 무시\n3. **m** - multiline, 여러 줄\n4. **s** - dotAll, . 이 \\n 포함\n5. **u** - unicode",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "RegExp"
+      ]
+    },
+    {
+      "question": "call vs apply vs bind의 차이는?",
+      "answer": "**call:**\n- 즉시 실행\n- 인수 개별 전달\n- func.call(obj, a, b)\n\n**apply:**\n- 즉시 실행\n- 인수 배열 전달\n- func.apply(obj, [a, b])\n\n**bind:**\n- 함수 반환\n- 나중에 실행",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Function"
+      ]
+    },
+    {
+      "question": "IIFE(즉시 실행 함수)의 용도 3가지는?",
+      "answer": "1. **전역 오염 방지** - 스코프 격리\n2. **private 변수** - 클로저 활용\n3. **모듈 패턴** - (function(){})()",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Function"
+      ]
+    },
+    {
+      "question": "커링(Currying)이란?",
+      "answer": "**개념:** 다중 인수 함수를 단일 인수 함수 체인으로\n\n**예:**\n```js\nconst add = a => b => a + b;\nconst add5 = add(5);\nadd5(3); // 8\n```",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Function"
+      ]
+    },
+    {
+      "question": "부분 적용(Partial Application)이란?",
+      "answer": "**개념:** 일부 인수를 고정한 새 함수 생성\n\n**bind 활용:**\n```js\nconst multiply = (a, b) => a * b;\nconst double = multiply.bind(null, 2);\n```",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Function"
+      ]
+    },
+    {
+      "question": "고차 함수(Higher-Order Function)란?",
+      "answer": "**정의:**\n- 함수를 인수로 받거나\n- 함수를 반환하는 함수\n\n**예:** map, filter, reduce",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Function"
+      ]
+    },
+    {
+      "question": "순수 함수(Pure Function)의 조건 2가지는?",
+      "answer": "1. **같은 입력 → 같은 출력** (결정적)\n2. **부수 효과 없음** (외부 상태 변경 X)\n\n불변성, 테스트 용이",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Function"
+      ]
+    },
+    {
+      "question": "함수형 프로그래밍의 주요 개념 4가지는?",
+      "answer": "1. **순수 함수**\n2. **불변성**\n3. **일급 함수** (변수에 할당 가능)\n4. **고차 함수**",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "FP"
+      ]
+    },
+    {
+      "question": "setTimeout 0의 의미는?",
+      "answer": "**의미:**\n- 즉시 실행 아님\n- 현재 실행 스택 완료 후\n- Macrotask Queue에 추가\n\n최소 지연 시간 4ms",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Async"
+      ]
+    },
+    {
+      "question": "Microtask vs Macrotask의 차이는?",
+      "answer": "**Microtask (우선순위 높음):**\n- Promise, queueMicrotask\n- 현재 작업 직후\n\n**Macrotask:**\n- setTimeout, setInterval\n- 다음 이벤트 루프",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Event Loop"
+      ]
+    },
+    {
+      "question": "Promise.all vs Promise.race의 차이는?",
+      "answer": "**Promise.all:**\n- 모두 완료 대기\n- 하나라도 실패 시 reject\n\n**Promise.race:**\n- 가장 빠른 것 하나\n- 먼저 완료된 것 반환",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Promise"
+      ]
+    },
+    {
+      "question": "Promise.allSettled vs Promise.all의 차이는?",
+      "answer": "**allSettled:**\n- 모두 완료 대기 (성공/실패 무관)\n- 모든 결과 반환\n\n**all:**\n- 하나라도 실패 시 즉시 reject",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Promise"
+      ]
+    },
+    {
+      "question": "async 함수의 특징 3가지는?",
+      "answer": "1. **자동 Promise 반환**\n2. **await 사용 가능**\n3. **동기 코드처럼 작성**\n\n에러는 try-catch",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Async"
+      ]
+    },
+    {
+      "question": "try-catch로 잡을 수 없는 에러는?",
+      "answer": "**비동기 콜백 에러:**\n- setTimeout 내부 에러\n- Promise reject (catch 필요)\n\n**해결:** async-await + try-catch",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Error"
+      ]
+    },
+    {
+      "question": "Error 객체의 주요 프로퍼티 3가지는?",
+      "answer": "1. **name** - 에러 타입\n2. **message** - 에러 메시지\n3. **stack** - 스택 트레이스",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Error"
+      ]
+    },
+    {
+      "question": "Symbol의 주요 용도 3가지는?",
+      "answer": "1. **고유한 프로퍼티 키** - 충돌 방지\n2. **Well-known Symbol** - Symbol.iterator 등\n3. **private 프로퍼티** - 은닉",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Symbol"
+      ]
+    },
+    {
+      "question": "Symbol vs String 키의 차이는?",
+      "answer": "**Symbol:**\n- 고유함\n- for...in, Object.keys 제외\n- Object.getOwnPropertySymbols로 조회\n\n**String:**\n- 열거 가능\n- 일반 순회 포함",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Symbol"
+      ]
+    },
+    {
+      "question": "Iterator와 Iterable의 관계는?",
+      "answer": "**Iterable:**\n- Symbol.iterator 메서드 가짐\n- for...of 사용 가능\n\n**Iterator:**\n- next() 메서드 가짐\n- {value, done} 반환",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "Iterator"
+      ]
+    },
+    {
+      "question": "Template Literal의 장점 3가지는?",
+      "answer": "1. **문자열 보간** - ${expression}\n2. **여러 줄** - 자유로운 줄바꿈\n3. **Tagged Template** - 함수 호출 가능",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "ES6"
+      ]
+    },
+    {
+      "question": "Optional Chaining(?.)과 Nullish Coalescing(??)의 용도는?",
+      "answer": "**?. (Optional Chaining):**\n- null/undefined 체크\n- user?.address?.street\n\n**?? (Nullish Coalescing):**\n- null/undefined만 대체\n- value ?? 'default'",
+      "type": "essay",
+      "tags": [
+        "JavaScript",
+        "ES2020"
+      ]
+    }
+  ]
+}

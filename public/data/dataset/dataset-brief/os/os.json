@@ -1,0 +1,1107 @@
+{
+  "name": "운영체제 (간략버전)",
+  "description": "OS 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "프로세스와 스레드의 차이점 3가지는?",
+      "answer": "1. **메모리** - 프로세스: 독립 / 스레드: 공유\n2. **생성 비용** - 프로세스: 높음 / 스레드: 낮음\n3. **통신** - 프로세스: IPC / 스레드: 변수 공유\n\n**스레드:** 프로세스 내 실행 단위",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Process",
+        "Thread"
+      ]
+    },
+    {
+      "question": "프로세스의 메모리 구조 4가지는?",
+      "answer": "1. **Code (Text)** - 실행 코드\n2. **Data** - 전역/정적 변수\n3. **Heap** - 동적 할당 (malloc)\n4. **Stack** - 지역 변수, 함수 호출\n\n**성장:** Heap ↑ / Stack ↓",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "프로세스 상태 5가지는?",
+      "answer": "1. **New** - 생성\n2. **Ready** - 실행 대기\n3. **Running** - 실행 중\n4. **Waiting (Blocked)** - I/O 대기\n5. **Terminated** - 종료",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Process"
+      ]
+    },
+    {
+      "question": "PCB(Process Control Block)에 포함된 정보는?",
+      "answer": "1. **프로세스 ID (PID)**\n2. **프로세스 상태**\n3. **Program Counter** - 다음 명령어 주소\n4. **CPU 레지스터** - 컨텍스트\n5. **메모리 정보** - 메모리 주소 공간\n6. **스케줄링 정보** - 우선순위 등",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Process"
+      ]
+    },
+    {
+      "question": "컨텍스트 스위칭(Context Switching)의 과정과 비용은?",
+      "answer": "**과정:**\n1. 현재 프로세스 상태 PCB 저장\n2. 다음 프로세스 PCB 로드\n3. CPU 레지스터 복원\n\n**비용:**\n- 캐시 무효화\n- TLB 플러시\n- 순수 오버헤드",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Process"
+      ]
+    },
+    {
+      "question": "CPU 스케줄링 알고리즘 6가지는?",
+      "answer": "1. **FCFS** - First Come First Served\n2. **SJF** - Shortest Job First\n3. **SRTF** - Shortest Remaining Time First\n4. **Priority** - 우선순위\n5. **Round Robin** - 시간 할당량\n6. **Multilevel Queue** - 다단계 큐",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Scheduling"
+      ]
+    },
+    {
+      "question": "선점형과 비선점형 스케줄링의 차이는?",
+      "answer": "**선점형 (Preemptive):**\n- 실행 중 강제 전환\n- Round Robin, SRTF, Priority\n- 응답 시간 빠름\n\n**비선점형 (Non-preemptive):**\n- 자발적 양보까지 대기\n- FCFS, SJF\n- 컨텍스트 스위칭 적음",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Scheduling"
+      ]
+    },
+    {
+      "question": "Round Robin의 특징과 시간 할당량 영향은?",
+      "answer": "**특징:**\n- 시간 할당량(Time Quantum) 기반\n- 선점형\n- 공평성\n\n**시간 할당량:**\n- 너무 크면 → FCFS화\n- 너무 작으면 → 컨텍스트 스위칭 과다",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Scheduling"
+      ]
+    },
+    {
+      "question": "Convoy Effect와 Starvation의 차이는?",
+      "answer": "**Convoy Effect:**\n- FCFS에서 긴 작업이 앞에 있을 때\n- 뒤의 짧은 작업들 대기\n- 평균 대기 시간 증가\n\n**Starvation:**\n- 우선순위 낮은 프로세스가 무한 대기\n- Aging으로 해결",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Scheduling"
+      ]
+    },
+    {
+      "question": "프로세스 동기화가 필요한 이유는?",
+      "answer": "**Race Condition 방지**\n\n**문제:**\n- 공유 자원 동시 접근\n- 실행 순서에 따라 결과 달라짐\n\n**해결:**\n- 상호 배제 (Mutual Exclusion)\n- 임계 영역 (Critical Section) 보호",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Synchronization"
+      ]
+    },
+    {
+      "question": "임계 영역(Critical Section) 해결 조건 3가지는?",
+      "answer": "1. **상호 배제** - 한 번에 하나만 진입\n2. **진행 (Progress)** - 대기 중이면 진입 가능\n3. **한정 대기** - 무한 대기 방지\n\n**추가:** 성능 (빠른 진입/퇴출)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Synchronization"
+      ]
+    },
+    {
+      "question": "뮤텍스(Mutex)와 세마포어(Semaphore)의 차이는?",
+      "answer": "**Mutex:**\n- Binary (0 또는 1)\n- 소유권 개념 (락 건 스레드만 해제)\n- 상호 배제\n\n**Semaphore:**\n- Counter (N개 허용)\n- 소유권 없음\n- 자원 관리\n\n**Binary Semaphore ≠ Mutex (소유권)**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Synchronization"
+      ]
+    },
+    {
+      "question": "스핀락(Spinlock)의 특징과 적합한 상황은?",
+      "answer": "**특징:**\n- Busy Waiting (루프 돌며 대기)\n- 컨텍스트 스위칭 없음\n- CPU 소모\n\n**적합:**\n- 짧은 임계 영역\n- 멀티 코어 환경\n- 실시간 시스템",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Lock"
+      ]
+    },
+    {
+      "question": "데드락(Deadlock)의 발생 조건 4가지는?",
+      "answer": "1. **상호 배제** - 자원 독점\n2. **점유와 대기** - 자원 보유 + 추가 대기\n3. **비선점** - 강제로 빼앗을 수 없음\n4. **순환 대기** - 자원 대기 그래프 순환\n\n**4가지 모두 만족시 데드락**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Deadlock"
+      ]
+    },
+    {
+      "question": "데드락 처리 방법 4가지는?",
+      "answer": "1. **예방** - 4가지 조건 중 하나 제거\n2. **회피** - 안전 상태 유지 (은행원 알고리즘)\n3. **탐지 및 회복** - 주기적 검사, 프로세스 종료\n4. **무시** - 발생 확률 낮으면 (타조 알고리즘)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Deadlock"
+      ]
+    },
+    {
+      "question": "은행원 알고리즘(Banker's Algorithm)의 개념은?",
+      "answer": "**개념:** 자원 할당 전 안전 상태 검사\n\n**동작:**\n1. 요청 자원 할당 가정\n2. 안전 순서열 존재 확인\n3. 안전하면 할당, 아니면 대기\n\n**단점:** 사전에 최대 자원 수 알아야 함",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Deadlock"
+      ]
+    },
+    {
+      "question": "메모리 관리 기법 3가지는?",
+      "answer": "1. **연속 할당** - 고정/가변 분할\n2. **페이징** - 고정 크기 페이지\n3. **세그멘테이션** - 가변 크기 세그먼트\n\n**현대:** 페이징 + 세그멘테이션",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "내부 단편화와 외부 단편화의 차이는?",
+      "answer": "**내부 단편화:**\n- 할당된 메모리 내부 낭비\n- 페이징 발생\n- 페이지 크기 조절로 완화\n\n**외부 단편화:**\n- 할당 가능한 메모리가 흩어짐\n- 세그멘테이션 발생\n- 압축(Compaction)으로 해결",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "페이징(Paging)의 개념과 구성 요소는?",
+      "answer": "**개념:** 물리 메모리를 고정 크기로 분할\n\n**구성:**\n- **Page** - 논리 메모리 단위\n- **Frame** - 물리 메모리 단위\n- **Page Table** - 매핑 테이블\n\n**크기:** 보통 4KB",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Paging"
+      ]
+    },
+    {
+      "question": "페이지 테이블의 구조와 문제점은?",
+      "answer": "**구조:** 논리 주소 → 물리 주소 매핑\n\n**문제:**\n- 큰 메모리 공간 필요\n- 메모리 접근 2번 (테이블 + 실제 데이터)\n\n**해결:**\n1. **TLB** - 캐시\n2. **계층적 페이징**\n3. **역 페이지 테이블**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Paging"
+      ]
+    },
+    {
+      "question": "TLB(Translation Lookaside Buffer)란?",
+      "answer": "**개념:** 페이지 테이블 캐시\n\n**특징:**\n- 빠른 주소 변환\n- 하드웨어 구현\n- 작은 크기 (수십~수백 엔트리)\n\n**동작:**\n- TLB Hit → 빠른 변환\n- TLB Miss → 페이지 테이블 참조",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "TLB"
+      ]
+    },
+    {
+      "question": "다단계 페이지 테이블의 장점은?",
+      "answer": "**장점:**\n1. 메모리 절약 - 사용 안하는 부분 미할당\n2. 큰 주소 공간 지원\n\n**단점:**\n- 메모리 접근 횟수 증가\n\n**예:** x86-64는 4단계 페이징",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Paging"
+      ]
+    },
+    {
+      "question": "가상 메모리(Virtual Memory)의 개념과 장점은?",
+      "answer": "**개념:** 물리 메모리보다 큰 주소 공간 제공\n\n**장점:**\n1. 메모리 부족 해결\n2. 프로세스 격리\n3. 공유 메모리 구현\n4. 효율적 메모리 활용\n\n**구현:** Demand Paging",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "VirtualMemory"
+      ]
+    },
+    {
+      "question": "Demand Paging의 동작 원리는?",
+      "answer": "**원리:** 필요할 때만 페이지 로드\n\n**동작:**\n1. Page Fault 발생\n2. 디스크에서 페이지 로드\n3. 페이지 테이블 업데이트\n4. 명령어 재실행\n\n**장점:** 메모리 절약, 빠른 시작",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Paging"
+      ]
+    },
+    {
+      "question": "페이지 교체 알고리즘 5가지는?",
+      "answer": "1. **FIFO** - 먼저 들어온 것\n2. **OPT (Optimal)** - 가장 나중에 사용될 것 (이론적)\n3. **LRU** - Least Recently Used\n4. **LFU** - Least Frequently Used\n5. **Clock (Second Chance)** - FIFO + Reference bit",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "PageReplacement"
+      ]
+    },
+    {
+      "question": "Belady's Anomaly란?",
+      "answer": "**현상:** 프레임 수 증가했는데 Page Fault 증가\n\n**발생:** FIFO 알고리즘\n\n**해결:** LRU 등 Stack 알고리즘 사용\n\n**이유:** FIFO는 페이지 사용 패턴 무시",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "PageReplacement"
+      ]
+    },
+    {
+      "question": "LRU 구현 방법 2가지는?",
+      "answer": "1. **Stack** - 최근 사용을 top으로\n2. **Counter** - 타임스탬프 기록\n\n**문제:** 오버헤드\n\n**대안:**\n- LRU Approximation (Reference bit)\n- Clock Algorithm",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "LRU"
+      ]
+    },
+    {
+      "question": "Thrashing의 개념과 원인은?",
+      "answer": "**개념:** Page Fault 과다로 시스템 성능 급격히 저하\n\n**원인:**\n- 프로세스가 필요한 페이지보다 적은 프레임 할당\n- 지속적인 Page In/Out\n\n**해결:**\n- Working Set 보장\n- 다중 프로그래밍 정도 감소",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Thrashing"
+      ]
+    },
+    {
+      "question": "Working Set의 개념과 활용은?",
+      "answer": "**개념:** 일정 시간 동안 참조된 페이지 집합\n\n**활용:**\n- 프로세스가 필요한 최소 페이지 예측\n- Thrashing 방지\n- 적절한 프레임 할당\n\n**Locality 원리 기반**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "WorkingSet"
+      ]
+    },
+    {
+      "question": "Locality의 종류 2가지는?",
+      "answer": "1. **시간 지역성 (Temporal)** - 최근 참조된 것 재참조\n2. **공간 지역성 (Spatial)** - 인접한 주소 참조\n\n**활용:**\n- 캐시\n- Prefetching\n- Page 교체",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Locality"
+      ]
+    },
+    {
+      "question": "세그멘테이션(Segmentation)의 개념과 특징은?",
+      "answer": "**개념:** 논리적 단위로 메모리 분할 (코드, 데이터, 스택 등)\n\n**특징:**\n- 가변 크기\n- 의미 있는 단위\n- 외부 단편화 발생\n\n**보호:** 세그먼트별 권한 설정 용이",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Segmentation"
+      ]
+    },
+    {
+      "question": "캐시 메모리의 매핑 방식 3가지는?",
+      "answer": "1. **Direct Mapping** - 고정 위치, 빠름, 충돌 많음\n2. **Fully Associative** - 어디든 가능, 느림, 충돌 적음\n3. **Set Associative** - 세트 내 자유, 절충안\n\n**교체:** LRU, Random",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Cache"
+      ]
+    },
+    {
+      "question": "캐시 쓰기 정책 2가지는?",
+      "answer": "**Write-Through:**\n- 캐시 + 메모리 동시 쓰기\n- 일관성 보장\n- 느림\n\n**Write-Back:**\n- 캐시만 쓰기\n- 교체시 메모리 갱신 (Dirty bit)\n- 빠름",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Cache"
+      ]
+    },
+    {
+      "question": "파일 시스템의 역할 4가지는?",
+      "answer": "1. **파일 관리** - 생성/삭제/수정\n2. **디렉토리 관리** - 계층 구조\n3. **저장 공간 관리** - 블록 할당\n4. **보안** - 접근 제어",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileSystem"
+      ]
+    },
+    {
+      "question": "파일 할당 방법 3가지는?",
+      "answer": "1. **연속 할당** - 순차 블록, 빠름, 외부 단편화\n2. **연결 할당** - 포인터 연결, 느림, 순차 접근만\n3. **인덱스 할당** - 인덱스 블록, 직접 접근, FAT, inode",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileSystem"
+      ]
+    },
+    {
+      "question": "inode의 개념과 포함 정보는?",
+      "answer": "**개념:** Unix/Linux 파일 메타데이터\n\n**포함:**\n- 파일 크기\n- 권한\n- 소유자\n- 타임스탬프\n- 데이터 블록 포인터 (직접/간접)\n\n**파일명은 디렉토리 엔트리에**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileSystem"
+      ]
+    },
+    {
+      "question": "Hard Link와 Symbolic Link의 차이는?",
+      "answer": "**Hard Link:**\n- 같은 inode 공유\n- 원본 삭제해도 유지\n- 디렉토리 불가\n- 같은 파일시스템만\n\n**Symbolic (Soft) Link:**\n- 경로 저장\n- 원본 삭제시 깨짐\n- 디렉토리 가능\n- 다른 파일시스템 가능",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileSystem"
+      ]
+    },
+    {
+      "question": "디스크 스케줄링 알고리즘 5가지는?",
+      "answer": "1. **FCFS** - 순서대로\n2. **SSTF** - 가장 가까운 것 (Shortest Seek Time)\n3. **SCAN** - 엘리베이터, 한 방향\n4. **C-SCAN** - 한 방향만, 처음으로 복귀\n5. **LOOK** - 요청 있는 곳까지만",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "DiskScheduling"
+      ]
+    },
+    {
+      "question": "저널링 파일 시스템의 개념과 장점은?",
+      "answer": "**개념:** 변경사항을 먼저 로그(저널)에 기록\n\n**장점:**\n1. 빠른 복구\n2. 일관성 보장\n3. fsck 시간 단축\n\n**예:** ext3/4, NTFS, XFS",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileSystem"
+      ]
+    },
+    {
+      "question": "RAID의 레벨별 특징은?",
+      "answer": "**RAID 0:** 스트라이핑, 성능 향상, 안전성 X\n**RAID 1:** 미러링, 안전성, 용량 50%\n**RAID 5:** 패리티 분산, 균형\n**RAID 6:** 이중 패리티, 2개 실패 허용\n**RAID 10:** 0+1, 성능+안전성",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "RAID"
+      ]
+    },
+    {
+      "question": "버퍼링과 캐싱의 차이는?",
+      "answer": "**버퍼링:**\n- 속도 차이 조정\n- 임시 저장\n- 한 번 사용\n\n**캐싱:**\n- 빠른 재접근\n- 자주 사용 데이터\n- 반복 사용",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Buffer",
+        "Cache"
+      ]
+    },
+    {
+      "question": "스풀링(Spooling)의 개념과 예시는?",
+      "answer": "**개념:** 느린 I/O 장치를 위한 버퍼링\n\n**동작:**\n1. 작업을 디스크 큐에 저장\n2. 장치 준비되면 순차 처리\n\n**예:** 프린터 스풀\n\n**장점:** CPU 효율 향상",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Spooling"
+      ]
+    },
+    {
+      "question": "인터럽트(Interrupt)의 종류와 처리 과정은?",
+      "answer": "**종류:**\n1. **하드웨어** - I/O 완료, 타이머\n2. **소프트웨어** - System Call, Exception\n\n**처리:**\n1. 현재 상태 저장\n2. ISR (Interrupt Service Routine) 실행\n3. 상태 복원",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Interrupt"
+      ]
+    },
+    {
+      "question": "DMA(Direct Memory Access)의 개념과 장점은?",
+      "answer": "**개념:** CPU 개입 없이 I/O와 메모리 간 직접 전송\n\n**장점:**\n1. CPU 부담 감소\n2. 빠른 데이터 전송\n3. 효율적 I/O\n\n**완료시 인터럽트 발생**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "DMA"
+      ]
+    },
+    {
+      "question": "폴링(Polling)과 인터럽트의 차이는?",
+      "answer": "**Polling:**\n- CPU가 주기적으로 확인\n- 단순\n- CPU 낭비\n\n**Interrupt:**\n- 장치가 CPU에 알림\n- 효율적\n- 복잡\n\n**용도:** Polling은 빠른 응답 필요시",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IO"
+      ]
+    },
+    {
+      "question": "System Call의 개념과 예시는?",
+      "answer": "**개념:** 사용자 프로그램이 커널 기능 요청\n\n**예시:**\n- 파일: open, read, write\n- 프로세스: fork, exec, wait\n- 메모리: malloc, free\n- 통신: socket, send, recv\n\n**모드:** User → Kernel 전환",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "SystemCall"
+      ]
+    },
+    {
+      "question": "User Mode와 Kernel Mode의 차이는?",
+      "answer": "**User Mode:**\n- 제한된 권한\n- 애플리케이션 실행\n- 하드웨어 직접 접근 불가\n\n**Kernel Mode:**\n- 모든 권한\n- OS 코어 실행\n- 하드웨어 제어 가능\n\n**전환:** System Call, Interrupt",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Mode"
+      ]
+    },
+    {
+      "question": "IPC(Inter-Process Communication) 방법 6가지는?",
+      "answer": "1. **Pipe** - 단방향, 부모-자식\n2. **Named Pipe (FIFO)** - 무관 프로세스\n3. **Message Queue** - 메시지 단위\n4. **Shared Memory** - 가장 빠름\n5. **Socket** - 네트워크 가능\n6. **Signal** - 간단한 알림",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IPC"
+      ]
+    },
+    {
+      "question": "Shared Memory의 장단점은?",
+      "answer": "**장점:**\n- 가장 빠른 IPC\n- 커널 개입 최소\n\n**단점:**\n- 동기화 필요 (직접 구현)\n- Race Condition 위험\n\n**용도:** 대량 데이터 공유",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IPC"
+      ]
+    },
+    {
+      "question": "fork()의 동작과 특징은?",
+      "answer": "**동작:**\n1. 자식 프로세스 생성\n2. 부모 메모리 복사 (COW)\n3. 부모는 자식 PID 반환, 자식은 0 반환\n\n**COW (Copy-on-Write):**\n- 실제 쓰기 전까지 공유\n- 메모리 효율",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Process"
+      ]
+    },
+    {
+      "question": "exec() 계열 함수의 역할은?",
+      "answer": "**역할:** 현재 프로세스를 새 프로그램으로 대체\n\n**종류:**\n- execl, execv, execvp 등\n\n**특징:**\n- PID 유지\n- 메모리 이미지 교체\n- 성공시 리턴 안함\n\n**조합:** fork + exec",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Process"
+      ]
+    },
+    {
+      "question": "좀비 프로세스와 고아 프로세스의 차이는?",
+      "answer": "**좀비 (Zombie):**\n- 종료했지만 부모가 wait() 안함\n- PCB만 남음\n- 자원은 해제됨\n\n**고아 (Orphan):**\n- 부모가 먼저 종료\n- init/systemd가 입양\n- 정상 동작",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Process"
+      ]
+    },
+    {
+      "question": "메모리 누수(Memory Leak)의 원인과 탐지 방법은?",
+      "answer": "**원인:**\n- malloc 후 free 안함\n- 포인터 분실\n- 순환 참조\n\n**탐지:**\n- Valgrind (Linux)\n- Instruments (macOS)\n- AddressSanitizer\n\n**예방:** RAII, 스마트 포인터",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "멀티스레딩의 모델 3가지는?",
+      "answer": "1. **Many-to-One** - 여러 유저 스레드 → 1 커널 스레드\n2. **One-to-One** - 유저:커널 = 1:1 (Linux)\n3. **Many-to-Many** - M:N 매핑\n\n**Linux:** NPTL (One-to-One)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Thread"
+      ]
+    },
+    {
+      "question": "Thread-Safe의 개념과 구현 방법은?",
+      "answer": "**개념:** 여러 스레드가 동시 실행해도 안전\n\n**방법:**\n1. Mutex/Lock 사용\n2. Atomic 연산\n3. Thread-Local Storage\n4. Immutable 데이터\n5. Re-entrant 함수",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Thread"
+      ]
+    },
+    {
+      "question": "Re-entrant Function의 조건은?",
+      "answer": "**조건:**\n1. 전역/정적 변수 사용 안함\n2. 동적 메모리 할당 안함\n3. 자기 자신 호출 가능\n4. 지역 변수만 사용\n\n**Thread-Safe의 부분 집합**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Thread"
+      ]
+    },
+    {
+      "question": "실시간 시스템(Real-Time System)의 종류는?",
+      "answer": "**Hard Real-Time:**\n- 데드라인 엄수 필수\n- 의료, 항공, 군사\n\n**Soft Real-Time:**\n- 데드라인 놓쳐도 치명적 아님\n- 멀티미디어, 게임\n\n**스케줄링:** EDF, RM",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "RealTime"
+      ]
+    },
+    {
+      "question": "마이크로커널과 모놀리식 커널의 차이는?",
+      "answer": "**Microkernel:**\n- 최소 기능만 (IPC, 스케줄링)\n- 나머지는 유저 공간 (드라이버 등)\n- 안정성, 확장성\n- 느림\n\n**Monolithic:**\n- 모든 기능 커널에\n- 빠름\n- 거대함\n\n**예:** Linux(모놀리식), Minix(마이크로)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Kernel"
+      ]
+    },
+    {
+      "question": "부팅 과정(Boot Process)의 단계는?",
+      "answer": "1. **BIOS/UEFI** - 하드웨어 초기화, POST\n2. **부트로더** - GRUB, OS 로드\n3. **커널 로드** - 메모리에 적재\n4. **Init/Systemd** - 시스템 초기화\n5. **로그인**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Boot"
+      ]
+    },
+    {
+      "question": "가상화(Virtualization)의 종류 2가지는?",
+      "answer": "**전가상화 (Full):**\n- 게스트 OS 수정 불필요\n- 하이퍼바이저가 모든 명령 처리\n- 느림\n- VMware, VirtualBox\n\n**반가상화 (Para):**\n- 게스트 OS 수정 필요\n- Hypercall 사용\n- 빠름\n- Xen",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Virtualization"
+      ]
+    },
+    {
+      "question": "컨테이너와 VM의 차이점은?",
+      "answer": "**컨테이너:**\n- OS 커널 공유\n- 가벼움 (MB)\n- 빠른 시작 (초)\n- Docker, LXC\n\n**VM:**\n- 별도 OS\n- 무거움 (GB)\n- 느린 시작 (분)\n- VirtualBox, VMware",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Container"
+      ]
+    },
+    {
+      "question": "Priority Inversion 문제와 해결책은?",
+      "answer": "**문제:** 낮은 우선순위가 자원 점유, 높은 우선순위 대기\n\n**해결:**\n1. **Priority Inheritance** - 일시적 우선순위 상승\n2. **Priority Ceiling** - 최고 우선순위로 설정\n\n**사례:** Mars Pathfinder",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Priority"
+      ]
+    },
+    {
+      "question": "Semaphore 구현시 주의사항은?",
+      "answer": "**Busy Waiting 방지:**\n- Block/Wakeup 방식 사용\n- Wait Queue 활용\n\n**Atomic Operation:**\n- P/V 연산 원자적 실행\n- Test-and-Set, Compare-and-Swap\n\n**Deadlock 방지**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Semaphore"
+      ]
+    },
+    {
+      "question": "Monitor의 개념과 장점은?",
+      "answer": "**개념:** 상호 배제 자동 제공하는 추상화\n\n**구성:**\n- 공유 데이터\n- Mutex (암시적)\n- Condition Variable\n\n**장점:**\n- 프로그래밍 쉬움\n- 안전함\n\n**예:** Java synchronized",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Monitor"
+      ]
+    },
+    {
+      "question": "Reader-Writer Problem의 해결 방법은?",
+      "answer": "**문제:** 읽기는 동시, 쓰기는 독점\n\n**해결:**\n1. **Reader 우선** - Starvation (Writer)\n2. **Writer 우선** - Starvation (Reader)\n3. **공정** - 순서대로\n\n**RW Lock 사용**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Synchronization"
+      ]
+    },
+    {
+      "question": "Dining Philosophers Problem의 해결책은?",
+      "answer": "**해결:**\n1. **비대칭** - 한 명은 반대 순서\n2. **최대 N-1명** - 동시 식사 제한\n3. **원자적** - 두 포크 동시 획득\n4. **타임아웃**\n\n**Deadlock 예방 문제**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Deadlock"
+      ]
+    },
+    {
+      "question": "Bounded Buffer Problem의 해결책은?",
+      "answer": "**Semaphore 사용:**\n- empty = N (빈 슬롯)\n- full = 0 (찬 슬롯)\n- mutex = 1 (상호 배제)\n\n**Producer:** wait(empty) → wait(mutex) → signal(mutex) → signal(full)\n**Consumer:** wait(full) → wait(mutex) → signal(mutex) → signal(empty)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Synchronization"
+      ]
+    },
+    {
+      "question": "메모리 보호 기법 3가지는?",
+      "answer": "1. **Base & Limit Register** - 범위 체크\n2. **Paging** - 페이지 테이블 권한\n3. **Segmentation** - 세그먼트 보호\n\n**MMU (Memory Management Unit)가 하드웨어로 지원**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "Copy-on-Write(COW)의 개념과 용도는?",
+      "answer": "**개념:** 쓰기 전까지 복사 지연\n\n**용도:**\n1. fork() 최적화\n2. 가상 메모리\n3. 파일 시스템 스냅샷\n\n**장점:** 메모리 절약, 빠른 복사\n\n**구현:** Page Fault 활용",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "COW"
+      ]
+    },
+    {
+      "question": "메모리 압축(Memory Compression)의 개념은?",
+      "answer": "**개념:** 메모리 페이지를 압축하여 더 많은 데이터 저장\n\n**장점:**\n- Swap 감소\n- 성능 향상\n\n**단점:**\n- CPU 오버헤드\n\n**사용:** macOS, Linux zRAM",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "Huge Page의 개념과 장점은?",
+      "answer": "**개념:** 기본 페이지(4KB)보다 큰 페이지 (2MB, 1GB)\n\n**장점:**\n1. TLB Miss 감소\n2. 페이지 테이블 크기 감소\n3. 대용량 메모리 성능 향상\n\n**단점:** 내부 단편화 증가\n\n**용도:** 데이터베이스, VM",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "NUMA(Non-Uniform Memory Access)의 특징은?",
+      "answer": "**특징:**\n- CPU가 자신의 로컬 메모리 빠르게 접근\n- 다른 CPU 메모리는 느림\n\n**고려사항:**\n- 메모리 배치 최적화\n- NUMA-aware 스케줄링\n\n**대비:** UMA (Uniform)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "NUMA"
+      ]
+    },
+    {
+      "question": "메모리 매핑 파일(Memory-Mapped File)의 개념은?",
+      "answer": "**개념:** 파일을 메모리 주소 공간에 매핑\n\n**장점:**\n1. 파일 I/O 간편 (포인터 접근)\n2. 빠른 접근\n3. 프로세스 간 공유 용이\n\n**시스템 콜:** mmap()\n\n**용도:** 대용량 파일, IPC",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "Swap Space의 개념과 관리는?",
+      "answer": "**개념:** 물리 메모리 부족시 디스크 사용\n\n**관리:**\n- Swappiness - 스왑 빈도 설정\n- Swap In/Out\n\n**문제:** 매우 느림\n\n**대안:** 메모리 증설, 압축",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Swap"
+      ]
+    },
+    {
+      "question": "OOM Killer의 역할과 동작은?",
+      "answer": "**역할:** 메모리 부족시 프로세스 강제 종료\n\n**점수 기준:**\n- 메모리 사용량\n- 실행 시간\n- nice 값\n- root 프로세스 보호\n\n**Linux:** /proc/<pid>/oom_score",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "파일 디스크립터(File Descriptor)란?",
+      "answer": "**개념:** 열린 파일을 가리키는 정수\n\n**기본:**\n- 0: stdin\n- 1: stdout\n- 2: stderr\n\n**관리:** 프로세스별 FD 테이블\n\n**제한:** ulimit -n",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileDescriptor"
+      ]
+    },
+    {
+      "question": "Select, Poll, Epoll의 차이는?",
+      "answer": "**Select:**\n- FD 개수 제한 (1024)\n- O(N) 스캔\n\n**Poll:**\n- FD 제한 없음\n- O(N) 스캔\n\n**Epoll (Linux):**\n- FD 제한 없음\n- O(1) - 이벤트만\n- Edge/Level Trigger\n\n**고성능:** Epoll, kqueue(BSD)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IO"
+      ]
+    },
+    {
+      "question": "동기 I/O와 비동기 I/O의 차이는?",
+      "answer": "**동기 (Synchronous):**\n- I/O 완료까지 대기 (Blocking)\n- 또는 완료 여부 직접 확인 (Non-blocking)\n\n**비동기 (Asynchronous):**\n- I/O 요청 후 즉시 리턴\n- 완료시 콜백/시그널\n\n**예:** aio, io_uring",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IO"
+      ]
+    },
+    {
+      "question": "Zero-Copy의 개념과 기법은?",
+      "answer": "**개념:** 데이터 복사 최소화\n\n**기법:**\n- sendfile() - 커널 내부 전송\n- mmap() - 메모리 매핑\n- splice() - 파이프 활용\n\n**장점:** CPU 절약, 성능 향상\n\n**용도:** 파일 전송, 프록시",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IO"
+      ]
+    },
+    {
+      "question": "Direct I/O의 개념과 용도는?",
+      "answer": "**개념:** 페이지 캐시 우회, 직접 디스크 I/O\n\n**장점:**\n- 캐시 오염 방지\n- 예측 가능한 성능\n\n**단점:**\n- 느릴 수 있음\n- 정렬 요구사항\n\n**용도:** 데이터베이스",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IO"
+      ]
+    },
+    {
+      "question": "fsync와 fdatasync의 차이는?",
+      "answer": "**fsync:**\n- 데이터 + 메타데이터 동기화\n- 느림\n\n**fdatasync:**\n- 데이터만 동기화\n- 빠름\n\n**용도:** 내구성 보장\n\n**주의:** 성능 저하",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IO"
+      ]
+    },
+    {
+      "question": "Page Cache와 Buffer Cache의 차이는?",
+      "answer": "**Page Cache:**\n- 파일 I/O 캐싱\n- 페이지 단위\n\n**Buffer Cache:**\n- 블록 I/O 캐싱\n- 블록 단위\n\n**현대 Linux:** 통합 (Unified Buffer Cache)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Cache"
+      ]
+    },
+    {
+      "question": "COW 파일시스템의 예시와 장점은?",
+      "answer": "**예시:** Btrfs, ZFS\n\n**특징:**\n- 쓰기시 새 위치에 기록\n- 원본 유지\n\n**장점:**\n1. 빠른 스냅샷\n2. 데이터 일관성\n3. 압축/중복 제거\n\n**단점:** 단편화",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileSystem"
+      ]
+    },
+    {
+      "question": "ext4의 주요 특징 4가지는?",
+      "answer": "1. **저널링** - 빠른 복구\n2. **Extent** - 연속 블록 그룹화\n3. **지연 할당** - 성능 향상\n4. **대용량 지원** - 1EB\n\n**Linux 기본 파일시스템**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileSystem"
+      ]
+    },
+    {
+      "question": "SSD와 HDD의 차이점과 최적화는?",
+      "answer": "**SSD:**\n- 빠름, 비쌈\n- 쓰기 수명\n- Wear Leveling\n- TRIM 명령\n\n**HDD:**\n- 느림, 저렴\n- 기계식\n- 디스크 스케줄링\n\n**최적화:** SSD는 순차/랜덤 차이 적음",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Storage"
+      ]
+    },
+    {
+      "question": "TRIM 명령의 역할은?",
+      "answer": "**역할:** SSD에 삭제된 블록 알림\n\n**효과:**\n1. 가비지 컬렉션 효율 향상\n2. 쓰기 성능 유지\n3. 수명 연장\n\n**주의:** RAID에서는 주의 필요",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "SSD"
+      ]
+    },
+    {
+      "question": "링 버퍼(Ring Buffer)의 개념과 용도는?",
+      "answer": "**개념:** 고정 크기 순환 버퍼\n\n**특징:**\n- FIFO\n- Head/Tail 포인터\n- 오버라이트 또는 차단\n\n**용도:**\n- 로그\n- 네트워크 패킷\n- 오디오/비디오",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "DataStructure"
+      ]
+    },
+    {
+      "question": "Futex의 개념과 장점은?",
+      "answer": "**개념:** Fast Userspace Mutex\n\n**동작:**\n- 경쟁 없으면 유저 공간에서 처리\n- 경쟁시만 커널 호출\n\n**장점:** 빠른 락\n\n**사용:** pthread_mutex",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Lock"
+      ]
+    },
+    {
+      "question": "RCU(Read-Copy-Update)의 개념은?",
+      "answer": "**개념:** 읽기 최적화 동기화\n\n**동작:**\n1. 읽기 - 락 없음\n2. 쓰기 - 복사 → 수정 → 교체\n3. 이전 버전 대기 후 삭제\n\n**장점:** 빠른 읽기\n\n**용도:** Linux 커널",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "RCU"
+      ]
+    },
+    {
+      "question": "CPU Affinity의 개념과 용도는?",
+      "answer": "**개념:** 프로세스/스레드를 특정 CPU에 고정\n\n**장점:**\n- 캐시 효율 향상\n- NUMA 최적화\n\n**설정:** taskset, sched_setaffinity()\n\n**주의:** 부하 불균형 가능",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Scheduling"
+      ]
+    },
+    {
+      "question": "CFS(Completely Fair Scheduler)의 특징은?",
+      "answer": "**개념:** Linux 기본 스케줄러\n\n**특징:**\n1. Red-Black Tree 사용\n2. vruntime (가상 실행 시간)\n3. 우선순위별 가중치\n4. O(log N)\n\n**목표:** 모든 프로세스에 공정한 CPU 시간",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Scheduling",
+        "Linux"
+      ]
+    },
+    {
+      "question": "nice 값과 우선순위의 관계는?",
+      "answer": "**Nice 값:**\n- 범위: -20 (높은 우선순위) ~ 19 (낮은 우선순위)\n- 기본값: 0\n\n**우선순위:** Priority = 20 - nice\n\n**명령:** nice, renice\n\n**root만 음수 설정 가능**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Priority"
+      ]
+    },
+    {
+      "question": "프로세스 그룹과 세션의 개념은?",
+      "answer": "**프로세스 그룹:**\n- 관련 프로세스 묶음\n- 파이프라인\n- 시그널 전파\n\n**세션:**\n- 여러 프로세스 그룹\n- 로그인 단위\n- 제어 터미널\n\n**명령:** setsid, setpgid",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Process"
+      ]
+    },
+    {
+      "question": "시그널(Signal)의 종류와 처리는?",
+      "answer": "**주요 시그널:**\n- SIGINT (2) - Ctrl+C\n- SIGKILL (9) - 강제 종료 (차단 불가)\n- SIGTERM (15) - 정상 종료\n- SIGSEGV (11) - Segmentation Fault\n- SIGCHLD - 자식 종료 알림\n\n**처리:** signal(), sigaction()",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Signal"
+      ]
+    },
+    {
+      "question": "Daemon Process의 특징과 생성 방법은?",
+      "answer": "**특징:**\n- 백그라운드 실행\n- 터미널 독립\n- init/systemd의 자식\n\n**생성:**\n1. fork() 후 부모 종료\n2. setsid() - 새 세션\n3. chdir(\"/\")\n4. umask(0)\n5. FD 닫기\n\n**예:** systemd, nginx",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Daemon"
+      ]
+    },
+    {
+      "question": "ulimit의 역할과 주요 설정은?",
+      "answer": "**역할:** 프로세스 자원 제한\n\n**주요 설정:**\n- -n: 파일 디스크립터 수\n- -u: 프로세스 수\n- -m: 메모리 크기\n- -s: 스택 크기\n- -c: 코어 덤프 크기\n\n**/etc/security/limits.conf**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Limit"
+      ]
+    },
+    {
+      "question": "Core Dump의 개념과 활용은?",
+      "answer": "**개념:** 프로그램 비정상 종료시 메모리 덤프\n\n**활용:**\n- 디버깅\n- gdb로 분석\n\n**설정:**\n- ulimit -c unlimited\n- /proc/sys/kernel/core_pattern\n\n**주의:** 디스크 공간",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Debug"
+      ]
+    },
+    {
+      "question": "strace의 역할과 사용법은?",
+      "answer": "**역할:** 시스템 콜 추적\n\n**사용:**\n- strace ls\n- strace -p <pid>\n- strace -e open,read\n\n**활용:**\n- 디버깅\n- 성능 분석\n- 파일 접근 추적",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Debug"
+      ]
+    },
+    {
+      "question": "perf의 기능과 활용은?",
+      "answer": "**기능:** Linux 성능 분석 도구\n\n**명령:**\n- perf top - CPU 사용률\n- perf record/report - 프로파일링\n- perf stat - 통계\n\n**분석:** CPU, 캐시, 브랜치 예측 등",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Performance"
+      ]
+    },
+    {
+      "question": "/proc 파일시스템의 역할과 주요 항목은?",
+      "answer": "**역할:** 커널 정보를 파일로 제공\n\n**주요:**\n- /proc/cpuinfo - CPU 정보\n- /proc/meminfo - 메모리 정보\n- /proc/<pid>/ - 프로세스 정보\n- /proc/sys/ - 커널 파라미터\n\n**가상 파일시스템**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Linux"
+      ]
+    },
+    {
+      "question": "sysctl의 역할과 예시는?",
+      "answer": "**역할:** 커널 파라미터 조회/수정\n\n**예시:**\n- vm.swappiness - 스왑 빈도\n- net.ipv4.ip_forward - IP 포워딩\n- kernel.pid_max - 최대 PID\n\n**영구 설정:** /etc/sysctl.conf",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Kernel"
+      ]
+    },
+    {
+      "question": "tmpfs의 특징과 용도는?",
+      "answer": "**특징:**\n- RAM 기반 파일시스템\n- 휘발성\n- 빠름\n\n**용도:**\n- /tmp\n- /dev/shm\n- 임시 빌드\n\n**주의:** 메모리 부족 주의",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "FileSystem"
+      ]
+    },
+    {
+      "question": "cgroups의 개념과 제어 자원은?",
+      "answer": "**개념:** Control Groups, 자원 격리 및 제한\n\n**제어:**\n- CPU\n- 메모리\n- 디스크 I/O\n- 네트워크\n\n**활용:** Docker, systemd\n\n**계층 구조**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "cgroups"
+      ]
+    },
+    {
+      "question": "namespace의 종류 6가지는?",
+      "answer": "1. **PID** - 프로세스 격리\n2. **NET** - 네트워크 격리\n3. **MNT** - 파일시스템 격리\n4. **UTS** - 호스트명 격리\n5. **IPC** - IPC 격리\n6. **USER** - 사용자 격리\n\n**활용:** 컨테이너",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Namespace"
+      ]
+    },
+    {
+      "question": "chroot의 개념과 한계는?",
+      "answer": "**개념:** 루트 디렉토리 변경\n\n**용도:**\n- 격리 환경\n- 테스트\n\n**한계:**\n- root 권한으로 탈출 가능\n- 프로세스/네트워크 격리 안됨\n\n**대안:** namespace, container",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Security"
+      ]
+    },
+    {
+      "question": "SELinux와 AppArmor의 차이는?",
+      "answer": "**SELinux:**\n- 레이블 기반\n- 복잡, 강력\n- RedHat 계열\n\n**AppArmor:**\n- 경로 기반\n- 간단\n- Debian/Ubuntu\n\n**공통:** MAC (Mandatory Access Control)",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Security"
+      ]
+    },
+    {
+      "question": "ASLR의 개념과 효과는?",
+      "answer": "**개념:** Address Space Layout Randomization, 메모리 주소 무작위화\n\n**효과:**\n- 버퍼 오버플로우 공격 방어\n- ROP 공격 어렵게\n\n**무작위화:** Stack, Heap, Library\n\n**설정:** /proc/sys/kernel/randomize_va_space",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Security"
+      ]
+    },
+    {
+      "question": "DEP/NX의 개념은?",
+      "answer": "**개념:** Data Execution Prevention / No-eXecute\n\n**기능:** 데이터 영역 실행 금지\n\n**효과:** 쉘코드 실행 방지\n\n**우회:** ROP (Return-Oriented Programming)\n\n**하드웨어 지원 필요**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Security"
+      ]
+    },
+    {
+      "question": "KASLR의 개념은?",
+      "answer": "**개념:** Kernel ASLR, 커널 주소 무작위화\n\n**효과:** 커널 공격 방어\n\n**주의:** 성능 영향\n\n**Linux:** 기본 활성화",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Security"
+      ]
+    },
+    {
+      "question": "Meltdown과 Spectre의 개념은?",
+      "answer": "**Meltdown:**\n- CPU 취약점\n- 커널 메모리 읽기\n- KPTI로 완화\n\n**Spectre:**\n- 분기 예측 악용\n- 프로세스 간 정보 유출\n- 완화 어려움\n\n**성능 저하 발생**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Security"
+      ]
+    },
+    {
+      "question": "eBPF의 개념과 용도는?",
+      "answer": "**개념:** Extended Berkeley Packet Filter, 커널 내 샌드박스 VM\n\n**용도:**\n- 네트워크 필터링\n- 성능 모니터링\n- 보안\n- 트레이싱\n\n**장점:** 커널 수정 없이 확장\n\n**도구:** bpftrace, bcc",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "eBPF"
+      ]
+    },
+    {
+      "question": "io_uring의 개념과 장점은?",
+      "answer": "**개념:** Linux 비동기 I/O 인터페이스\n\n**특징:**\n- Ring Buffer 기반\n- 시스템 콜 최소화\n- 고성능\n\n**vs AIO:** 더 빠르고 범용적\n\n**용도:** 고성능 서버",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "IO"
+      ]
+    },
+    {
+      "question": "CPU 캐시 일관성 프로토콜은?",
+      "answer": "**MESI 프로토콜:**\n- **Modified** - 수정됨\n- **Exclusive** - 독점\n- **Shared** - 공유\n- **Invalid** - 무효\n\n**목적:** 멀티코어 캐시 동기화\n\n**False Sharing 문제**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Cache"
+      ]
+    },
+    {
+      "question": "False Sharing의 개념과 해결책은?",
+      "answer": "**개념:** 다른 변수지만 같은 캐시 라인에 위치\n\n**문제:** 한 코어 수정시 다른 코어 캐시 무효화\n\n**해결:**\n- 패딩 추가\n- alignas\n- 변수 분리\n\n**캐시 라인:** 보통 64 bytes",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Cache"
+      ]
+    },
+    {
+      "question": "메모리 배리어(Memory Barrier)의 역할은?",
+      "answer": "**역할:** 메모리 접근 순서 보장\n\n**필요성:**\n- CPU 재배치 방지\n- 컴파일러 최적화 제어\n\n**종류:**\n- Load Barrier\n- Store Barrier\n- Full Barrier\n\n**동기화에 필수**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Memory"
+      ]
+    },
+    {
+      "question": "Atomic Operation의 종류와 구현은?",
+      "answer": "**종류:**\n- Atomic Load/Store\n- Compare-and-Swap (CAS)\n- Fetch-and-Add\n- Test-and-Set\n\n**구현:**\n- 하드웨어 지원 (lock prefix)\n- C11 stdatomic.h\n- C++ std::atomic\n\n**Lock-Free 자료구조**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Atomic"
+      ]
+    },
+    {
+      "question": "Lock-Free와 Wait-Free의 차이는?",
+      "answer": "**Lock-Free:**\n- 시스템 전체 진행 보장\n- 개별 스레드 Starvation 가능\n- CAS 사용\n\n**Wait-Free:**\n- 모든 스레드 진행 보장\n- 유한 시간 내 완료\n- 구현 어려움\n\n**Lock-Free ⊂ Wait-Free**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "LockFree"
+      ]
+    },
+    {
+      "question": "ABA Problem의 개념과 해결책은?",
+      "answer": "**문제:** CAS에서 A→B→A 변경을 감지 못함\n\n**예:**\n1. 스레드1: A 읽음\n2. 스레드2: A→B→A\n3. 스레드1: CAS 성공 (잘못된 판단)\n\n**해결:**\n- 버전 태그\n- Double-CAS\n- Hazard Pointer",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "LockFree"
+      ]
+    },
+    {
+      "question": "CPU 파이프라인의 단계 5가지는?",
+      "answer": "1. **IF (Instruction Fetch)** - 명령어 가져오기\n2. **ID (Instruction Decode)** - 명령어 해석\n3. **EX (Execute)** - 실행\n4. **MEM (Memory)** - 메모리 접근\n5. **WB (Write Back)** - 결과 저장\n\n**Pipeline Hazard:** Data, Control, Structural",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "CPU"
+      ]
+    },
+    {
+      "question": "Branch Prediction의 개념과 영향은?",
+      "answer": "**개념:** 조건 분기 결과 예측\n\n**영향:**\n- 예측 성공: 파이프라인 계속\n- 예측 실패: 파이프라인 플러시 (성능 저하)\n\n**최적화:** 예측 가능한 코드 작성\n\n**Misprediction 비용: 10-20 사이클**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "CPU"
+      ]
+    },
+    {
+      "question": "SIMD의 개념과 예시는?",
+      "answer": "**개념:** Single Instruction Multiple Data, 데이터 병렬성\n\n**예시:**\n- SSE (Streaming SIMD Extensions)\n- AVX (Advanced Vector Extensions)\n- NEON (ARM)\n\n**용도:** 멀티미디어, 과학 계산\n\n**벡터 연산**",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "CPU"
+      ]
+    },
+    {
+      "question": "Little Endian과 Big Endian의 차이는?",
+      "answer": "**0x12345678 저장 예:**\n\n**Little Endian:**\n- 낮은 주소에 낮은 바이트\n- 78 56 34 12\n- x86\n\n**Big Endian:**\n- 낮은 주소에 높은 바이트\n- 12 34 56 78\n- 네트워크 바이트 순서\n\n**변환:** htonl, ntohl",
+      "type": "essay",
+      "tags": [
+        "OS",
+        "Endian"
+      ]
+    }
+  ]
+}

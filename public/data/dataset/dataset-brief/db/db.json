@@ -1,0 +1,546 @@
+{
+  "name": "데이터베이스 (간략버전)",
+  "description": "Database 핵심 개념을 간결하게 정리한 버전",
+  "cards": [
+    {
+      "question": "기본키, 후보키, 슈퍼키, 대체키의 차이는?",
+      "answer": "1. **슈퍼키** - 유일성만 만족 (튜플 구별 가능)\n2. **후보키** - 유일성 + 최소성 (슈퍼키 중 최소)\n3. **기본키** - 후보키 중 선택된 대표 키\n4. **대체키** - 기본키 제외한 나머지 후보키",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Key"
+      ]
+    },
+    {
+      "question": "기본키 수정 가능 여부와 이유는?",
+      "answer": "**가능하지만 권장하지 않음**\n\n**이유:**\n1. 외래키 참조 무결성 위반 가능\n2. 인덱스 재구성 비용\n3. 애플리케이션 논리 복잡도 증가\n\n**대안:** 대리키(Surrogate Key) 사용",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Key"
+      ]
+    },
+    {
+      "question": "MySQL에서 기본키 없이 테이블 생성이 가능한 이유는?",
+      "answer": "**InnoDB의 숨겨진 Row ID 사용**\n\n1. 기본키 없으면 UNIQUE 키 중 NOT NULL을 기본키로\n2. 그것도 없으면 내부적으로 6바이트 Row ID 자동 생성\n3. 하지만 명시적 기본키 사용 권장",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "MySQL"
+      ]
+    },
+    {
+      "question": "외래키에 NULL 허용 여부는?",
+      "answer": "**허용됨**\n\n**의미:** 관계가 선택적(Optional)\n\n**예시:**\n- 사원 테이블의 부서 ID\n- 소속 부서가 없는 경우 NULL\n\n**NOT NULL 외래키:** 필수 관계",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "ForeignKey"
+      ]
+    },
+    {
+      "question": "UNIQUE 제약조건의 성능 효과는?",
+      "answer": "**자동 인덱스 생성**\n\n**효과:**\n1. 중복 검사 빠름\n2. 해당 컬럼 조회 성능 향상\n3. 인덱스 스캔 활용 가능\n\n**주의:** 쓰기 성능은 약간 저하",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "인덱스의 장단점은?",
+      "answer": "**장점:**\n- 조회 속도 향상 (O(log N))\n- 정렬/그룹핑 성능 개선\n\n**단점:**\n- 쓰기 성능 저하 (INSERT/UPDATE/DELETE)\n- 추가 저장 공간 필요\n- 인덱스 유지 비용",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "인덱스를 사용하면 항상 빠른가?",
+      "answer": "**아니요, 상황에 따라 다름**\n\n**느린 경우:**\n1. 카디널리티 낮은 컬럼 (성별 등)\n2. 전체 데이터의 많은 비율 조회\n3. 함수 적용시 인덱스 무효화\n4. 복합 인덱스 순서 불일치",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "인덱스 자료구조 3가지는?",
+      "answer": "1. **B-Tree** - 균형 트리, 범위 검색 유리\n2. **Hash** - 등호 비교만, O(1)\n3. **Bitmap** - 카디널리티 낮을 때 (성별, 등급)",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "Clustered Index와 Non-Clustered Index 차이는?",
+      "answer": "**Clustered (군집):**\n- 데이터와 인덱스가 함께 정렬\n- 테이블당 1개만\n- 기본키에 자동 생성\n- 빠른 범위 검색\n\n**Non-Clustered:**\n- 별도 인덱스 구조\n- 여러 개 가능\n- 포인터로 데이터 참조",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "복합 인덱스 생성시 고려사항은?",
+      "answer": "1. **컬럼 순서** - 카디널리티 높은 것 먼저\n2. **WHERE 조건 순서** - 자주 사용하는 조합\n3. **최좌측 매칭** - 첫 번째 컬럼 필수\n4. **중복 방지** - (A,B)와 (A) 중복\n\n**예:** INDEX(dept, name) → dept만 사용 가능",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "정규화의 목적과 장점 3가지는?",
+      "answer": "**목적:** 데이터 중복 최소화, 무결성 유지\n\n**장점:**\n1. **이상 현상 방지** - 삽입/수정/삭제 이상\n2. **저장 공간 절약**\n3. **데이터 일관성 유지**",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Normalization"
+      ]
+    },
+    {
+      "question": "제1정규형(1NF)의 조건은?",
+      "answer": "**원자값(Atomic Value)만 허용**\n\n**위반 예:**\n- 전화번호: \"010-1234-5678, 02-9876-5432\"\n- 배열이나 리스트 저장\n\n**해결:** 각 값을 별도 행으로 분리",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Normalization"
+      ]
+    },
+    {
+      "question": "제2정규형(2NF)의 조건은?",
+      "answer": "**1NF + 부분 함수 종속 제거**\n\n**부분 함수 종속:**\n- 복합키의 일부에만 종속\n- (학번, 과목) → 학년 (X, 학번에만 종속)\n\n**해결:** 테이블 분리",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Normalization"
+      ]
+    },
+    {
+      "question": "제3정규형(3NF)의 조건은?",
+      "answer": "**2NF + 이행적 함수 종속 제거**\n\n**이행적 종속:**\n- A → B, B → C이면 A → C\n- 학번 → 학과, 학과 → 학과장\n\n**해결:** 학과 테이블 분리",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Normalization"
+      ]
+    },
+    {
+      "question": "BCNF의 조건은?",
+      "answer": "**3NF + 모든 결정자가 후보키**\n\n**위반 예:**\n- (학생, 과목) 테이블\n- 교수 → 과목 (교수가 결정자지만 후보키 아님)\n\n**해결:** 교수-과목 테이블 분리",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Normalization"
+      ]
+    },
+    {
+      "question": "역정규화의 이유와 기법은?",
+      "answer": "**이유:**\n- JOIN 비용 감소\n- 조회 성능 향상\n\n**기법:**\n1. 테이블 병합\n2. 컬럼 중복\n3. 파생 컬럼 추가 (총합 등)\n4. 이력 테이블 분리",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Denormalization"
+      ]
+    },
+    {
+      "question": "트랜잭션의 ACID 속성은?",
+      "answer": "1. **Atomicity (원자성)** - All or Nothing\n2. **Consistency (일관성)** - 제약조건 유지\n3. **Isolation (격리성)** - 독립 실행\n4. **Durability (지속성)** - 영구 저장",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Transaction"
+      ]
+    },
+    {
+      "question": "트랜잭션 격리 수준 4가지는?",
+      "answer": "1. **READ UNCOMMITTED** - Dirty Read 발생\n2. **READ COMMITTED** - Dirty Read 방지\n3. **REPEATABLE READ** - Non-Repeatable Read 방지\n4. **SERIALIZABLE** - Phantom Read 방지, 가장 엄격",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Transaction"
+      ]
+    },
+    {
+      "question": "Dirty Read, Non-Repeatable Read, Phantom Read의 차이는?",
+      "answer": "1. **Dirty Read** - 커밋 안된 데이터 읽기\n2. **Non-Repeatable Read** - 같은 데이터 재조회시 값 변경\n3. **Phantom Read** - 같은 조건 재조회시 행 수 변경",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Transaction"
+      ]
+    },
+    {
+      "question": "낙관적 락과 비관적 락의 차이는?",
+      "answer": "**낙관적 락:**\n- 충돌 없다고 가정\n- 버전/타임스탬프로 검증\n- 읽기 많은 환경\n\n**비관적 락:**\n- 충돌 발생 가정\n- SELECT FOR UPDATE\n- 쓰기 많은 환경",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Lock"
+      ]
+    },
+    {
+      "question": "공유 락(S Lock)과 배타 락(X Lock)의 차이는?",
+      "answer": "**공유 락 (Shared Lock):**\n- 읽기 락\n- 여러 트랜잭션 동시 획득 가능\n- 쓰기 차단\n\n**배타 락 (Exclusive Lock):**\n- 쓰기 락\n- 하나만 획득 가능\n- 읽기/쓰기 모두 차단",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Lock"
+      ]
+    },
+    {
+      "question": "데드락의 발생 조건 4가지는?",
+      "answer": "1. **상호 배제** - 자원 독점 사용\n2. **점유와 대기** - 자원 보유하면서 대기\n3. **비선점** - 강제로 뺏을 수 없음\n4. **순환 대기** - 자원 대기 그래프가 순환\n\n**모두 만족시 데드락 발생**",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Deadlock"
+      ]
+    },
+    {
+      "question": "데드락 해결 방법 4가지는?",
+      "answer": "1. **예방** - 4가지 조건 중 하나 제거\n2. **회피** - 안전 상태 유지 (은행원 알고리즘)\n3. **탐지 및 회복** - 주기적 검사, 롤백\n4. **타임아웃** - 일정 시간 후 자동 롤백",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Deadlock"
+      ]
+    },
+    {
+      "question": "JOIN의 종류 5가지는?",
+      "answer": "1. **INNER JOIN** - 교집합\n2. **LEFT JOIN** - 왼쪽 전체 + 매칭\n3. **RIGHT JOIN** - 오른쪽 전체 + 매칭\n4. **FULL OUTER JOIN** - 합집합\n5. **CROSS JOIN** - 카티션 곱",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "JOIN"
+      ]
+    },
+    {
+      "question": "INNER JOIN과 OUTER JOIN의 차이는?",
+      "answer": "**INNER JOIN:**\n- 양쪽 테이블에 모두 존재하는 행만\n- 교집합\n\n**OUTER JOIN:**\n- 한쪽에만 있어도 포함\n- NULL로 채움\n- LEFT/RIGHT/FULL",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "JOIN"
+      ]
+    },
+    {
+      "question": "서브쿼리의 종류 3가지는?",
+      "answer": "1. **스칼라 서브쿼리** - 단일 값 반환 (SELECT절)\n2. **인라인 뷰** - 가상 테이블 (FROM절)\n3. **중첩 서브쿼리** - 조건 비교 (WHERE절)\n\n**상관/비상관:** 외부 쿼리 참조 여부",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Subquery"
+      ]
+    },
+    {
+      "question": "GROUP BY와 HAVING의 차이는?",
+      "answer": "**GROUP BY:**\n- 그룹핑 기준\n- WHERE 이후 실행\n\n**HAVING:**\n- 그룹 필터링\n- 집계 함수 조건\n- GROUP BY 이후 실행\n\n**순서:** WHERE → GROUP BY → HAVING → ORDER BY",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "SQL"
+      ]
+    },
+    {
+      "question": "UNION과 UNION ALL의 차이는?",
+      "answer": "**UNION:**\n- 중복 제거\n- 정렬 발생\n- 느림\n\n**UNION ALL:**\n- 중복 허용\n- 단순 결합\n- 빠름\n\n**권장:** 중복 없으면 UNION ALL 사용",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "SQL"
+      ]
+    },
+    {
+      "question": "윈도우 함수의 종류와 예시는?",
+      "answer": "1. **순위** - ROW_NUMBER, RANK, DENSE_RANK\n2. **집계** - SUM, AVG, COUNT OVER\n3. **행 순서** - LAG, LEAD, FIRST_VALUE, LAST_VALUE\n\n**특징:** GROUP BY 없이 그룹별 계산",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "SQL"
+      ]
+    },
+    {
+      "question": "ROW_NUMBER, RANK, DENSE_RANK의 차이는?",
+      "answer": "**예: 점수 90, 90, 80**\n\n1. **ROW_NUMBER** - 1, 2, 3 (고유 번호)\n2. **RANK** - 1, 1, 3 (동점 건너뜀)\n3. **DENSE_RANK** - 1, 1, 2 (연속 번호)",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "SQL"
+      ]
+    },
+    {
+      "question": "실행 계획(Execution Plan)의 주요 확인 항목은?",
+      "answer": "1. **type** - 조인 타입 (ALL, index, range, ref, eq_ref, const)\n2. **key** - 사용된 인덱스\n3. **rows** - 예상 스캔 행 수\n4. **Extra** - Using filesort, Using temporary 등\n\n**const > eq_ref > ref > range > index > ALL**",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Performance"
+      ]
+    },
+    {
+      "question": "쿼리 최적화 기법 6가지는?",
+      "answer": "1. **인덱스 활용** - WHERE, JOIN 컬럼\n2. **SELECT 컬럼 최소화** - * 대신 필요한 것만\n3. **서브쿼리 대신 JOIN**\n4. **LIMIT 활용** - 페이징\n5. **WHERE 조건 최적화** - 인덱스 무효화 방지\n6. **파티셔닝** - 데이터 분할",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Performance"
+      ]
+    },
+    {
+      "question": "인덱스를 무효화시키는 WHERE 조건 5가지는?",
+      "answer": "1. **함수 적용** - WHERE YEAR(date) = 2024\n2. **연산자 사용** - WHERE age + 1 = 30\n3. **LIKE 앞 와일드카드** - WHERE name LIKE '%kim'\n4. **NOT, !=**\n5. **OR 조건** - 인덱스 머지 또는 풀스캔",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "파티셔닝의 종류 4가지는?",
+      "answer": "1. **Range** - 범위 기준 (날짜 등)\n2. **List** - 특정 값 목록\n3. **Hash** - 해시 함수\n4. **Key** - MySQL 내부 해시\n\n**목적:** 대용량 데이터 관리, 쿼리 성능 향상",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Partitioning"
+      ]
+    },
+    {
+      "question": "샤딩(Sharding)의 개념과 방식은?",
+      "answer": "**개념:** 수평 파티셔닝, 여러 DB에 데이터 분산\n\n**방식:**\n1. **Modular** - user_id % N\n2. **Range** - 1-1000, 1001-2000\n3. **Directory** - 매핑 테이블\n\n**장점:** 확장성 / **단점:** 복잡도, JOIN 어려움",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Sharding"
+      ]
+    },
+    {
+      "question": "레플리케이션(Replication)의 방식 2가지는?",
+      "answer": "**Master-Slave:**\n- 읽기 분산\n- Master 쓰기, Slave 읽기\n\n**Master-Master:**\n- 양방향 동기화\n- 쓰기도 분산\n- 충돌 가능성\n\n**목적:** 가용성, 성능, 백업",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Replication"
+      ]
+    },
+    {
+      "question": "CAP 이론의 3가지 요소는?",
+      "answer": "1. **Consistency (일관성)** - 모든 노드 동일 데이터\n2. **Availability (가용성)** - 항상 응답\n3. **Partition Tolerance (분할 내성)** - 네트워크 장애 대응\n\n**정리:** 3가지 중 2가지만 선택 가능",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "DistributedSystem"
+      ]
+    },
+    {
+      "question": "RDBMS vs NoSQL 비교는?",
+      "answer": "**RDBMS:**\n- 정형 데이터, 스키마\n- ACID, 트랜잭션\n- JOIN, 복잡한 쿼리\n\n**NoSQL:**\n- 비정형 데이터, 유연한 스키마\n- BASE, 최종 일관성\n- 수평 확장 용이",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "NoSQL"
+      ]
+    },
+    {
+      "question": "NoSQL의 종류 4가지는?",
+      "answer": "1. **Key-Value** - Redis, DynamoDB\n2. **Document** - MongoDB, CouchDB\n3. **Column-Family** - Cassandra, HBase\n4. **Graph** - Neo4j, OrientDB",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "NoSQL"
+      ]
+    },
+    {
+      "question": "Redis의 주요 특징과 용도는?",
+      "answer": "**특징:**\n- In-Memory Key-Value\n- 다양한 자료구조 (String, List, Set, Hash, Sorted Set)\n- 영속성 옵션 (RDB, AOF)\n\n**용도:**\n- 캐싱\n- 세션 저장\n- 실시간 랭킹\n- Pub/Sub",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Redis"
+      ]
+    },
+    {
+      "question": "MongoDB의 특징과 용어 매핑은?",
+      "answer": "**특징:** Document 기반 NoSQL, JSON 유사\n\n**용어:**\n- Database → Database\n- Table → Collection\n- Row → Document\n- Column → Field\n\n**장점:** 스키마 유연성, 확장성",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "MongoDB"
+      ]
+    },
+    {
+      "question": "뷰(View)의 장점과 단점은?",
+      "answer": "**장점:**\n1. 보안 (컬럼 숨김)\n2. 쿼리 단순화\n3. 논리적 독립성\n\n**단점:**\n1. 성능 (매번 실행)\n2. 인덱스 불가\n3. 수정 제한\n\n**대안:** Materialized View (결과 저장)",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "View"
+      ]
+    },
+    {
+      "question": "스토어드 프로시저의 장단점은?",
+      "answer": "**장점:**\n1. 네트워크 트래픽 감소\n2. 재사용성\n3. 보안 (권한 제어)\n4. 실행 계획 캐싱\n\n**단점:**\n1. DB 부하 증가\n2. 디버깅 어려움\n3. 이식성 낮음",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Procedure"
+      ]
+    },
+    {
+      "question": "트리거(Trigger)의 용도와 주의사항은?",
+      "answer": "**용도:**\n- 자동 로깅\n- 데이터 검증\n- 연쇄 작업\n\n**주의:**\n1. 성능 저하\n2. 디버깅 어려움\n3. 순환 트리거 방지\n4. 과도한 사용 지양",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Trigger"
+      ]
+    },
+    {
+      "question": "커넥션 풀(Connection Pool)의 개념과 장점은?",
+      "answer": "**개념:** 미리 생성한 DB 연결 재사용\n\n**장점:**\n1. 연결 생성/해제 비용 절감\n2. 빠른 응답 시간\n3. 연결 수 제한 (DB 보호)\n\n**설정:** min, max, timeout",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "ConnectionPool"
+      ]
+    },
+    {
+      "question": "슬로우 쿼리 로그의 활용법은?",
+      "answer": "**설정:**\n- slow_query_log = 1\n- long_query_time = 2 (초)\n\n**활용:**\n1. 느린 쿼리 식별\n2. 실행 계획 분석\n3. 인덱스 추가/수정\n4. 쿼리 튜닝",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Performance"
+      ]
+    },
+    {
+      "question": "EXPLAIN 결과의 type별 성능 순서는?",
+      "answer": "**빠름 → 느림:**\n1. **system** - 테이블에 0~1행\n2. **const** - 기본키/유니크 상수 비교\n3. **eq_ref** - 조인시 기본키/유니크\n4. **ref** - 인덱스 동등 비교\n5. **range** - 인덱스 범위\n6. **index** - 인덱스 풀스캔\n7. **ALL** - 테이블 풀스캔",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Performance"
+      ]
+    },
+    {
+      "question": "커버링 인덱스(Covering Index)란?",
+      "answer": "**개념:** 쿼리에 필요한 모든 컬럼이 인덱스에 포함\n\n**장점:**\n- 테이블 접근 불필요\n- 빠른 성능\n\n**예:**\n- INDEX(dept, name)\n- SELECT name FROM user WHERE dept = 'IT'",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "인덱스 힌트(Index Hint)를 사용하는 경우는?",
+      "answer": "**사용:**\n- 옵티마이저가 잘못된 인덱스 선택시\n- 통계 정보 부정확시\n\n**문법:**\n- USE INDEX (idx_name)\n- FORCE INDEX (idx_name)\n- IGNORE INDEX (idx_name)\n\n**주의:** 최후 수단, 통계 업데이트 우선",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "Full Text Index의 특징은?",
+      "answer": "**용도:** 텍스트 검색 (LIKE '%word%' 대안)\n\n**특징:**\n1. 자연어 검색\n2. Boolean 모드\n3. Stopword 제외\n4. 최소 단어 길이 제한\n\n**MATCH AGAINST 구문 사용**",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "InnoDB와 MyISAM의 차이점은?",
+      "answer": "**InnoDB:**\n- 트랜잭션 지원\n- 외래키 지원\n- 행 레벨 락\n- 기본 엔진\n\n**MyISAM:**\n- 트랜잭션 미지원\n- 테이블 레벨 락\n- 빠른 읽기\n- 레거시",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "MySQL"
+      ]
+    },
+    {
+      "question": "MVCC(Multi-Version Concurrency Control)란?",
+      "answer": "**개념:** 다중 버전 동시성 제어\n\n**동작:**\n- 변경시 새 버전 생성\n- 읽기는 스냅샷 참조\n- 락 없이 읽기 가능\n\n**장점:** 읽기/쓰기 동시 처리\n**사용:** PostgreSQL, InnoDB",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "MVCC"
+      ]
+    },
+    {
+      "question": "Undo Log와 Redo Log의 차이는?",
+      "answer": "**Undo Log:**\n- 롤백용\n- MVCC 구현\n- 이전 버전 저장\n\n**Redo Log:**\n- 복구용\n- 장애시 재실행\n- 변경 사항 기록\n\n**Write-Ahead Logging (WAL)**",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Log"
+      ]
+    },
+    {
+      "question": "체크포인트(Checkpoint)의 역할은?",
+      "answer": "**역할:**\n1. 메모리의 변경 사항 디스크 반영\n2. Redo Log 크기 관리\n3. 복구 시간 단축\n\n**동작:**\n- 주기적 실행\n- Dirty Page 플러시",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Checkpoint"
+      ]
+    },
+    {
+      "question": "페이지(Page)와 블록(Block)의 개념은?",
+      "answer": "**Page:**\n- DB가 읽고 쓰는 최소 단위\n- InnoDB: 16KB\n- 여러 행 포함\n\n**Block:**\n- OS/디스크 I/O 단위\n- 보통 4KB~8KB\n\n**Buffer Pool:** 페이지 캐싱",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Storage"
+      ]
+    },
+    {
+      "question": "B-Tree 인덱스의 구조와 특징은?",
+      "answer": "**구조:**\n- Root → Branch → Leaf\n- 균형 트리 (모든 Leaf 동일 깊이)\n- Leaf는 Linked List\n\n**특징:**\n- O(log N) 검색\n- 범위 검색 유리\n- 정렬 상태 유지",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "BTree"
+      ]
+    },
+    {
+      "question": "카디널리티(Cardinality)란?",
+      "answer": "**개념:** 컬럼의 고유값 비율\n\n**높음:** 주민번호, 이메일 (인덱스 유리)\n**낮음:** 성별, 등급 (인덱스 불리)\n\n**선택도 = 카디널리티 / 전체 행 수**",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Index"
+      ]
+    },
+    {
+      "question": "통계 정보 업데이트의 중요성은?",
+      "answer": "**역할:** 옵티마이저가 실행 계획 결정\n\n**포함 정보:**\n- 행 수\n- 인덱스 카디널리티\n- 데이터 분포\n\n**업데이트:**\n- ANALYZE TABLE\n- 주기적 실행 필요",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Statistics"
+      ]
+    },
+    {
+      "question": "쿼리 캐시의 동작과 주의사항은?",
+      "answer": "**동작:**\n- 동일 쿼리 결과 캐싱\n- 빠른 응답\n\n**무효화:**\n- 테이블 변경시 전체 캐시 삭제\n\n**주의:**\n- MySQL 8.0에서 제거됨\n- 쓰기 많으면 오히려 느림\n\n**대안:** 애플리케이션 레벨 캐싱",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Cache"
+      ]
+    },
+    {
+      "question": "데이터베이스 백업 방식 3가지는?",
+      "answer": "1. **Full Backup** - 전체 백업\n2. **Incremental** - 마지막 백업 이후 변경분\n3. **Differential** - 마지막 Full 이후 변경분\n\n**복구:** Full + Incremental 순차 적용\n\n**도구:** mysqldump, xtrabackup",
+      "type": "essay",
+      "tags": [
+        "Database",
+        "Backup"
+      ]
+    }
+  ]
+}
