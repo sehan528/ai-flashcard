@@ -413,9 +413,16 @@ vercel
 
 ## 문서
 
+### 개발 가이드
 - [개발 가이드](docs/DEVELOPMENT_GUIDE.md) - 프로젝트 구조, 개발 순서, 패턴 가이드
+- [esbuild & ESLint 가이드](docs/ESBUILD_ESLINT_GUIDE.md) - esbuild/ESLint 기초부터 실무 활용까지
+- [트러블슈팅 히스토리](docs/TROUBLESHOOTING.md) - 실제 발생한 문제와 해결 과정
+
+### Electron 가이드
 - [Electron 설정 가이드](docs/ELECTRON_SETUP.md) - Electron 앱 빌드 방법
 - [Electron 트러블슈팅](docs/ELECTRON_TROUBLESHOOTING.md) - 알려진 문제와 해결 방법
+
+### 디자인 가이드
 - [UI/UX 디자인 가이드](docs/UI_UX_DESIGN.md) - 디자인 결정사항과 구현 방법
 
 ## 라이선스
