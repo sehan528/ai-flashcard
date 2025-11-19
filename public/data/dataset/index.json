@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "generatedAt": "AUTO_GENERATED",
-  "totalDatasets": 13,
+  "totalDatasets": 24,
   "categories": {
     "db": [
       {
@@ -11,6 +11,15 @@
         "description": "데이터베이스 핵심 개념 및 면접 질문",
         "cardCount": 60,
         "fileName": "db.json"
+      },
+      {
+        "category": "db",
+        "path": "/data/dataset/dataset-brief/db/db.json",
+        "name": "데이터베이스 (간략버전)",
+        "description": "DB 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 60,
+        "fileName": "db.json",
+        "isBrief": true
       }
     ],
     "ds": [
@@ -21,6 +30,15 @@
         "description": "자료구조 핵심 개념 및 면접 질문",
         "cardCount": 62,
         "fileName": "ds.json"
+      },
+      {
+        "category": "ds",
+        "path": "/data/dataset/dataset-brief/ds/ds.json",
+        "name": "자료구조 (간략버전)",
+        "description": "자료구조 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 55,
+        "fileName": "ds.json",
+        "isBrief": true
       }
     ],
     "elasticsearch": [
@@ -41,6 +59,15 @@
         "description": "가상화, Docker, CI/CD, static 등 개발 필수 지식",
         "cardCount": 44,
         "fileName": "etc.json"
+      },
+      {
+        "category": "etc",
+        "path": "/data/dataset/dataset-brief/etc/etc.json",
+        "name": "개발상식 (간략버전)",
+        "description": "개발상식 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 44,
+        "fileName": "etc.json",
+        "isBrief": true
       }
     ],
     "javascript": [
@@ -51,6 +78,15 @@
         "description": "JavaScript 핵심 개념 및 면접 질문",
         "cardCount": 60,
         "fileName": "javascript.json"
+      },
+      {
+        "category": "javascript",
+        "path": "/data/dataset/dataset-brief/javascript/javascript.json",
+        "name": "자바스크립트 (간략버전)",
+        "description": "JavaScript 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 60,
+        "fileName": "javascript.json",
+        "isBrief": true
       }
     ],
     "kafka": [
@@ -71,6 +107,15 @@
         "description": "네트워크 핵심 개념 및 면접 질문",
         "cardCount": 104,
         "fileName": "network.json"
+      },
+      {
+        "category": "network",
+        "path": "/data/dataset/dataset-brief/network/network.json",
+        "name": "네트워크 (간략버전)",
+        "description": "네트워크 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 104,
+        "fileName": "network.json",
+        "isBrief": true
       }
     ],
     "os": [
@@ -81,6 +126,15 @@
         "description": "운영체제 핵심 개념 및 면접 질문",
         "cardCount": 122,
         "fileName": "os.json"
+      },
+      {
+        "category": "os",
+        "path": "/data/dataset/dataset-brief/os/os.json",
+        "name": "운영체제 (간략버전)",
+        "description": "운영체제 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 122,
+        "fileName": "os.json",
+        "isBrief": true
       }
     ],
     "pl": [
@@ -91,6 +145,15 @@
         "description": "프로그래밍 언어 핵심 개념 및 면접 질문",
         "cardCount": 125,
         "fileName": "pl.json"
+      },
+      {
+        "category": "pl",
+        "path": "/data/dataset/dataset-brief/pl/pl.json",
+        "name": "프로그래밍 언어 (간략버전)",
+        "description": "프로그래밍 언어 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 126,
+        "fileName": "pl.json",
+        "isBrief": true
       }
     ],
     "react": [
@@ -101,6 +164,15 @@
         "description": "React 핵심 개념 및 면접 질문",
         "cardCount": 62,
         "fileName": "react.json"
+      },
+      {
+        "category": "react",
+        "path": "/data/dataset/dataset-brief/react/react.json",
+        "name": "리액트 (간략버전)",
+        "description": "React 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 62,
+        "fileName": "react.json",
+        "isBrief": true
       }
     ],
     "redis": [
@@ -111,6 +183,15 @@
         "description": "Redis 핵심 개념 및 면접 질문",
         "cardCount": 32,
         "fileName": "redis.json"
+      },
+      {
+        "category": "redis",
+        "path": "/data/dataset/dataset-brief/redis/redis.json",
+        "name": "Redis (간략버전)",
+        "description": "Redis 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 32,
+        "fileName": "redis.json",
+        "isBrief": true
       }
     ],
     "spring": [
@@ -121,6 +202,15 @@
         "description": "Spring Framework 핵심 개념 및 면접 질문",
         "cardCount": 85,
         "fileName": "spring.json"
+      },
+      {
+        "category": "spring",
+        "path": "/data/dataset/dataset-brief/spring/spring.json",
+        "name": "스프링 (간략버전)",
+        "description": "Spring 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 85,
+        "fileName": "spring.json",
+        "isBrief": true
       }
     ],
     "websocket": [
@@ -131,6 +221,15 @@
         "description": "WebSocket 핵심 개념 및 실무 질문",
         "cardCount": 30,
         "fileName": "websocket.json"
+      },
+      {
+        "category": "websocket",
+        "path": "/data/dataset/dataset-brief/websocket/websocket.json",
+        "name": "WebSocket (간략버전)",
+        "description": "WebSocket 핵심 개념을 간결하게 정리한 버전",
+        "cardCount": 30,
+        "fileName": "websocket.json",
+        "isBrief": true
       }
     ]
   },
@@ -144,12 +243,30 @@
       "fileName": "db.json"
     },
     {
+      "category": "db",
+      "path": "/data/dataset/dataset-brief/db/db.json",
+      "name": "데이터베이스 (간략버전)",
+      "description": "DB 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 60,
+      "fileName": "db.json",
+      "isBrief": true
+    },
+    {
       "category": "ds",
       "path": "/data/dataset/ds/ds.json",
       "name": "자료구조",
       "description": "자료구조 핵심 개념 및 면접 질문",
       "cardCount": 62,
       "fileName": "ds.json"
+    },
+    {
+      "category": "ds",
+      "path": "/data/dataset/dataset-brief/ds/ds.json",
+      "name": "자료구조 (간략버전)",
+      "description": "자료구조 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 55,
+      "fileName": "ds.json",
+      "isBrief": true
     },
     {
       "category": "elasticsearch",
@@ -168,12 +285,30 @@
       "fileName": "etc.json"
     },
     {
+      "category": "etc",
+      "path": "/data/dataset/dataset-brief/etc/etc.json",
+      "name": "개발상식 (간략버전)",
+      "description": "개발상식 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 44,
+      "fileName": "etc.json",
+      "isBrief": true
+    },
+    {
       "category": "javascript",
       "path": "/data/dataset/javascript/javascript.json",
       "name": "자바스크립트",
       "description": "JavaScript 핵심 개념 및 면접 질문",
       "cardCount": 60,
       "fileName": "javascript.json"
+    },
+    {
+      "category": "javascript",
+      "path": "/data/dataset/dataset-brief/javascript/javascript.json",
+      "name": "자바스크립트 (간략버전)",
+      "description": "JavaScript 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 60,
+      "fileName": "javascript.json",
+      "isBrief": true
     },
     {
       "category": "kafka",
@@ -192,12 +327,30 @@
       "fileName": "network.json"
     },
     {
+      "category": "network",
+      "path": "/data/dataset/dataset-brief/network/network.json",
+      "name": "네트워크 (간략버전)",
+      "description": "네트워크 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 104,
+      "fileName": "network.json",
+      "isBrief": true
+    },
+    {
       "category": "os",
       "path": "/data/dataset/os/os.json",
       "name": "운영체제",
       "description": "운영체제 핵심 개념 및 면접 질문",
       "cardCount": 122,
       "fileName": "os.json"
+    },
+    {
+      "category": "os",
+      "path": "/data/dataset/dataset-brief/os/os.json",
+      "name": "운영체제 (간략버전)",
+      "description": "운영체제 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 122,
+      "fileName": "os.json",
+      "isBrief": true
     },
     {
       "category": "pl",
@@ -208,12 +361,30 @@
       "fileName": "pl.json"
     },
     {
+      "category": "pl",
+      "path": "/data/dataset/dataset-brief/pl/pl.json",
+      "name": "프로그래밍 언어 (간략버전)",
+      "description": "프로그래밍 언어 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 126,
+      "fileName": "pl.json",
+      "isBrief": true
+    },
+    {
       "category": "react",
       "path": "/data/dataset/react/react.json",
       "name": "리액트",
       "description": "React 핵심 개념 및 면접 질문",
       "cardCount": 62,
       "fileName": "react.json"
+    },
+    {
+      "category": "react",
+      "path": "/data/dataset/dataset-brief/react/react.json",
+      "name": "리액트 (간략버전)",
+      "description": "React 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 62,
+      "fileName": "react.json",
+      "isBrief": true
     },
     {
       "category": "redis",
@@ -224,6 +395,15 @@
       "fileName": "redis.json"
     },
     {
+      "category": "redis",
+      "path": "/data/dataset/dataset-brief/redis/redis.json",
+      "name": "Redis (간략버전)",
+      "description": "Redis 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 32,
+      "fileName": "redis.json",
+      "isBrief": true
+    },
+    {
       "category": "spring",
       "path": "/data/dataset/spring/spring.json",
       "name": "스프링",
@@ -232,12 +412,30 @@
       "fileName": "spring.json"
     },
     {
+      "category": "spring",
+      "path": "/data/dataset/dataset-brief/spring/spring.json",
+      "name": "스프링 (간략버전)",
+      "description": "Spring 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 85,
+      "fileName": "spring.json",
+      "isBrief": true
+    },
+    {
       "category": "websocket",
       "path": "/data/dataset/websocket/websocket.json",
       "name": "WebSocket",
       "description": "WebSocket 핵심 개념 및 실무 질문",
       "cardCount": 30,
       "fileName": "websocket.json"
+    },
+    {
+      "category": "websocket",
+      "path": "/data/dataset/dataset-brief/websocket/websocket.json",
+      "name": "WebSocket (간략버전)",
+      "description": "WebSocket 핵심 개념을 간결하게 정리한 버전",
+      "cardCount": 30,
+      "fileName": "websocket.json",
+      "isBrief": true
     }
   ]
 }
