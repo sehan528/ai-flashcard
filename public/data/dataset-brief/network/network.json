@@ -3,27 +3,90 @@
   "description": "Network 핵심 개념을 간결하게 정리한 버전",
   "cards": [
     {
-      "question": "OSI 7계층의 각 계층과 역할은?",
-      "answer": "1. **물리** - 비트 전송\n2. **데이터링크** - 프레임 전송, MAC 주소\n3. **네트워크** - 라우팅, IP 주소\n4. **전송** - 종단간 통신, TCP/UDP\n5. **세션** - 세션 관리\n6. **표현** - 데이터 변환, 암호화\n7. **응용** - 사용자 인터페이스",
+      "question": "REST API의 설계 원칙 6가지는?",
+      "answer": "1. **Uniform Interface** - 일관된 인터페이스\n2. **Stateless** - 무상태성\n3. **Cacheable** - 캐시 가능\n4. **Client-Server** - 클라이언트-서버 구조\n5. **Layered System** - 계층화\n6. **Code on Demand** - 선택적",
       "type": "essay",
       "tags": [
         "Network",
-        "OSI"
+        "REST"
       ]
     },
     {
-      "question": "TCP와 UDP의 주요 차이점 5가지는?",
-      "answer": "1. **연결** - TCP: 연결형 / UDP: 비연결형\n2. **신뢰성** - TCP: 보장 / UDP: 미보장\n3. **순서** - TCP: 보장 / UDP: 미보장\n4. **속도** - TCP: 느림 / UDP: 빠름\n5. **용도** - TCP: HTTP, FTP / UDP: DNS, 스트리밍",
+      "question": "HTTP/1.1과 HTTP/2의 주요 차이점 4가지는?",
+      "answer": "1. **멀티플렉싱** - HTTP/2는 하나의 연결로 여러 요청 동시 처리\n2. **헤더 압축** - HPACK으로 헤더 크기 감소\n3. **서버 푸시** - 클라이언트 요청 전 리소스 전송\n4. **바이너리 프로토콜** - 텍스트 대신 바이너리 사용",
       "type": "essay",
       "tags": [
         "Network",
-        "TCP",
-        "UDP"
+        "HTTP"
       ]
     },
     {
-      "question": "TCP 3-way handshake 과정은?",
-      "answer": "1. **SYN** - 클라이언트 → 서버\n2. **SYN+ACK** - 서버 → 클라이언트\n3. **ACK** - 클라이언트 → 서버\n\n연결 수립 완료",
+      "question": "로드 밸런싱 알고리즘 4가지는?",
+      "answer": "1. **Round Robin** - 순차적 분배\n2. **Least Connection** - 연결 수가 가장 적은 서버\n3. **IP Hash** - IP 주소 기반 해싱\n4. **Weighted Round Robin** - 가중치 기반 분배",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "LoadBalancing"
+      ]
+    },
+    {
+      "question": "SSL/TLS Handshake 과정은?",
+      "answer": "1. Client Hello - 클라이언트가 지원 가능한 암호화 방식 전송\n2. Server Hello - 서버가 선택한 암호화 방식, 인증서 전송\n3. 인증서 검증 - 클라이언트가 CA로 인증서 검증\n4. 키 교환 - 대칭키 생성 및 교환\n5. Finished - 암호화 통신 시작",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security",
+        "SSL"
+      ]
+    },
+    {
+      "question": "NAT의 종류 3가지는?",
+      "answer": "1. **Static NAT** - 1:1 고정 매핑\n2. **Dynamic NAT** - 풀에서 동적 할당\n3. **PAT (NAPT)** - 포트 번호로 다중 매핑",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "NAT"
+      ]
+    },
+    {
+      "question": "서브넷 마스크의 역할과 예시는?",
+      "answer": "**역할:** IP 주소를 네트워크부와 호스트부로 구분\n\n**예시:**\n- 255.255.255.0 (/24) - C클래스, 254개 호스트\n- 255.255.0.0 (/16) - B클래스, 65534개 호스트",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "IP"
+      ]
+    },
+    {
+      "question": "ARP 프로토콜의 동작 과정은?",
+      "answer": "1. ARP Request 브로드캐스트 - IP에 대한 MAC 주소 요청\n2. 해당 IP를 가진 호스트가 ARP Reply 유니캐스트\n3. MAC 주소 수신 및 ARP 캐시 저장\n4. 이후 통신에 캐시 사용",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "ARP"
+      ]
+    },
+    {
+      "question": "DHCP의 동작 과정 4단계는?",
+      "answer": "1. **Discover** - 클라이언트가 DHCP 서버 찾기 (브로드캐스트)\n2. **Offer** - DHCP 서버가 IP 제안\n3. **Request** - 클라이언트가 IP 요청\n4. **Ack** - 서버가 IP 할당 확인",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "DHCP"
+      ]
+    },
+    {
+      "question": "Proxy 서버의 종류와 용도는?",
+      "answer": "**Forward Proxy:**\n- 클라이언트 대신 요청\n- 익명성, 캐싱, 필터링\n\n**Reverse Proxy:**\n- 서버 앞단에 위치\n- 로드밸런싱, 보안, SSL 종료",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Proxy"
+      ]
+    },
+    {
+      "question": "TCP 흐름제어 방법 2가지는?",
+      "answer": "1. **Stop-and-Wait** - 응답 받을 때까지 대기\n2. **Sliding Window** - 윈도우 크기만큼 연속 전송, 동적 조절",
       "type": "essay",
       "tags": [
         "Network",
@@ -31,8 +94,146 @@
       ]
     },
     {
-      "question": "HTTP와 HTTPS의 차이점 3가지는?",
-      "answer": "1. **보안** - HTTP: 평문 / HTTPS: 암호화 (SSL/TLS)\n2. **포트** - HTTP: 80 / HTTPS: 443\n3. **인증서** - HTTPS는 SSL 인증서 필요",
+      "question": "TCP 혼잡제어 알고리즘 4가지는?",
+      "answer": "1. **Slow Start** - 지수적으로 윈도우 증가\n2. **Congestion Avoidance** - 선형적으로 증가\n3. **Fast Retransmit** - 3 중복 ACK시 즉시 재전송\n4. **Fast Recovery** - 혼잡 회피 단계로 빠른 복구",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP"
+      ]
+    },
+    {
+      "question": "웹 소켓과 HTTP 폴링의 차이는?",
+      "answer": "**WebSocket:**\n- 양방향 실시간 통신\n- 연결 유지\n- 낮은 오버헤드\n\n**HTTP 폴링:**\n- 주기적 요청-응답\n- 연결 재생성\n- 높은 오버헤드",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "WebSocket"
+      ]
+    },
+    {
+      "question": "CDN의 동작 원리와 장점은?",
+      "answer": "**동작:**\n- 전 세계 엣지 서버에 컨텐츠 분산\n- 사용자와 가까운 서버에서 응답\n\n**장점:**\n- 빠른 속도\n- 서버 부하 분산\n- DDoS 방어",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "CDN"
+      ]
+    },
+    {
+      "question": "HTTP 인증 방식 4가지는?",
+      "answer": "1. **Basic** - Base64 인코딩 (보안 취약)\n2. **Digest** - 해시 사용\n3. **Bearer Token** - JWT 등\n4. **OAuth 2.0** - 토큰 기반 인증",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "HTTP",
+        "Auth"
+      ]
+    },
+    {
+      "question": "RESTful API와 GraphQL의 차이점은?",
+      "answer": "**REST:**\n- 여러 엔드포인트\n- Over/Under fetching 가능\n- 캐싱 용이\n\n**GraphQL:**\n- 단일 엔드포인트\n- 필요한 데이터만 요청\n- 복잡한 쿼리 가능",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "REST",
+        "GraphQL"
+      ]
+    },
+    {
+      "question": "SOP(Same-Origin Policy)의 조건 3가지는?",
+      "answer": "1. **프로토콜** - http/https 일치\n2. **도메인** - 도메인 일치\n3. **포트** - 포트 번호 일치\n\n모두 일치해야 동일 출처",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "IPv4와 IPv6의 주요 차이점 4가지는?",
+      "answer": "1. **주소 길이** - IPv4: 32비트 / IPv6: 128비트\n2. **표기법** - IPv4: 10진수 / IPv6: 16진수\n3. **주소 개수** - IPv4: 43억 / IPv6: 340간\n4. **헤더** - IPv6가 더 단순하고 효율적",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "IP"
+      ]
+    },
+    {
+      "question": "라우팅 프로토콜의 분류는?",
+      "answer": "**IGP (내부):**\n- RIP - 거리 벡터\n- OSPF - 링크 상태\n- EIGRP - 하이브리드\n\n**EGP (외부):**\n- BGP - 경로 벡터",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Routing"
+      ]
+    },
+    {
+      "question": "TCP 4-way handshake 과정은?",
+      "answer": "1. **FIN** - 클라이언트 → 서버 (종료 요청)\n2. **ACK** - 서버 → 클라이언트\n3. **FIN** - 서버 → 클라이언트 (종료 준비 완료)\n4. **ACK** - 클라이언트 → 서버\n\n연결 종료",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP"
+      ]
+    },
+    {
+      "question": "포트 번호의 분류는?",
+      "answer": "1. **Well-Known Ports (0-1023)** - HTTP(80), HTTPS(443), SSH(22)\n2. **Registered Ports (1024-49151)** - 등록된 애플리케이션\n3. **Dynamic Ports (49152-65535)** - 임시 포트",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Port"
+      ]
+    },
+    {
+      "question": "VPN의 종류 3가지와 특징은?",
+      "answer": "1. **Site-to-Site VPN** - 네트워크 간 연결\n2. **Remote Access VPN** - 개인 사용자 접속\n3. **SSL VPN** - 웹 브라우저 기반",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "VPN"
+      ]
+    },
+    {
+      "question": "방화벽의 종류 3가지는?",
+      "answer": "1. **Packet Filtering** - IP/포트 기반 필터링\n2. **Stateful Inspection** - 연결 상태 추적\n3. **Application Level** - 애플리케이션 계층 검사",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "DDoS 공격의 유형 3가지는?",
+      "answer": "1. **Volume-based** - 대역폭 소진 (UDP Flood)\n2. **Protocol** - 프로토콜 취약점 (SYN Flood)\n3. **Application** - 애플리케이션 레벨 (HTTP Flood)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "MAC 주소의 특징과 구조는?",
+      "answer": "**특징:** 48비트 물리적 주소, NIC 고유 식별\n\n**구조:**\n- 앞 24비트: OUI (제조사)\n- 뒤 24비트: 일련번호\n- 예: AA:BB:CC:DD:EE:FF",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "MAC"
+      ]
+    },
+    {
+      "question": "스위치와 라우터의 차이점 3가지는?",
+      "answer": "1. **계층** - 스위치: L2 / 라우터: L3\n2. **주소** - 스위치: MAC / 라우터: IP\n3. **범위** - 스위치: LAN / 라우터: LAN+WAN",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Switch",
+        "Router"
+      ]
+    },
+    {
+      "question": "HTTP/3의 주요 특징 4가지는?",
+      "answer": "1. **QUIC 프로토콜** - UDP 기반\n2. **0-RTT** - 연결 재개시 지연 없음\n3. **패킷 손실 개선** - 개별 스트림 영향 최소화\n4. **연결 마이그레이션** - IP 변경시에도 유지",
       "type": "essay",
       "tags": [
         "Network",
@@ -40,8 +241,497 @@
       ]
     },
     {
-      "question": "HTTP 메서드의 의미와 멱등성은?",
-      "answer": "**멱등성 O:**\n- GET (조회)\n- PUT (전체 수정)\n- DELETE (삭제)\n\n**멱등성 X:**\n- POST (생성)\n- PATCH (부분 수정)",
+      "question": "네트워크 보안 프로토콜 4가지는?",
+      "answer": "1. **SSL/TLS** - 전송 계층 암호화\n2. **IPSec** - IP 계층 보안\n3. **SSH** - 안전한 원격 접속\n4. **HTTPS** - HTTP over SSL/TLS",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "QoS의 메커니즘 3가지는?",
+      "answer": "1. **Traffic Shaping** - 트래픽 속도 조절\n2. **Traffic Policing** - 초과 트래픽 제한\n3. **Priority Queuing** - 우선순위 기반 큐잉",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "QoS"
+      ]
+    },
+    {
+      "question": "멀티캐스트의 특징과 용도는?",
+      "answer": "**특징:**\n- 1:N 통신\n- 특정 그룹에만 전송\n- 대역폭 효율적\n\n**용도:**\n- IPTV, 화상회의\n- 주식 시세 전송",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Multicast"
+      ]
+    },
+    {
+      "question": "유니캐스트, 브로드캐스트, 멀티캐스트 비교는?",
+      "answer": "1. **유니캐스트** - 1:1 통신\n2. **브로드캐스트** - 1:전체 통신\n3. **멀티캐스트** - 1:그룹 통신",
+      "type": "essay",
+      "tags": [
+        "Network"
+      ]
+    },
+    {
+      "question": "네트워크 토폴로지 5가지는?",
+      "answer": "1. **Star** - 중앙 집중형\n2. **Ring** - 순환 구조\n3. **Bus** - 단일 백본\n4. **Mesh** - 완전 연결\n5. **Tree** - 계층 구조",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Topology"
+      ]
+    },
+    {
+      "question": "ICMP의 용도와 주요 메시지는?",
+      "answer": "**용도:** 네트워크 진단 및 오류 보고\n\n**주요 메시지:**\n- Echo Request/Reply (ping)\n- Destination Unreachable\n- Time Exceeded (traceroute)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "ICMP"
+      ]
+    },
+    {
+      "question": "VLAN의 개념과 장점 3가지는?",
+      "answer": "**개념:** 논리적으로 네트워크를 분할\n\n**장점:**\n1. 브로드캐스트 도메인 분리\n2. 보안 강화\n3. 유연한 네트워크 관리",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "VLAN"
+      ]
+    },
+    {
+      "question": "Ping과 Traceroute의 차이는?",
+      "answer": "**Ping:**\n- 도달 가능 여부 확인\n- RTT 측정\n- ICMP Echo\n\n**Traceroute:**\n- 경로 추적\n- 각 홉의 지연시간\n- ICMP TTL 활용",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "ICMP"
+      ]
+    },
+    {
+      "question": "MTU와 MSS의 차이는?",
+      "answer": "**MTU (Maximum Transmission Unit):**\n- 데이터링크 계층 최대 크기\n- 일반적으로 1500 bytes\n\n**MSS (Maximum Segment Size):**\n- TCP 데이터 최대 크기\n- MTU - IP헤더 - TCP헤더",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "MTU"
+      ]
+    },
+    {
+      "question": "대역폭과 처리량의 차이는?",
+      "answer": "**대역폭 (Bandwidth):**\n- 이론적 최대 전송 속도\n- 물리적 용량\n\n**처리량 (Throughput):**\n- 실제 전송 속도\n- 네트워크 상태 영향",
+      "type": "essay",
+      "tags": [
+        "Network"
+      ]
+    },
+    {
+      "question": "지연(Latency)의 구성 요소 4가지는?",
+      "answer": "1. **전파 지연** - 물리적 거리\n2. **전송 지연** - 데이터 크기/대역폭\n3. **처리 지연** - 라우터/스위치 처리\n4. **큐잉 지연** - 대기 시간",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Latency"
+      ]
+    },
+    {
+      "question": "이더넷 프레임의 구조는?",
+      "answer": "1. **Preamble** - 동기화 (7 bytes)\n2. **SFD** - 프레임 시작 (1 byte)\n3. **Destination MAC** (6 bytes)\n4. **Source MAC** (6 bytes)\n5. **Type** - 상위 프로토콜 (2 bytes)\n6. **Data** (46-1500 bytes)\n7. **FCS** - 오류 검출 (4 bytes)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Ethernet"
+      ]
+    },
+    {
+      "question": "IP 헤더의 주요 필드 5가지는?",
+      "answer": "1. **Version** - IPv4/IPv6\n2. **TTL** - 홉 수 제한\n3. **Protocol** - 상위 프로토콜 (TCP/UDP)\n4. **Source IP**\n5. **Destination IP**",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "IP"
+      ]
+    },
+    {
+      "question": "TCP 헤더의 주요 필드 6가지는?",
+      "answer": "1. **Source/Dest Port** - 포트 번호\n2. **Sequence Number** - 순서 번호\n3. **Acknowledgment** - 응답 번호\n4. **Flags** - SYN, ACK, FIN 등\n5. **Window Size** - 흐름 제어\n6. **Checksum** - 오류 검출",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP"
+      ]
+    },
+    {
+      "question": "라우팅 테이블의 구성 요소는?",
+      "answer": "1. **Destination Network** - 목적지 네트워크\n2. **Subnet Mask** - 서브넷 마스크\n3. **Gateway** - 다음 홉 라우터\n4. **Interface** - 출력 인터페이스\n5. **Metric** - 경로 비용",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Routing"
+      ]
+    },
+    {
+      "question": "CIDR 표기법의 의미는?",
+      "answer": "**개념:** Classless Inter-Domain Routing\n\n**예시:**\n- 192.168.1.0/24 → 256개 주소\n- 192.168.1.0/25 → 128개 주소\n\n**/N = 네트워크 비트 수**",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "IP"
+      ]
+    },
+    {
+      "question": "Public IP와 Private IP의 차이는?",
+      "answer": "**Public IP:**\n- 인터넷에서 라우팅 가능\n- 전 세계 유일\n\n**Private IP:**\n- 내부 네트워크 전용\n- 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "IP"
+      ]
+    },
+    {
+      "question": "Keepalive의 목적과 동작은?",
+      "answer": "**목적:**\n- 연결 유지 확인\n- 죽은 연결 감지\n\n**동작:**\n- 주기적으로 probe 전송\n- 응답 없으면 연결 종료",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP"
+      ]
+    },
+    {
+      "question": "Half-duplex와 Full-duplex의 차이는?",
+      "answer": "**Half-duplex:**\n- 양방향 통신 가능\n- 동시 불가 (교대로)\n\n**Full-duplex:**\n- 양방향 통신 가능\n- 동시 가능",
+      "type": "essay",
+      "tags": [
+        "Network"
+      ]
+    },
+    {
+      "question": "FTP의 동작 모드 2가지는?",
+      "answer": "1. **Active Mode** - 서버가 클라이언트에 데이터 연결\n2. **Passive Mode** - 클라이언트가 서버에 데이터 연결\n\n방화벽 환경에서는 Passive 선호",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "FTP"
+      ]
+    },
+    {
+      "question": "SMTP, POP3, IMAP의 차이는?",
+      "answer": "**SMTP (25):**\n- 메일 전송\n\n**POP3 (110):**\n- 메일 다운로드 후 서버 삭제\n\n**IMAP (143):**\n- 서버에 메일 유지, 동기화",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Email"
+      ]
+    },
+    {
+      "question": "Telnet과 SSH의 차이는?",
+      "answer": "**Telnet (23):**\n- 평문 전송\n- 보안 취약\n\n**SSH (22):**\n- 암호화 전송\n- 안전한 원격 접속",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "SSH"
+      ]
+    },
+    {
+      "question": "네트워크 장비의 계층별 분류는?",
+      "answer": "- **L1 (물리)** - 리피터, 허브\n- **L2 (데이터링크)** - 스위치, 브리지\n- **L3 (네트워크)** - 라우터, L3 스위치\n- **L4 (전송)** - L4 스위치, 로드밸런서\n- **L7 (응용)** - 방화벽, 프록시",
+      "type": "essay",
+      "tags": [
+        "Network"
+      ]
+    },
+    {
+      "question": "TCP Nagle 알고리즘의 목적은?",
+      "answer": "**목적:** 작은 패킷 전송 최소화\n\n**동작:**\n- ACK 받기 전까지 작은 데이터 버퍼링\n- 모아서 한번에 전송\n- 네트워크 효율성 향상",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP"
+      ]
+    },
+    {
+      "question": "Delayed ACK의 개념은?",
+      "answer": "**개념:** ACK 전송을 지연시켜 효율성 향상\n\n**특징:**\n- 200ms까지 지연\n- 여러 세그먼트를 하나의 ACK로\n- 데이터와 함께 piggyback 가능",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP"
+      ]
+    },
+    {
+      "question": "SYN Flood 공격의 원리와 대응은?",
+      "answer": "**원리:**\n- 대량 SYN 전송\n- ACK 응답 안함\n- Half-open 연결 누적\n\n**대응:**\n- SYN Cookie\n- 연결 타임아웃 단축\n- 방화벽 필터링",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "TIME_WAIT 상태의 목적과 시간은?",
+      "answer": "**목적:**\n1. 마지막 ACK 재전송 대기\n2. 지연 패킷 처리\n\n**시간:** 2MSL (보통 60초-4분)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TCP"
+      ]
+    },
+    {
+      "question": "UDP의 특징과 사용 사례는?",
+      "answer": "**특징:**\n- 비연결형, 비신뢰적\n- 순서 보장 안함\n- 빠른 전송\n\n**사용:**\n- DNS, DHCP\n- 스트리밍, 게임\n- VoIP",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "UDP"
+      ]
+    },
+    {
+      "question": "Jumbo Frame의 개념과 장단점은?",
+      "answer": "**개념:** MTU > 1500 bytes (보통 9000)\n\n**장점:**\n- CPU 오버헤드 감소\n- 처리량 증가\n\n**단점:**\n- 전체 경로 지원 필요\n- 패킷 손실시 재전송 비용 증가",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "MTU"
+      ]
+    },
+    {
+      "question": "ARP Spoofing 공격의 원리와 대응은?",
+      "answer": "**원리:**\n- 위조된 ARP Reply 전송\n- MAC-IP 매핑 변조\n- MITM 공격 가능\n\n**대응:**\n- Static ARP 테이블\n- DAI (Dynamic ARP Inspection)\n- 암호화 통신",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "Spanning Tree Protocol의 목적은?",
+      "answer": "**목적:** 스위치 네트워크의 루프 방지\n\n**동작:**\n1. Root Bridge 선출\n2. 최단 경로 계산\n3. 중복 경로 차단\n4. 장애시 우회 경로 활성화",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "STP"
+      ]
+    },
+    {
+      "question": "Link Aggregation의 개념과 장점은?",
+      "answer": "**개념:** 여러 물리 링크를 논리적으로 묶음\n\n**장점:**\n1. 대역폭 증가\n2. 이중화 (장애 대응)\n3. 로드 밸런싱",
+      "type": "essay",
+      "tags": [
+        "Network"
+      ]
+    },
+    {
+      "question": "Port Mirroring의 용도는?",
+      "answer": "**용도:**\n- 트래픽 모니터링\n- 네트워크 분석\n- IDS/IPS 연동\n\n**방식:**\n- SPAN (로컬)\n- RSPAN (원격)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Monitoring"
+      ]
+    },
+    {
+      "question": "Anycast의 개념과 용도는?",
+      "answer": "**개념:** 동일 IP를 여러 서버가 공유, 가장 가까운 서버 응답\n\n**용도:**\n- DNS 루트 서버\n- CDN\n- DDoS 방어",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Anycast"
+      ]
+    },
+    {
+      "question": "BGP의 특징과 경로 선택 기준은?",
+      "answer": "**특징:**\n- AS 간 라우팅\n- 경로 벡터 프로토콜\n- TCP 기반 (포트 179)\n\n**선택 기준:**\n1. Weight\n2. Local Preference\n3. AS Path 길이\n4. MED",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "BGP"
+      ]
+    },
+    {
+      "question": "OSPF의 특징과 장점은?",
+      "answer": "**특징:**\n- 링크 상태 프로토콜\n- 최단 경로 (Dijkstra)\n- Area 개념\n\n**장점:**\n- 빠른 수렴\n- VLSM 지원\n- 확장성",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "OSPF"
+      ]
+    },
+    {
+      "question": "Static Routing과 Dynamic Routing의 비교는?",
+      "answer": "**Static:**\n- 수동 설정\n- 변경 불가\n- 작은 네트워크 적합\n\n**Dynamic:**\n- 자동 학습\n- 경로 변경 대응\n- 큰 네트워크 적합",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Routing"
+      ]
+    },
+    {
+      "question": "Distance Vector와 Link State의 차이는?",
+      "answer": "**Distance Vector (RIP):**\n- 거리와 방향 정보\n- 주기적 업데이트\n- 느린 수렴\n\n**Link State (OSPF):**\n- 전체 토폴로지 파악\n- 변경시만 업데이트\n- 빠른 수렴",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Routing"
+      ]
+    },
+    {
+      "question": "Count to Infinity 문제와 해결책은?",
+      "answer": "**문제:** Distance Vector에서 라우팅 루프 발생\n\n**해결:**\n1. **Split Horizon** - 받은 인터페이스로 역전송 금지\n2. **Poison Reverse** - 무한대 메트릭 전송\n3. **Hold Down Timer** - 일정 시간 업데이트 거부",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Routing"
+      ]
+    },
+    {
+      "question": "MPLS의 개념과 장점은?",
+      "answer": "**개념:** 레이블 기반 고속 라우팅\n\n**장점:**\n1. 빠른 포워딩\n2. TE (Traffic Engineering)\n3. VPN 구성 용이\n4. QoS 지원",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "MPLS"
+      ]
+    },
+    {
+      "question": "SDN의 개념과 특징은?",
+      "answer": "**개념:** Software Defined Networking, 제어와 데이터 평면 분리\n\n**특징:**\n1. 중앙 집중 제어\n2. 프로그래밍 가능\n3. OpenFlow 프로토콜\n4. 네트워크 자동화",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "SDN"
+      ]
+    },
+    {
+      "question": "NFV의 개념과 장점은?",
+      "answer": "**개념:** Network Functions Virtualization, 네트워크 기능 가상화\n\n**장점:**\n1. 하드웨어 독립성\n2. 빠른 배포\n3. 비용 절감\n4. 유연한 확장",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "NFV"
+      ]
+    },
+    {
+      "question": "Ingress와 Egress의 의미는?",
+      "answer": "**Ingress:**\n- 네트워크/시스템으로 들어오는 트래픽\n- 인바운드\n\n**Egress:**\n- 네트워크/시스템에서 나가는 트래픽\n- 아웃바운드",
+      "type": "essay",
+      "tags": [
+        "Network"
+      ]
+    },
+    {
+      "question": "네트워크 모니터링 도구와 용도는?",
+      "answer": "1. **Wireshark** - 패킷 캡처/분석\n2. **tcpdump** - 커맨드라인 패킷 캡처\n3. **SNMP** - 장비 모니터링\n4. **NetFlow** - 트래픽 분석\n5. **Nagios** - 네트워크 감시",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Monitoring"
+      ]
+    },
+    {
+      "question": "gRPC의 특징 4가지는?",
+      "answer": "1. **HTTP/2 기반** - 멀티플렉싱, 스트리밍\n2. **Protocol Buffers** - 효율적 직렬화\n3. **4가지 통신 방식** - Unary, Server/Client/Bidirectional Streaming\n4. **언어 중립적** - 다양한 언어 지원",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "gRPC"
+      ]
+    },
+    {
+      "question": "WebRTC의 특징과 구성 요소는?",
+      "answer": "**특징:** P2P 실시간 통신\n\n**구성:**\n1. **getUserMedia** - 미디어 획득\n2. **RTCPeerConnection** - P2P 연결\n3. **RTCDataChannel** - 데이터 전송\n4. **Signaling Server** - 피어 정보 교환",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "WebRTC"
+      ]
+    },
+    {
+      "question": "STUN과 TURN의 역할은?",
+      "answer": "**STUN:**\n- 공인 IP/포트 확인\n- NAT 타입 판별\n\n**TURN:**\n- NAT 통과 실패시 릴레이\n- 미디어 중계 서버",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "WebRTC"
+      ]
+    },
+    {
+      "question": "Long Polling과 Server-Sent Events의 차이는?",
+      "answer": "**Long Polling:**\n- 클라이언트가 주기적 요청\n- 이벤트 발생시 응답\n- HTTP 요청-응답 반복\n\n**SSE:**\n- 단일 연결 유지\n- 서버 → 클라이언트 단방향\n- EventSource API",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "SSE"
+      ]
+    },
+    {
+      "question": "mTLS의 개념과 동작은?",
+      "answer": "**개념:** Mutual TLS, 양방향 인증서 검증\n\n**동작:**\n1. 클라이언트가 서버 인증서 검증\n2. 서버가 클라이언트 인증서 검증\n3. 양방향 신원 확인",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "Zero Trust 네트워크의 원칙은?",
+      "answer": "1. **Never Trust, Always Verify** - 모든 접근 검증\n2. **Least Privilege** - 최소 권한\n3. **Assume Breach** - 침해 가정\n4. **Micro-segmentation** - 세밀한 분할",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "Service Mesh의 개념과 기능은?",
+      "answer": "**개념:** 마이크로서비스 간 통신 인프라 계층\n\n**기능:**\n1. 트래픽 관리\n2. 보안 (mTLS)\n3. 모니터링\n4. 서비스 디스커버리\n\n**예:** Istio, Linkerd",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "ServiceMesh"
+      ]
+    },
+    {
+      "question": "Circuit Breaker 패턴의 상태 3가지는?",
+      "answer": "1. **Closed** - 정상 작동\n2. **Open** - 실패 임계값 초과, 요청 차단\n3. **Half-Open** - 테스트 요청 허용",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Pattern"
+      ]
+    },
+    {
+      "question": "Rate Limiting 알고리즘 4가지는?",
+      "answer": "1. **Token Bucket** - 토큰 소비 방식\n2. **Leaky Bucket** - 일정 속도 처리\n3. **Fixed Window** - 고정 시간 윈도우\n4. **Sliding Window** - 이동 시간 윈도우",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "RateLimit"
+      ]
+    },
+    {
+      "question": "API Gateway의 주요 기능은?",
+      "answer": "1. **라우팅** - 요청 분배\n2. **인증/인가** - 보안 처리\n3. **Rate Limiting** - 속도 제한\n4. **로깅/모니터링**\n5. **프로토콜 변환**\n6. **캐싱**",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "APIGateway"
+      ]
+    },
+    {
+      "question": "Forward Proxy와 Reverse Proxy의 차이점은?",
+      "answer": "**Forward Proxy:**\n- 클라이언트 앞단\n- 클라이언트 대신 요청\n- 익명성, 캐싱\n\n**Reverse Proxy:**\n- 서버 앞단\n- 서버 대신 응답\n- 로드밸런싱, 보안",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Proxy"
+      ]
+    },
+    {
+      "question": "Content Negotiation의 방법 3가지는?",
+      "answer": "1. **Server-driven** - Accept 헤더 기반\n2. **Agent-driven** - 클라이언트가 선택\n3. **Transparent** - 중간 서버가 선택\n\n**헤더:** Accept, Accept-Language, Accept-Encoding",
       "type": "essay",
       "tags": [
         "Network",
@@ -49,8 +739,187 @@
       ]
     },
     {
-      "question": "HTTP 상태 코드의 분류는?",
-      "answer": "- **1xx**: 정보 (처리 중)\n- **2xx**: 성공 (200 OK, 201 Created)\n- **3xx**: 리다이렉션 (301, 302)\n- **4xx**: 클라이언트 오류 (400, 404)\n- **5xx**: 서버 오류 (500, 503)",
+      "question": "ETag의 개념과 용도는?",
+      "answer": "**개념:** 리소스의 버전 식별자\n\n**용도:**\n1. 캐시 검증 (If-None-Match)\n2. 조건부 요청\n3. 낙관적 동시성 제어\n\n**응답:** 304 Not Modified",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "HTTP",
+        "Cache"
+      ]
+    },
+    {
+      "question": "HTTP 캐싱 헤더의 종류와 역할은?",
+      "answer": "1. **Cache-Control** - 캐시 동작 지시\n2. **Expires** - 만료 시각\n3. **ETag** - 리소스 버전\n4. **Last-Modified** - 수정 시각\n5. **If-None-Match / If-Modified-Since** - 조건부 요청",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Cache"
+      ]
+    },
+    {
+      "question": "Cache-Control 디렉티브 주요 값은?",
+      "answer": "**요청:**\n- no-cache, no-store\n- max-age\n\n**응답:**\n- public, private\n- max-age, s-maxage\n- no-cache, no-store\n- must-revalidate",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Cache"
+      ]
+    },
+    {
+      "question": "SameSite 쿠키 속성의 값 3가지는?",
+      "answer": "1. **Strict** - 같은 사이트만 전송\n2. **Lax** - 일부 크로스 사이트 허용 (GET)\n3. **None** - 모든 요청 전송 (Secure 필수)\n\n**목적:** CSRF 방어",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Cookie",
+        "Security"
+      ]
+    },
+    {
+      "question": "JWT의 구조 3가지는?",
+      "answer": "1. **Header** - 알고리즘, 타입\n2. **Payload** - 클레임 (데이터)\n3. **Signature** - 서명\n\n**형식:** xxxxx.yyyyy.zzzzz (Base64 인코딩)",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Auth",
+        "JWT"
+      ]
+    },
+    {
+      "question": "OAuth 2.0의 권한 부여 방식 4가지는?",
+      "answer": "1. **Authorization Code** - 웹 앱 (가장 안전)\n2. **Implicit** - SPA (deprecated)\n3. **Resource Owner Password** - 신뢰 앱\n4. **Client Credentials** - 서버 간 통신",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "OAuth"
+      ]
+    },
+    {
+      "question": "Access Token과 Refresh Token의 차이는?",
+      "answer": "**Access Token:**\n- API 접근 권한\n- 짧은 유효 기간 (15분-1시간)\n- 탈취 피해 최소화\n\n**Refresh Token:**\n- Access Token 재발급\n- 긴 유효 기간\n- 안전하게 저장",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Auth"
+      ]
+    },
+    {
+      "question": "PKCE의 개념과 동작은?",
+      "answer": "**개념:** Proof Key for Code Exchange, OAuth 보안 강화\n\n**동작:**\n1. Code Verifier 생성 (랜덤)\n2. Code Challenge 생성 (해시)\n3. 인증 요청시 Challenge 전송\n4. 토큰 요청시 Verifier 검증",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "OAuth",
+        "Security"
+      ]
+    },
+    {
+      "question": "HSTS의 개념과 효과는?",
+      "answer": "**개념:** HTTP Strict Transport Security, HTTPS 강제\n\n**효과:**\n1. HTTP → HTTPS 자동 리다이렉트\n2. 중간자 공격 방지\n3. SSL Stripping 방어\n\n**헤더:** Strict-Transport-Security: max-age=...",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "CSP의 개념과 디렉티브는?",
+      "answer": "**개념:** Content Security Policy, XSS 방어\n\n**주요 디렉티브:**\n- default-src\n- script-src\n- style-src\n- img-src\n- connect-src",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "CSRF 토큰의 동작 원리는?",
+      "answer": "1. 서버가 세션별 랜덤 토큰 생성\n2. 폼에 토큰 포함\n3. 요청시 토큰 검증\n4. 일치하지 않으면 거부\n\n**특징:** 공격자가 토큰 알 수 없음",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "XSS 공격의 유형 3가지는?",
+      "answer": "1. **Stored XSS** - DB에 스크립트 저장\n2. **Reflected XSS** - URL 파라미터 반영\n3. **DOM-based XSS** - 클라이언트 DOM 조작\n\n**방어:** 입력 검증, 출력 인코딩, CSP",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "SQL Injection 방어 방법 4가지는?",
+      "answer": "1. **Prepared Statement** - 파라미터 바인딩\n2. **입력 검증** - 화이트리스트\n3. **ORM 사용** - 쿼리 추상화\n4. **최소 권한** - DB 계정 권한 제한",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "TLS 1.3의 개선사항 4가지는?",
+      "answer": "1. **1-RTT Handshake** - 기존 2-RTT에서 단축\n2. **0-RTT 재연결** - 이전 연결 재사용\n3. **암호화 강화** - 약한 알고리즘 제거\n4. **Forward Secrecy** - 필수 적용",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security",
+        "TLS"
+      ]
+    },
+    {
+      "question": "Diffie-Hellman 키 교환의 원리는?",
+      "answer": "1. 공개 매개변수 합의 (p, g)\n2. 각자 비밀 키 생성\n3. 공개 키 교환\n4. 공유 비밀 키 계산\n\n**특징:** 제3자는 공유 키 알 수 없음",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security",
+        "Cryptography"
+      ]
+    },
+    {
+      "question": "대칭키와 비대칭키 암호화의 차이는?",
+      "answer": "**대칭키:**\n- 동일 키로 암/복호화\n- 빠름\n- 키 배송 문제\n- AES, DES\n\n**비대칭키:**\n- 공개키/개인키 쌍\n- 느림\n- 안전한 키 교환\n- RSA, ECC",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security",
+        "Cryptography"
+      ]
+    },
+    {
+      "question": "해시 함수의 특성 4가지는?",
+      "answer": "1. **결정성** - 동일 입력 → 동일 출력\n2. **일방향성** - 역연산 불가\n3. **눈사태 효과** - 작은 변화 → 큰 변화\n4. **충돌 저항성** - 동일 해시값 찾기 어려움",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security",
+        "Hash"
+      ]
+    },
+    {
+      "question": "Digital Signature의 동작 과정은?",
+      "answer": "**서명:**\n1. 메시지 해시 생성\n2. 개인키로 해시 암호화\n\n**검증:**\n1. 공개키로 서명 복호화\n2. 메시지 해시와 비교\n\n**효과:** 무결성, 인증, 부인방지",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Security"
+      ]
+    },
+    {
+      "question": "SNI의 개념과 필요성은?",
+      "answer": "**개념:** Server Name Indication, TLS 확장\n\n**필요성:**\n- 하나의 IP에 여러 도메인 호스팅\n- 올바른 인증서 선택\n- HTTPS 가상 호스팅 지원",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "TLS"
+      ]
+    },
+    {
+      "question": "HTTP Pipelining과 Multiplexing의 차이는?",
+      "answer": "**Pipelining (HTTP/1.1):**\n- 여러 요청 순차 전송\n- 응답도 순서대로\n- HOL Blocking 문제\n\n**Multiplexing (HTTP/2):**\n- 단일 연결에 여러 스트림\n- 응답 순서 무관\n- HOL Blocking 해결",
       "type": "essay",
       "tags": [
         "Network",
@@ -58,39 +927,21 @@
       ]
     },
     {
-      "question": "쿠키와 세션의 차이점은?",
-      "answer": "**쿠키:**\n- 클라이언트 저장\n- 보안 취약\n- 용량 제한 (4KB)\n\n**세션:**\n- 서버 저장\n- 상대적으로 안전\n- 서버 메모리 사용",
-      "type": "essay",
-      "tags": [
-        "Network",
-        "Cookie"
-      ]
-    },
-    {
-      "question": "CORS의 개념과 해결 방법은?",
-      "answer": "**개념:** 다른 origin의 리소스 요청 제한\n\n**해결:**\n- 서버에서 Access-Control-Allow-Origin 헤더 설정\n- Proxy 서버 사용\n- JSONP (레거시)",
-      "type": "essay",
-      "tags": [
-        "Network",
-        "CORS"
-      ]
-    },
-    {
-      "question": "DNS의 동작 과정은?",
-      "answer": "1. 브라우저 캐시 확인\n2. OS 캐시 확인\n3. 로컬 DNS 서버 조회\n4. 루트 DNS → TLD DNS → 권한 DNS 순차 조회\n5. IP 주소 반환",
-      "type": "essay",
-      "tags": [
-        "Network",
-        "DNS"
-      ]
-    },
-    {
-      "question": "GET과 POST의 차이점 5가지는?",
-      "answer": "1. **용도** - GET: 조회 / POST: 생성/수정\n2. **데이터 위치** - GET: URL / POST: Body\n3. **캐싱** - GET: 가능 / POST: 불가\n4. **길이 제한** - GET: 있음 / POST: 없음\n5. **멱등성** - GET: O / POST: X",
+      "question": "HOL Blocking의 개념과 해결책은?",
+      "answer": "**개념:** Head-of-Line Blocking, 앞선 요청이 후속 요청 지연\n\n**HTTP/1.1:** 파이프라이닝 문제\n**해결 (HTTP/2):** 멀티플렉싱\n**TCP HOL:** HTTP/3의 QUIC으로 해결 (UDP 기반)",
       "type": "essay",
       "tags": [
         "Network",
         "HTTP"
+      ]
+    },
+    {
+      "question": "네트워크 성능 최적화 기법 6가지는?",
+      "answer": "1. **CDN** - 콘텐츠 분산\n2. **캐싱** - 중복 요청 감소\n3. **압축** - 데이터 크기 축소 (gzip, brotli)\n4. **HTTP/2, HTTP/3** - 프로토콜 개선\n5. **Connection Pooling** - 연결 재사용\n6. **DNS Prefetch** - DNS 조회 선행",
+      "type": "essay",
+      "tags": [
+        "Network",
+        "Performance"
       ]
     }
   ]
