@@ -15,6 +15,10 @@ const Home = ({ onStartStudy, onEditCardSet } : HomeProps) => {
 
     // 로컬 UI 상태
     const [isRandom, setIsRandom] = useState(false);
+    const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; cardSet: CardSet | null }>({
+        isOpen: false,
+        cardSet: null,
+    });
 
     // 이벤트 핸들러들
     const handleStartStudy = (cardSet: CardSet) => {
@@ -36,15 +40,20 @@ const Home = ({ onStartStudy, onEditCardSet } : HomeProps) => {
     };
 
     const handleDeleteCardSet = (cardSet: CardSet) => {
-        if (confirm(`"${cardSet.name}" 카드셋을 삭제하시겠습니까?`)) {
+        setDeleteConfirm({ isOpen: true, cardSet });
+    };
+
+    const confirmDeleteCardSet = () => {
+        if (deleteConfirm.cardSet) {
             try {
-                deleteCardSet(cardSet.id);
-                showToast('success', `"${cardSet.name}" 카드셋이 삭제되었습니다.`);
+                deleteCardSet(deleteConfirm.cardSet.id);
+                showToast('success', `"${deleteConfirm.cardSet.name}" 카드셋이 삭제되었습니다.`);
             } catch (error) {
                 console.error('카드셋 삭제 실패:', error);
                 showToast('error', '카드셋 삭제에 실패했습니다.');
             }
         }
+        setDeleteConfirm({ isOpen: false, cardSet: null });
     };
 
     const handleAddSampleData = () => {
@@ -53,9 +62,10 @@ const Home = ({ onStartStudy, onEditCardSet } : HomeProps) => {
     };
 
     return (
-        <div className="flex flex-col h-[calc(100vh-200px)]">
-            {/* 고정 헤더 영역 */}
-            <div className="sticky top-[200px] z-40 bg-gray-50 pb-4 mb-4 text-center">
+        <>
+            <div className="flex flex-col h-[calc(100vh-200px)]">
+                {/* 고정 헤더 영역 */}
+                <div className="sticky top-[200px] z-40 bg-gray-50 pb-4 mb-4 text-center">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                     내 플래시카드 ({cardSets.length}개)
                 </h2>
@@ -94,6 +104,39 @@ const Home = ({ onStartStudy, onEditCardSet } : HomeProps) => {
                 </div>
             </div>
         </div>
+
+        {/* 삭제 확인 다이얼로그 */}
+        {deleteConfirm.isOpen && deleteConfirm.cardSet && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+                <div className="bg-white rounded-xl p-6 max-w-md mx-4">
+                    <h3 className="text-xl font-bold text-gray-800 mb-4">
+                        카드셋 삭제 확인
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                        <strong>"{deleteConfirm.cardSet.name}"</strong> 카드셋을 삭제하시겠습니까?
+                        <br />
+                        <span className="text-sm text-red-600 mt-2 block">
+                            이 작업은 되돌릴 수 없습니다.
+                        </span>
+                    </p>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => setDeleteConfirm({ isOpen: false, cardSet: null })}
+                            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
+                        >
+                            취소
+                        </button>
+                        <button
+                            onClick={confirmDeleteCardSet}
+                            className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                        >
+                            삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+    </>
     );
 };
 

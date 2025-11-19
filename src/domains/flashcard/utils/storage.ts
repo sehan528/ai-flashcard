@@ -414,9 +414,12 @@ export class FlashcardStorage {
                 }))
             }));
 
+            let actualImportedCount: number;
+
             if (mergeMode === 'replace') {
                 // 기존 데이터 덮어쓰기
                 this.saveCardSets(importedCardSets);
+                actualImportedCount = importedCardSets.length;
             } else {
                 // 기존 데이터와 병합 (중복 ID 제거)
                 const existingCardSets = this.getCardSets();
@@ -426,11 +429,12 @@ export class FlashcardStorage {
                 const mergedCardSets = [...existingCardSets, ...newCardSets];
 
                 this.saveCardSets(mergedCardSets);
+                actualImportedCount = newCardSets.length; // 실제로 추가된 새로운 카드셋의 개수
             }
 
             return {
                 success: true,
-                importedCount: mergeMode === 'replace' ? importedCardSets.length : importedCardSets.filter(set => !this.getCardSets().map(s => s.id).includes(set.id)).length
+                importedCount: actualImportedCount
             };
         } catch (error) {
             console.error('Import 실패:', error);
@@ -447,9 +451,10 @@ export class FlashcardStorage {
         totalImported: number;
         errors: string[];
     }> {
-        let totalImported = 0;
         const errors: string[] = [];
+        const validFiles: { file: File; content: string; data: any }[] = [];
 
+        // 1단계: 모든 파일 유효성 검증
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
 
@@ -462,30 +467,55 @@ export class FlashcardStorage {
             try {
                 const content = await file.text();
 
-                // JSON 파싱 가능 여부 먼저 확인
+                // JSON 파싱 시도
+                let data;
                 try {
-                    JSON.parse(content);
+                    data = JSON.parse(content);
                 } catch (parseError) {
                     errors.push(`${file.name}: 올바른 JSON 형식이 아닙니다.`);
                     continue;
                 }
 
-                const result = this.importFromJSON(content, 'merge');
-
-                if (result.success) {
-                    totalImported += result.importedCount || 0;
-                } else {
-                    errors.push(`${file.name}: ${result.error}`);
+                // 카드셋 데이터 유효성 검증
+                const validation = this.validateImportData(data);
+                if (!validation.valid) {
+                    errors.push(`${file.name}: ${validation.error}`);
+                    continue;
                 }
+
+                validFiles.push({ file, content, data });
             } catch (error) {
                 errors.push(`${file.name}: 파일 읽기 실패`);
             }
         }
 
+        // 하나라도 유효하지 않은 파일이 있으면 전체 실패
+        if (errors.length > 0) {
+            return {
+                success: false,
+                totalImported: 0,
+                errors: [
+                    '유효하지 않은 파일이 포함되어 있습니다.',
+                    '모든 파일이 올바른 형식이어야 합니다.',
+                    '',
+                    ...errors
+                ]
+            };
+        }
+
+        // 2단계: 모두 유효하면 import 진행
+        let totalImported = 0;
+        for (const { file, content } of validFiles) {
+            const result = this.importFromJSON(content, 'merge');
+            if (result.success) {
+                totalImported += result.importedCount || 0;
+            }
+        }
+
         return {
-            success: errors.length === 0,
+            success: true,
             totalImported,
-            errors
+            errors: []
         };
     }
 

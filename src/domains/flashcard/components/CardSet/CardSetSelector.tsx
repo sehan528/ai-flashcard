@@ -34,6 +34,12 @@ const CardSetSelector = ({
         cardSet: null,
     });
 
+    // 삭제 확인 다이얼로그 상태
+    const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; cardSet: CardSet | null }>({
+        isOpen: false,
+        cardSet: null,
+    });
+
     // 새 카드셋 생성 폼 검증
     const validateCreateForm = (): boolean => {
         const newErrors: Record<string, string> = {};
@@ -91,13 +97,21 @@ const CardSetSelector = ({
         closeContextMenu();
     };
 
-    // 카드셋 삭제
+    // 카드셋 삭제 확인 다이얼로그 표시
     const handleDeleteCardSet = (cardSetId: string) => {
         const cardSet = cardSets.find(set => set.id === cardSetId);
-        if (cardSet && onDeleteCardSet && confirm(`"${cardSet.name}" 카드셋을 삭제하시겠습니까?`)) {
-            onDeleteCardSet(cardSetId);
+        if (cardSet) {
+            setDeleteConfirm({ isOpen: true, cardSet });
         }
         closeContextMenu();
+    };
+
+    // 카드셋 삭제 확정
+    const confirmDeleteCardSet = () => {
+        if (deleteConfirm.cardSet && onDeleteCardSet) {
+            onDeleteCardSet(deleteConfirm.cardSet.id);
+        }
+        setDeleteConfirm({ isOpen: false, cardSet: null });
     };
 
 // 카드셋 편집 저장
@@ -285,6 +299,38 @@ const CardSetSelector = ({
                     onClose={() => setEditModal({ isOpen: false, cardSet: null })}
                     onSave={handleSaveEdit}
                 />
+            )}
+
+            {/* 삭제 확인 다이얼로그 */}
+            {deleteConfirm.isOpen && deleteConfirm.cardSet && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+                    <div className="bg-white rounded-xl p-6 max-w-md mx-4">
+                        <h3 className="text-xl font-bold text-gray-800 mb-4">
+                            카드셋 삭제 확인
+                        </h3>
+                        <p className="text-gray-600 mb-6">
+                            <strong>"{deleteConfirm.cardSet.name}"</strong> 카드셋을 삭제하시겠습니까?
+                            <br />
+                            <span className="text-sm text-red-600 mt-2 block">
+                                이 작업은 되돌릴 수 없습니다.
+                            </span>
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setDeleteConfirm({ isOpen: false, cardSet: null })}
+                                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors"
+                            >
+                                취소
+                            </button>
+                            <button
+                                onClick={confirmDeleteCardSet}
+                                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                            >
+                                삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </>
     );

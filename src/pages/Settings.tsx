@@ -105,26 +105,16 @@ const Settings = () => {
             if (result.success) {
                 showToast('success', `${result.totalImported}개의 카드셋을 가져왔습니다!`);
             } else {
-                // 에러가 있는 경우 더 자세한 메시지
-                if (result.errors && result.errors.length > 0) {
-                    // 에러가 3개 이하면 모두 표시, 그 이상이면 처음 3개만
-                    const displayErrors = result.errors.slice(0, 3);
-                    const remainingErrors = result.errors.length - 3;
+                // 에러 메시지 표시 (최대 5개까지)
+                const displayErrors = result.errors.slice(0, 5);
+                const remainingErrors = result.errors.length - 5;
 
-                    let errorMessage = `파일 가져오기 실패:\n${displayErrors.join('\n')}`;
-                    if (remainingErrors > 0) {
-                        errorMessage += `\n... 외 ${remainingErrors}개 파일`;
-                    }
-
-                    showToast('error', errorMessage);
-                } else {
-                    showToast('error', '데이터 가져오기에 실패했습니다.');
+                let errorMessage = displayErrors.join('\n');
+                if (remainingErrors > 0) {
+                    errorMessage += `\n... 외 ${remainingErrors}개 항목`;
                 }
 
-                // 일부 성공한 경우
-                if (result.totalImported && result.totalImported > 0) {
-                    showToast('success', `${result.totalImported}개의 카드셋은 성공적으로 가져왔습니다.`);
-                }
+                showToast('error', errorMessage);
             }
         } catch (error) {
             showToast('error', '파일 읽기에 실패했습니다.');
@@ -386,7 +376,7 @@ const Settings = () => {
             {/* 전체 데이터 삭제 (위험 섹션) */}
             <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6 mb-6">
                 <h3 className="text-lg font-semibold text-red-700 mb-4">
-                    위험 영역
+                    데이터 전체 삭제
                 </h3>
 
                 <div>
